@@ -1,0 +1,112 @@
+body{
+    background-color: #171717;
+    color: white;
+    
+}
+
+.grid{
+    /* display: flex;
+    flex-wrap: wrap;
+    gap: 10px 0.9% ; */
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 60px); /* Adjust number of columns based on your needs */
+    grid-template-rows: repeat(5, 60px);
+    grid-gap: 20px 10px;
+    justify-content: center;
+    width: 700px;
+    
+    font-size: 20px;
+}
+
+.App{
+    padding: 10px 20%;
+}
+
+.grid-item{
+    height: 60px;
+    width: 60px;
+    border: solid 3px rgb(194, 194, 194);
+    border-radius: 10px;
+    overflow: hidden;
+    text-align: center;    
+    justify-content: flex-end; /* Align content to the right */
+    /* flex: 0 0 8%; */
+}
+
+.grid-item.gap{
+    border: none;
+}
+
+.grid-receiver-slot {
+    position: relative;
+    height: 50%;
+    width: 100%;
+    background-color: #5d5d5d;
+}
+
+.placeholder,
+.grid-receiver-slot .grid-shape {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.grid-receiver-slot .grid-shape {
+    /* max-height: none;
+    max-width: none;
+    min-height: none;
+    min-width: none; */
+    width: 100%;
+    height: 100%;
+}
+
+
+.grid-phonetic{
+    display: flex;   
+    justify-content: center;
+    align-items: center;
+    height: 50%;
+    width: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.grid-shape{
+    display: flex;   
+    justify-content: center;
+    align-items: center;
+    /* max-height: 40px;
+    max-width: 40px;
+    min-height: 40px;
+    min-width: 40px; */
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #BC002D;
+    border-radius: 5px;
+    /* flex: 0 0 9%; */
+}
+
+.grid-shape.gap{
+    visibility: hidden;
+}
+
+/* Apply to elements that can be dragged */
+[draggable="true"] {
+    cursor: grab; /* Cursor appearance before dragging starts */
+}
+  
+/* Apply to elements when they are being dragged */
+[draggable="true"]:active {
+    cursor: grabbing; /* Cursor appearance during dragging */
+}
+
+
+#shapesGrid{
+    /* padding: 0 20% ; */
+    /* min-height: 200px; */
+}
+
+
+.hide-placeholder {
+    visibility: hidden;
+  }
+  
