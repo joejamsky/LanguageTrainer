@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import './App.css';
-import hiraganaCharacters from './Data/hiragana_characters.json';
-import hiraganaPhonetics from './Data/hiragana_phonetic.json';
+import './Styles/App.scss';
+import './Styles/Header.scss';
+import hiraganaCharacters from './Data/hiragana_characters_alt.json';
+import hiraganaPhonetics from './Data/hiragana_phonetic_alt.json';
 import '@fortawesome/fontawesome-free/css/all.css';
 
 
@@ -12,7 +13,10 @@ function App() {
   const [shuffleIntensity, setShuffleIntensity] = useState(0);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+  
   const toggleDropdown = () => {
+    let bars = document.querySelectorAll('.bar')
+    bars.forEach(bar => bar.classList.toggle('x'))
     setIsDropdownOpen(!isDropdownOpen);
   };
 
@@ -154,21 +158,81 @@ function App() {
     <div className="App">
 
 
-      <div className="dropdown">
-        <button onClick={toggleDropdown}>
-          Select <i className="fa fa-caret-down" aria-hidden="true"></i>
-        </button>
-        {isDropdownOpen && (
-          <div className="dropdown-content">
-            <label for="languages">List of Languages:</label>
-            <select name="" id="languages">
-              <option value="">Romanji</option>
-              <option value="">Hiragana</option>
-              <option value="">Katakana</option>
-            </select>
+      {/* <div className="nav-container">
+        <div className='language-select-container'>
+          <div className="dropdown">
+            <input type="checkbox" id="dropdown-native"/>
+
+            <label className="dropdown__face" htmlFor="dropdown-native">
+              <div className="dropdown__text"><i className="fa-regular fa-square-caret-up"></i></div>
+
+              <div className="dropdown__arrow"></div>
+            </label>
+
+            <ul className="dropdown__items">
+              <li>Romanji</li>
+              <li>Hiragana</li>
+              <li>Katakana</li>
+            </ul>
           </div>
-        )}
-      </div>
+
+          <svg>
+            <filter id="goo">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+              <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 30 -10" result="goo" />
+              <feBlend in="SourceGraphic" in2="goo" />
+            </filter>
+          </svg>
+
+
+            
+          <div className="dropdown">
+            <input type="checkbox" id="dropdown-target"/>
+
+            <label className="dropdown__face" htmlFor="dropdown-target">
+              <div className="dropdown__text"><i className="fa-regular fa-square-caret-down"></i></div>
+
+              <div className="dropdown__arrow"></div>
+            </label>
+
+            <ul className="dropdown__items">
+              <li>Romanji</li>
+              <li>Hiragana</li>
+              <li>Katakana</li>
+            </ul>
+          </div>
+
+          <svg>
+            <filter id="goo">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+              <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 30 -10" result="goo" />
+              <feBlend in="SourceGraphic" in2="goo" />
+            </filter>
+          </svg>
+        </div>
+
+        <div className='nav-toggle-container'>
+          <a className="nav-toggle" onClick={toggleDropdown} > 
+            <span className="bar"></span>
+            <span className="bar"></span>
+            <span className="bar"></span>
+          </a>
+        </div>
+
+        <div className={`options-container ${isDropdownOpen ? 'open' : ''}`}>
+          <div className='panel panel-01'></div>
+          <div className='panel panel-02'></div>
+          <div className='panel panel-03'></div>
+          <div className='panel panel-04'></div>
+          <div className='panel panel-05'></div>
+          <div className='options-content'>
+            <div className=''>
+
+            </div>
+          </div>
+        </div>
+
+      </div> */}
 
       <div className="grid" onDragOver={onDragOver}>
         {hiraganaCharacters.map((character, index) => (
@@ -187,7 +251,7 @@ function App() {
         ))}
       </div>
 
-      {/* <div class="divider"></div> */}
+      <hr></hr>
 
       <div id="shapesGrid" className="grid">
       {shuffledCharacters.map((hiraganaCharacter, index) => (
@@ -211,7 +275,9 @@ function App() {
         <button className="reset-btn" onClick={resetGame}>&#10227;</button>
 
         
-        <button onClick={() => setShowPlaceholders(!showPlaceholders)}>
+        <button 
+          className="hint-btn"
+          onClick={() => setShowPlaceholders(!showPlaceholders)}>
           {showPlaceholders ? (
             <span>Hint: <i className="fa-regular fa-eye"></i></span>
           ) : (
@@ -220,7 +286,7 @@ function App() {
         </button>
 
         <div className="difficulty-container">
-          <i class="fa-solid fa-shuffle"></i>
+          <i className="fa-solid fa-shuffle"></i>
           <input
             type="range"
             min="0"
