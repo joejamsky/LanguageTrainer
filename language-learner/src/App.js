@@ -158,7 +158,7 @@ function App() {
     <div className="App">
 
 
-      {/* <div className="nav-container">
+      <div className="nav-container">
         <div className='language-select-container'>
           <div className="dropdown">
             <input type="checkbox" id="dropdown-native"/>
@@ -212,11 +212,11 @@ function App() {
         </div>
 
         <div className='nav-toggle-container'>
-          <a className="nav-toggle" onClick={toggleDropdown} > 
+          <div className="nav-toggle" onClick={toggleDropdown} > 
             <span className="bar"></span>
             <span className="bar"></span>
             <span className="bar"></span>
-          </a>
+          </div>
         </div>
 
         <div className={`options-container ${isDropdownOpen ? 'open' : ''}`}>
@@ -232,7 +232,7 @@ function App() {
           </div>
         </div>
 
-      </div> */}
+      </div>
 
       <div className="grid" onDragOver={onDragOver}>
         {hiraganaCharacters.map((character, index) => (
