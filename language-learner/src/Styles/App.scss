@@ -5,8 +5,8 @@ html, body, #root {
     height: 100vh;
     /* box-sizing: border-box; */
     /* overflow: hidden; */
+    font-family: Arial, Helvetica, sans-serif;
 }
-
 
 
 hr{
@@ -14,11 +14,10 @@ hr{
     border-color: #282828;
 }
 
-
 .App{
     background-color: #171717;
     color: white;
-    padding: 20px 10%;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -32,212 +31,48 @@ hr{
     }
 }
 
-
-
-
-
-.grid{
-    /* display: flex;
-    flex-wrap: wrap;
-    gap: 10px 0.9% ; */
-    display: grid;
-    grid-template-columns: repeat(5, auto); /* Adjust number of columns based on your needs */
-    // grid-template-rows: repeat(auto, auto);
-    grid-gap: 2px;
-    /* justify-content: center; */
-    width: 100%;
-    
-    font-size: 14px;
-
-    // border-bottom: 1px solid white;
-    // padding: 5px 0;
-}
-
-.grid-item{
-    height: 30px;
-    width: 100%;
-    margin: 0 auto;
-    max-width: 70px;
-    display: flex;
-    flex-direction: row;
-    border-bottom: solid 2px;
-    border-left: solid 3px;
-    border-right: solid 3px;
-    border-top: solid 2px;
-    border-radius: 10px;
-    overflow: hidden;
-    text-align: center;    
-    justify-content: flex-end; /* Align content to the right */
-    /* flex: 0 0 8%; */
-}
-
-.grid-item:nth-child(5n-4){
-    border-color: rgb(173, 116, 116);
-}
-
-.grid-item:nth-child(5n-3){
-    border-color: rgb(116, 173, 121);
-}
-
-.grid-item:nth-child(5n-2){
-    border-color: rgb(116, 173, 168);
-}
-
-.grid-item:nth-child(5n-1){
-    border-color: rgb(173, 116, 149);
-}
-
-.grid-item:nth-child(5n){
-    border-color: rgb(153, 173, 116);
-}
-
-.grid-item.gap{
-    border: none;
-}
-
-.grid-receiver-slot {
-    position: relative;
-    height: 100%;
-    width: 50%;
-    background-color: #5d5d5d;
-}
-
-.placeholder,
-.grid-receiver-slot .grid-shape {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.grid-receiver-slot .grid-shape {
-    /* max-height: none;
-    max-width: none;
-    min-height: none;
-    min-width: none; */
-    width: 100%;
-    height: 100%;
-}
-
-
-.grid-phonetic{
-    display: flex;   
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    width: 50%;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-.grid-shape{
-    display: flex;   
-    justify-content: center;
-    align-items: center;
-    height: 28px;
-    width: 100%;
-    margin: 0 auto;
-    max-width: 70px;
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: #BC002D;
-    border-radius: 5px;
-}
-
-.grid-shape.gap{
-    visibility: hidden;
-}
-
-/* Apply to elements that can be dragged */
 [draggable="true"] {
-    cursor: grab; /* Cursor appearance before dragging starts */
+    cursor: grab !important; /* Cursor appearance before dragging starts */
 }
   
-/* Apply to elements when they are being dragged */
 [draggable="true"]:active {
-    cursor: grabbing; /* Cursor appearance during dragging */
-}
+    cursor: grabbing !important; /* Cursor appearance during dragging */
+}      
 
-
-#shapesGrid{
-    /* padding: 0 20% ; */
-    /* min-height: 200px; */
-}
-
-
-.hide-placeholder {
-    visibility: hidden;
-}
-  
-.ui{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    /* justify-content: flex-start; */
-    width: 100%;
-    gap: 5px;
-    padding: 5px 0;
-
-}
-
-button{
+button {
     font-size: 15px;
     color: white;
-    height: 50px;
-    min-width: 50px;
-    border-radius: 5px;
     background: #5d5d5d;
     padding: 0 10px;
     cursor: pointer;
     border: none;
 }
 
-.difficulty-container{
-    background: #5d5d5d;
-    border-radius: 5px;
-    height: 50px;
-    width: fit-content;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0 10px;
+// Grids {
+.grid {
+    display: grid;
+    grid-gap: 4px;
+    font-size: 14px;
 }
 
-.difficulty-slider{
-    /* transform: rotate(270deg); */
-    width: 50px;
-    margin-left: 10px;
-    cursor: pointer;
+.grid.horizontal{
+    grid-template-columns: repeat(10, minmax(auto, 120px)); /* Adjust number of columns based on your needs */
 }
 
-.reset-btn{
-    font-size: 26px;
-    font-weight: 900;
-    line-height: 0px;
+.grid.vertical{
+    grid-template-columns: repeat(5, minmax(auto, 120px)); /* Adjust number of columns based on your needs */
+}
+// Grids }
+
+
+
+// Util {
+.hide {
+    visibility: hidden !important;
 }
 
-.hint-btn{
-    min-width: 80px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    i{
-        width: 20px;
-    }
+.d-none {
+    display: none !important;
 }
+// Util }
 
-.time{
-    margin-left: auto;
-    margin-top: auto;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-}
-
-      
-/* .divider{
-    border-top: 1px solid white;
-    width: 100%;
-} */
-
-.grid-shape.dragging {
-    opacity: 0.5;
-  }
-  
