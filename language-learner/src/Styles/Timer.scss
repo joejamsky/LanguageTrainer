@@ -1,23 +1,19 @@
 .timer-container{
-
-    width: 100%;
-    border-top: #282828 solid 1px;
     position: relative;
-    margin: 25px 0;
 
     button{
         position: absolute;
-        
-        font-weight: 900;
-        line-height: 0px;
         left: 50%;
         top: 50%;
         transform: translate(-50%, -50%);
+        
+        font-weight: 900;
+        line-height: 0px;
+        
         height: 45px;
         width: 70px;
         border-radius: 10px;
         background-color: rgb(11, 70, 160);
-        background-image: linear-gradient(to right, #093475, rgb(15, 71, 156), #093475 );
 
         -webkit-box-shadow: 0px 4px 0px 0px rgb(8, 46, 104);
         -moz-box-shadow: 0px 4px 0px 0px rgb(8, 46, 104);

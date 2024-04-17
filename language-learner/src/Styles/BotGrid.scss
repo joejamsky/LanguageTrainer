@@ -1,6 +1,9 @@
 .bot-grid-container{
     display: flex;
     justify-content: center;
+
+    overflow: hidden; //this is temp solution
+    height: 40px;
 }
 
 .bot-grid-item {

@@ -5,7 +5,6 @@ const DragTile = ({ character, index, setStart }) => {
   const [dragging, setDragging] = useState(false);
   const dragRef = useRef(null);  // Create a ref for the draggable element
 
-  console.log('character', character)
   const onDragStart = (e) => {
     setDragging(true);
     setStart(true);

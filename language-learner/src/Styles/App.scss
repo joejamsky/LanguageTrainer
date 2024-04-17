@@ -8,6 +8,10 @@ html, body, #root {
     font-family: Arial, Helvetica, sans-serif;
 }
 
+* {
+    box-sizing: border-box;
+}
+
 
 hr{
     margin: 0px;
@@ -17,19 +21,30 @@ hr{
 .App{
     background-color: #171717;
     color: white;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
     width: 100%;
     height: 100%;
+
+    .gutter-container {
+        padding: 20px;
+        max-width: 80%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0 auto;
+        gap: 30px;
+    }
 }
 
 @media only screen and (max-width: 480px) {
     .App{
-        padding: 10px;
+        .gutter-container {
+            max-width: none;
+            padding: 10px;
+        }
     }
 }
+
+
 
 [draggable="true"] {
     cursor: grab !important; /* Cursor appearance before dragging starts */
@@ -46,6 +61,23 @@ button {
     padding: 0 10px;
     cursor: pointer;
     border: none;
+}
+
+.UI-container {
+    width: 100%;
+    z-index: 10000;
+    margin: 20px 0;
+}
+
+.UI-divider-container {
+    position: relative;
+    width: 100%;
+}
+
+.UI-divider{
+    position: absolute;
+    border-top: #282828 solid 1px;
+    width: 100%;
 }
 
 // Grids {

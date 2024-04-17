@@ -1,65 +1,84 @@
 import React from 'react';
 import '../Styles/UIControls.scss'
+import CharacterCheckBox from './CharacterCheckBox';
+import DragChracterRadio from './DragChracterRadio';
 
 
-function UIControls({
-  timeElapsed,
-  setTimeElapsed,
-  showPlaceholders,
-  setShowPlaceholders,
-  shuffleIntensity,
-  setShuffleIntensity,
-  shuffledCharacters,
-  setShuffledCharacters,
-  hiraganaCharacters
-}) {
-  const resetGame = () => {
-    setTimeElapsed(0);
+function UIControls({ options, setOptions}) {
 
-    // Reset the shuffle intensity or any other game settings as necessary
-    setShuffleIntensity(0); // Reset shuffle intensity to default
-
-    // Resetting characters to initial state
-    setShuffledCharacters([...hiraganaCharacters]);
-
-    // Optionally, reset any other game state you manage
-  };
 
   return (
-      <div className="ui">
-        <button className="reset-btn" onClick={resetGame}>
-          &#10227;
-        </button>
+    <div className="ui">
 
-        <button
-          className="hint-btn"
-          onClick={() => setShowPlaceholders(!showPlaceholders)}
-        >
-          {showPlaceholders ? (
-            <span>
-              Hint: <i className="fa-regular fa-eye"></i>
-            </span>
-          ) : (
-            <span>
-              Hint: <i className="fa-regular fa-eye-slash"></i>
-            </span>
-          )}
-        </button>
+      {/* <CharacterCheckBox 
+        options={options.topCharacters}
+        setOptions={setOptions}
+      /> */}
 
-        <div className="difficulty-container">
-          <i className="fa-solid fa-shuffle"></i>
-          <input
-            type="range"
-            min="0"
-            max="5"
-            value={shuffleIntensity}
-            className="difficulty-slider"
-            onChange={(e) => setShuffleIntensity(Number(e.target.value))}
-          />
-        </div>
-
-        <div className="time">Time: {timeElapsed} seconds</div>
+      <DragChracterRadio 
+        options={options}
+        setOptions={setOptions}
+      />
+      
+      <div>
+        bottom, radial button for hirigana, katakan, or romaji
       </div>
+
+      {/* <button
+        className="hint-btn"
+        onClick={() => setShowPlaceholders(!showPlaceholders)}
+      >
+        {showPlaceholders ? (
+          <span>
+            Hint: <i className="fa-regular fa-eye"></i>
+          </span>
+        ) : (
+          <span>
+            Hint: <i className="fa-regular fa-eye-slash"></i>
+          </span>
+        )}
+      </button> */}
+
+      {/* <div className="difficulty-container">
+        <i className="fa-solid fa-shuffle"></i>
+        <input
+          type="range"
+          min="0"
+          max="5"
+          value={shuffleIntensity}
+          className="difficulty-slider"
+          onChange={(e) => setShuffleIntensity(Number(e.target.value))}
+        />
+      </div> */}
+
+      <div>
+        Shuffle level 
+      </div>
+
+      <div>
+        Sort by shape vs sort by sound
+      </div>
+
+      <div>
+        only include frequently missed
+      </div>
+
+      <div>
+        turn off columns on top
+      </div>
+
+      <div>
+        fastest time and difficult completed
+      </div>
+
+      <div>
+        sound
+      </div>
+
+      <div>
+        reset data
+      </div>
+    </div>
   );
 }
 
