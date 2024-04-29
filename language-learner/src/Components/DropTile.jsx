@@ -1,11 +1,12 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import "../Styles/DropTile.scss";
 
 
-const DropTile = ({ characterObj, index, topCharacters, setTopCharacters, botCharacters, setBotCharacters, options }) => {
+const DropTile = ({ character, setCharacters, characters, index, setGame, options }) => {
 
 
     const [dragHover, setDragHover] = useState(false);
+    const active = !character.placeholder && !character.filled;
 
     const onDragOver = (e) => {
         e.preventDefault();
@@ -16,94 +17,80 @@ const DropTile = ({ characterObj, index, topCharacters, setTopCharacters, botCha
         setDragHover(false);
     };
 
-    const onDrop = (e, targetLetter) => {
+    const getCurrentRow = (characters) => {
+        const firstRenderedIndex = characters.findIndex(char => char.render);
+        const currentRow = Math.floor(firstRenderedIndex / 5);
+        return currentRow;
+    };
+    
+    const onDrop = (e) => {
         e.preventDefault();
         setDragHover(false);
+    
+        const droppedCharacter = e.dataTransfer.getData("character");
+        const droppedIndex = e.dataTransfer.getData("index");
 
-        const droppedID = e.dataTransfer.getData("id");
-        const droppedElement = document.getElementById(droppedID);
-        const droppedLetter = droppedElement.getAttribute("data-letter");
-        const droppedIndex = parseInt(droppedElement.getAttribute("data-index"));
+        const targetSlot = e.target.closest('.top-grid-item')
+        const targetCharacter = targetSlot.dataset.character;
+        const targetIndex = targetSlot.dataset.index;
+        targetSlot.classList.remove("drag-proximity-hover");
 
-        // Ensure there's a target slot and the dropped letter matches the intended slot letter
-        if (droppedLetter === targetLetter) {
-            // targetSlot.appendChild(droppedElement);
+        if (droppedCharacter === targetCharacter) {
+            const tempTopChars = [...characters.topCharacters];
+            tempTopChars[targetIndex].filled = true;
+    
+            console.log('droppedIndex', droppedIndex)
+            const currentRow = getCurrentRow(characters.botCharacters);
+            const startIdx = currentRow * 5;
+            const endIdx = startIdx + 5;
+    
+            const tempBotChars = [...characters.botCharacters]
+            tempBotChars[droppedIndex].filled = true;
+            const row = tempBotChars.slice(startIdx, endIdx);
+            const allFilled = row.every(char => char.filled);
+    
+            if (allFilled) {
+                row.forEach(char => char.render = false); // Hide the filled row
+            }
 
-            let tempTop = [...topCharacters]
-            let tempBot = [...botCharacters]
-
-            tempTop[droppedIndex].filled = true
-            tempBot[droppedIndex] = null
-
-            setTopCharacters(tempTop)
-            setBotCharacters(tempBot)
-
-            const targetSlot = e.target.closest('.top-grid-item');
-
-            targetSlot.classList.remove("drag-proximity-hover");
-
+            if (allFilled && (currentRow + 1) === (tempBotChars.length / 5) ){
+                setGame((prevGame) => ({
+                    ...prevGame,
+                    gameover: true
+                }))
+            }
+    
+            setCharacters({
+                topCharacters: tempTopChars,
+                botCharacters: tempBotChars
+            });
         }
-
     };
+    
 
     return (
-        characterObj.filled ? (
-            <div 
-                key={`drop-tile-${index}`} 
-                className={`top-grid-item filled`} 
-            >
-                {/* <div className={`top-grid-hint-container ${false || false ? "" : "d-none"}`}>
-                    <div className={`top-grid-hint ${ false ? "" : "d-none"}`}>
-                        {characterObj.hiragana}
-                    </div>
-                    <div className={`top-grid-hint ${false ? "" : "d-none"}`}>
-                        {characterObj.katakana}
-                    </div>
-                    
-                </div> */}
-
-{/* [options, setOptions] = useState({
-    characters: {
-      hiragana: { activeTop: true, activeBot: false },
-      katakana: { activeTop: false, activeBot: false },
-      romaji: { activeTop: false, activeBot: false }
-    }, */}
-                
-                <div className="top-grid-phonetic">
-                    {options.characters.hiragana.activeTop ? `${characterObj.hiragana}`: ''}
-                    {options.characters.katakana.activeTop ? `${characterObj.katakana}`: ''}
-                    {options.characters.romaji.activeTop ? `${characterObj.romaji}`: ''}
-                </div>
+        <div
+            key={`drop-tile-${index}`}
+            className={`
+                top-grid-item 
+                ${character.placeholder ? 'hide' : ''}
+                ${character.filled ? 'filled' : ''}
+                ${dragHover ? 'drag-proximity-hover' : ''}
+            `}
+            onDrop={active ? onDrop : undefined} 
+            onDragOver={active ? onDragOver : undefined}
+            onDragLeave={active ? onDragLeave : undefined}
+            data-character={character.hiragana}
+            data-index={index}
+        >
+            <div className="top-grid-phonetic">
+                {options.characters.hiragana.activeTop ? `${character.hiragana}` : ''}
+                {options.characters.katakana.activeTop ? `${character.katakana}` : ''}
+                {options.characters.romaji.activeTop ? `${character.romaji}` : ''}
             </div>
-        ) : (
-            <div 
-                key={`drop-tile-${index}`} 
-                className={`top-grid-item ${dragHover ? 'drag-proximity-hover' : ''}`} 
-                onDrop={(e) => onDrop(e, characterObj.hiragana)} 
-                onDragOver={onDragOver} 
-                onDragLeave={onDragLeave}
-            >
-
-                <div className="top-grid-phonetic">
-                    {options.characters.hiragana.activeTop ? `${characterObj.hiragana}`: ''}
-                    {options.characters.katakana.activeTop ? `${characterObj.katakana}`: ''}
-                    {options.characters.romaji.activeTop ? `${characterObj.romaji}`: ''}
-
-                </div>
-                {/* <div className={`top-grid-hint-container ${false || false ? "" : "d-none"}`}>
-                    <div className={`top-grid-hint ${ false ? "" : "d-none"}`}>
-                        {characterObj.hiragana}
-                    </div>
-                    <div className={`top-grid-hint ${false ? "" : "d-none"}`}>
-                        {characterObj.katakana}
-                    </div>
-                    
-                </div>
-            
-                <div className="top-grid-phonetic">{characterObj.romaji}</div> */}
-            </div>
-        )
+        </div>
     );
+      
 };
 
 export default DropTile;

@@ -2,7 +2,9 @@ import React from 'react';
 import '../Styles/UIControls.scss'
 import CharacterCheckBox from './CharacterCheckBox';
 import DragChracterRadio from './DragChracterRadio';
-
+import ShuffleSlider from './ShuffleSlider';
+import SortBy from './SortBy';
+import RowSlider from './RowSlider';
 
 function UIControls({ options, setOptions}) {
 
@@ -20,9 +22,6 @@ function UIControls({ options, setOptions}) {
         setOptions={setOptions}
       />
       
-      <div>
-        bottom, radial button for hirigana, katakan, or romaji
-      </div>
 
       {/* <button
         className="hint-btn"
@@ -39,33 +38,22 @@ function UIControls({ options, setOptions}) {
         )}
       </button> */}
 
-      {/* <div className="difficulty-container">
-        <i className="fa-solid fa-shuffle"></i>
-        <input
-          type="range"
-          min="0"
-          max="5"
-          value={shuffleIntensity}
-          className="difficulty-slider"
-          onChange={(e) => setShuffleIntensity(Number(e.target.value))}
-        />
-      </div> */}
+      <ShuffleSlider
+        options={options}
+        setOptions={setOptions}
+      />
 
-      <div>
-        Shuffle level 
-      </div>
+      <SortBy 
+        options={options}
+        setOptions={setOptions}
+      />
 
-      <div>
-        Sort by shape vs sort by sound
-      </div>
+      <RowSlider
+        options={options}
+        setOptions={setOptions}
+      />
+      
 
-      <div>
-        only include frequently missed
-      </div>
-
-      <div>
-        turn off columns on top
-      </div>
 
       <div>
         fastest time and difficult completed

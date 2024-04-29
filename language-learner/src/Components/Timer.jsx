@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../Styles/Timer.scss";
 
-function Timer({ start, reset }) {
-
+function Timer({ start, reset, gameover }) {
   
   const [timeElapsed, setTimeElapsed] = useState(0);
 
@@ -14,7 +13,7 @@ function Timer({ start, reset }) {
   useEffect(() => {
     let timer;
 
-    if (start) {
+    if (start && !gameover) {
       timer = setInterval(() => {
         setTimeElapsed((prevTime) => prevTime + 1);
       }, 1000);

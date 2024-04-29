@@ -8,22 +8,29 @@ const DragTile = ({ character, index, setStart }) => {
   const onDragStart = (e) => {
     setDragging(true);
     setStart(true);
-    e.dataTransfer.setData("id", dragRef.current.id);  // Use ref to access the element ID
+    e.dataTransfer.clearData();
+    e.dataTransfer.setData("character", dragRef.current.getAttribute("data-character"));
+    e.dataTransfer.setData("index", dragRef.current.getAttribute("data-index"));
   };
 
   const onDragEnd = (e) => {
     setDragging(false);
   };
-
+  
   return (
     <div
-      ref={dragRef}  // Attach the ref to your draggable div
+      ref={dragRef}
+      key={`bot-grid-item-${index}`}
       id={`draggable-${character.hiragana}`}
-      className={`bot-grid-item ${dragging ? 'dragging' : ''}`}
-      draggable
+      className={`
+          bot-grid-item 
+          ${dragging ? 'dragging' : ''} 
+          ${character.placeholder || character.filled ? 'hide' : ''} 
+        `}
+      draggable={!character.placeholder && !character.filled} 
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
-      data-letter={character.hiragana}
+      data-character={character.hiragana}
       data-index={index}
     >
       {character.hiragana}

@@ -2,25 +2,24 @@ import React from 'react';
 import "../Styles/BotGrid.scss";
 import DragTile from './DragTile';
 
-const BotGrid = ({ botCharacters, setStart }) => {
+const BotGrid = ({ characters, setStart }) => {
 
     return (
         <div className="bot-grid-container">
 
             <div id="draggrid" className={`grid draggrid ${true ? 'vertical' : 'horizontal'}`}>
 
-                {botCharacters && botCharacters.map((characterObj, index) => {
-                    
+                {characters && characters.map((character, index) => {
                     return (
-                        (characterObj !== null && Object.keys(characterObj).length > 1) ? (
+                        (character && character.render) ? (
                             <DragTile
                                 key={`bot-grid-item-${index}`}
                                 index={index}
-                                character={characterObj}
+                                character={character}
                                 setStart={setStart}
                             />
-                        ) : ( // Placeholder for gaps
-                            <div key={`bot-grid-item-${index}`} className="bot-grid-item hide"></div>
+                        ) : ( // Don't render row if all characters have assigned to correct position
+                            null
                         ) 
                     )
                 })}

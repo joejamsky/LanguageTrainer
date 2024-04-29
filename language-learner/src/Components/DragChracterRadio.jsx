@@ -43,6 +43,10 @@ function DragCharacterRadio({ options, setOptions }) {
   return (
     <div>
       <div>
+        dakuten toggle.
+      </div>
+
+      <div>
         {Object.keys(options.characters).map(character => (
           <label key={character + '-top'}>
             <input
