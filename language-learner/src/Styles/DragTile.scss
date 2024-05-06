@@ -1,0 +1,33 @@
+.bot-grid-item {
+    height: 45px;
+    border-radius: 10px;
+    width: 50px;
+
+    margin: 0 auto; // center in grid column
+    display: flex;   
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+
+    background-color: #BC002D;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+
+.bot-grid-item.dragging {
+    opacity: 0.5;
+    cursor: grabbing !important;
+}
+
+.char-container{
+    width: 35%;
+    display: flex;
+    justify-content: center;
+}
+
+
+.char-container:nth-child(3n){
+    margin-top: -16px;
+    // border-top: solid 1px black;
+}

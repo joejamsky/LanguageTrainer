@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import "../Styles/DragTile.scss";
 
-const DragTile = ({ character, index, setStart }) => {
+const DragTile = ({ character, index, options, setStart }) => {
   const [dragging, setDragging] = useState(false);
   const dragRef = useRef(null);  // Create a ref for the draggable element
 
@@ -9,7 +9,7 @@ const DragTile = ({ character, index, setStart }) => {
     setDragging(true);
     setStart(true);
     e.dataTransfer.clearData();
-    e.dataTransfer.setData("character", dragRef.current.getAttribute("data-character"));
+    e.dataTransfer.setData("id", dragRef.current.getAttribute("data-id"));
     e.dataTransfer.setData("index", dragRef.current.getAttribute("data-index"));
   };
 
@@ -17,23 +17,32 @@ const DragTile = ({ character, index, setStart }) => {
     setDragging(false);
   };
   
+  const renderCharacterContainers = () => {
+    return Object.keys(options.characters).map(key => {
+      if (options.characters[key].activeBot) {
+        return <div key={`char-container-${character[key]}`} className="char-container">{character[key]}</div>;
+      }
+      return null;
+    });
+  };
+
   return (
     <div
       ref={dragRef}
-      key={`bot-grid-item-${index}`}
-      id={`draggable-${character.hiragana}`}
+      key={`drag-tile-${character.id}`}
+      id={`draggable-${character.id}`}
       className={`
-          bot-grid-item 
-          ${dragging ? 'dragging' : ''} 
+          bot-grid-item
+          ${dragging ? 'dragging' : ''}
           ${character.placeholder || character.filled ? 'hide' : ''} 
         `}
       draggable={!character.placeholder && !character.filled} 
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
-      data-character={character.hiragana}
+      data-id={character.id}
       data-index={index}
     >
-      {character.hiragana}
+      {renderCharacterContainers()}
     </div>
   );
 };

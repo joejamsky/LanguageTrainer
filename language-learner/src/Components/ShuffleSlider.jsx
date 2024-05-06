@@ -1,6 +1,6 @@
 import React from 'react';
 
-function ShuffleSlider({ characters, setCharacters, options, setOptions }) {
+function ShuffleSlider({ options, setOptions }) {
 
     const onChange = (num) => {
         setOptions({

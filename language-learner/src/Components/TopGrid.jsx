@@ -1,10 +1,11 @@
 import React from "react";
 import "../Styles/TopGrid.scss";
 import DropTile from "./DropTile";
+import { useGameState } from "../Contexts/GameStateContext.js";
 
+const TopGrid = () => {
+  const { characters, setCharacters, options, setGame} = useGameState();
 
-const TopGrid = ({ characters, setCharacters, options, setGame}) => {
-  
   return (
     <div className="top-grid-container">
 

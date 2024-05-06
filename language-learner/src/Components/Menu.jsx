@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import "../Styles/Menu.scss";
 import UIControls from "./UIControls";
 
-const Menu = ({options , setOptions}) => {
+const Menu = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -30,10 +30,7 @@ const Menu = ({options , setOptions}) => {
        
 
       <div className={`dropdown ${isDropdownOpen ? 'open' : ''}`}>
-        <UIControls
-          options={options}
-          setOptions={setOptions}
-        />
+        <UIControls/>
       </div>    
     </div>
   );

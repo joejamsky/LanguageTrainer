@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import "../Styles/DropTile.scss";
 
 
@@ -27,19 +27,19 @@ const DropTile = ({ character, setCharacters, characters, index, setGame, option
         e.preventDefault();
         setDragHover(false);
     
-        const droppedCharacter = e.dataTransfer.getData("character");
+        const droppedID = e.dataTransfer.getData("id");
         const droppedIndex = e.dataTransfer.getData("index");
 
         const targetSlot = e.target.closest('.top-grid-item')
-        const targetCharacter = targetSlot.dataset.character;
+        const targetID = targetSlot.dataset.id;
         const targetIndex = targetSlot.dataset.index;
         targetSlot.classList.remove("drag-proximity-hover");
 
-        if (droppedCharacter === targetCharacter) {
+
+        if (droppedID === targetID) {
             const tempTopChars = [...characters.topCharacters];
             tempTopChars[targetIndex].filled = true;
     
-            console.log('droppedIndex', droppedIndex)
             const currentRow = getCurrentRow(characters.botCharacters);
             const startIdx = currentRow * 5;
             const endIdx = startIdx + 5;
@@ -66,11 +66,21 @@ const DropTile = ({ character, setCharacters, characters, index, setGame, option
             });
         }
     };
-    
+
+    const renderCharacterContainers = () => {
+        return Object.keys(options.characters).map(key => {
+            if (options.characters[key].activeTop) {
+                return <div key={`char-container-${character[key]}`} className="char-container">{character[key]}</div>;
+            }
+            return null;
+        });
+    };
+
+
 
     return (
         <div
-            key={`drop-tile-${index}`}
+            key={`drop-tile-${character.id}`}
             className={`
                 top-grid-item 
                 ${character.placeholder ? 'hide' : ''}
@@ -80,13 +90,11 @@ const DropTile = ({ character, setCharacters, characters, index, setGame, option
             onDrop={active ? onDrop : undefined} 
             onDragOver={active ? onDragOver : undefined}
             onDragLeave={active ? onDragLeave : undefined}
-            data-character={character.hiragana}
+            data-id={character.id}
             data-index={index}
         >
             <div className="top-grid-phonetic">
-                {options.characters.hiragana.activeTop ? `${character.hiragana}` : ''}
-                {options.characters.katakana.activeTop ? `${character.katakana}` : ''}
-                {options.characters.romaji.activeTop ? `${character.romaji}` : ''}
+                {renderCharacterContainers()}
             </div>
         </div>
     );

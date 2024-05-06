@@ -2,26 +2,30 @@ import React from 'react';
 import '../Styles/UIControls.scss'
 // import CharacterCheckBox from './CharacterCheckBox';
 import DragChracterRadio from './DragChracterRadio';
+import CharacterCheckBox from './CharacterCheckBox';
 import ShuffleSlider from './ShuffleSlider';
 import SortBy from './SortBy';
 import RowSlider from './RowSlider';
+import { useGameState } from "../Contexts/GameStateContext.js";
 
-function UIControls({ options, setOptions}) {
-
-
+function UIControls() {
+  const { options, setOptions} = useGameState();
+  
   return (
     <div className="ui">
 
-      {/* <CharacterCheckBox 
-        options={options.topCharacters}
-        setOptions={setOptions}
-      /> */}
-
-      <DragChracterRadio 
+      <CharacterCheckBox 
         options={options}
         setOptions={setOptions}
+        sectionType="activeTop"
       />
-      
+
+      <CharacterCheckBox 
+        options={options}
+        setOptions={setOptions}
+        sectionType="activeBot"
+      />
+
 
       {/* <button
         className="hint-btn"

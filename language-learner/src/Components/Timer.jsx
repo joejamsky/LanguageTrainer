@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "../Styles/Timer.scss";
+import { useGameState } from "../Contexts/GameStateContext.js";
 
-function Timer({ start, reset, gameover }) {
-  
+function Timer() {
+  const { start, reset, gameover } = useGameState();
   const [timeElapsed, setTimeElapsed] = useState(0);
 
   const handleResetClick = () => {

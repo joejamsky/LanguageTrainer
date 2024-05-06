@@ -10,42 +10,7 @@
 }
 
 
-.top-grid-item{
-    position: relative;
-    height: 40px;
-    // width: 100%;
-    margin: 0 auto; // center in grid column
-    // max-width: 90px;
-    // min-width: 60px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
 
-    border-bottom: solid 3px;
-    border-left: solid 3px;
-    border-right: solid 3px;
-    border-top: solid 3px;
-    border-radius: 10px;
-    
-    overflow: hidden;
-    text-align: center;
-
-    .bot-grid-item{
-        pointer-events: none;
-        position: absolute;
-        border-radius: 0;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-}
-
-
-
-.top-grid-item.filled{
-    background: #BC002D;
-    
-}
 
 
 .drag-proximity-hover{

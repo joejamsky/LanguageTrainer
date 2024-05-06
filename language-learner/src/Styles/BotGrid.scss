@@ -1,54 +1,17 @@
 .bot-grid-container{
     display: flex;
     justify-content: center;
-
-    overflow: hidden; //this is temp solution
-    height: 40px;
-}
-
-.bot-grid-item {
-    height: 40px;
-    border-radius: 10px;
-    min-width: 40px;
-
-    margin: 0 auto; // center in grid column
-    display: flex;   
-    justify-content: center;
-    align-items: center;
+    position: relative;
     overflow: hidden;
-
-    background-color: #BC002D;
+    height: 55px;   //Hides grid items below top 5
 }
 
-
-.bot-grid-item.dragging {
-    opacity: 0.5;
-    cursor: grabbing !important;
+.shadow-gradient{
+    background-image: linear-gradient(to top, #171717, transparent);
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 15px;
+    // pointer-events: none;
 }
-
-// .placeholder,
-// .grid-shape {
-//     position: absolute;
-//     top: 50%;
-//     left: 50%;
-//     transform: translate(-50%, -50%);
-// }
-
-// .grid-shape {
-//     /* max-height: none;
-//     max-width: none;
-//     min-height: none;
-//     min-width: none; */
-//     width: 100%;
-//     height: 100%;
-// }
-
-
-
-
-// #shapesGrid{
-//     /* padding: 0 20% ; */
-//     /* min-height: 200px; */
-// }
-
-  
