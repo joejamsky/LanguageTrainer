@@ -1,23 +1,24 @@
 import React, { createContext, useState, useContext, useCallback } from 'react';
 import { cloneCharacters, filterCharacters } from '../Misc/Utils'; 
 import japanese_characters_standard from '../Data/japanese_characters_standard.json'; 
+import japanese_characters_byshape_hiragana from '../Data/japanese_characters_byshape_hiragana.json'; 
+import japanese_characters_byshape_katakana from '../Data/japanese_characters_byshape_katakana.json'; 
 
-// Initial state definitions
 const initialState = {
   characters: {
     topCharacters: [],
-    botCharacters: []
+    botCharacters: [],
+    defaultCharacters: []
   },
   options: {
-    characters: {
+    characterTypes: {
       hiragana: { activeTop: false, activeBot: true },
       katakana: { activeTop: false, activeBot: false },
       romaji: { activeTop: true, activeBot: false },
-      // dakuon: false,
     },
+    dakuon: false,
     topRowLevels: 10,
-    botRowShuffleLevel: 0,
-    sorting: {
+    gameMode: {
       current: 0,
       methods: ['sound', 'h-shape', 'k-shape', 'missed']
     },
@@ -30,7 +31,11 @@ const initialState = {
     recentTime: 0,
     bestTime: 0,
   },
-  start: false
+  start: false,
+  selectedTile: {
+    id: null,
+    index: null
+  }
 };
 
 const GameStateContext = createContext();
@@ -41,24 +46,71 @@ export const GameStateProvider = ({ children }) => {
   const [game, setGame] = useState(initialState.game);
   const [stats, setStats] = useState(initialState.stats);
   const [start, setStart] = useState(initialState.start);
+  const [selectedTile, setSelectedTile] = useState(initialState.selectedTile);
+
+
+  // const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  const isMobile = true;
 
   const reset = useCallback(() => {
-    setStart(false);
-    setGame(prevGame => ({
-        ...prevGame,
-        gameover: false
-    }));
+    setStart(initialState.start);
+    setGame(initialState.game);
+    setStats(initialState.stats);
+    setOptions(initialState.options);
     setCharacters({
         topCharacters: cloneCharacters(filterCharacters(japanese_characters_standard, filterByOptions)),
-        botCharacters: cloneCharacters(filterCharacters(japanese_characters_standard, filterByOptions))
+        botCharacters: cloneCharacters(filterCharacters(japanese_characters_standard, filterByOptions)),
+        defaultCharacters: cloneCharacters(filterCharacters(japanese_characters_standard, filterByOptions))
     });
   }, []); 
 
   const filterByOptions = (character) => {
-    const isDakuonEnabled = options.characters.dakuon;
+    const isDakuonEnabled = options.dakuon;
     const characterIsDakuon = character.dakuon;
     return isDakuonEnabled || !characterIsDakuon;
   };
+
+  const getCurrentRow = (characters) => {
+    const firstRenderedIndex = characters.findIndex(char => char.render);
+    const currentRow = Math.floor(firstRenderedIndex / 5);
+    return currentRow;
+};
+
+  const handleDrop = (targetId, targetIndex) => {
+    if(selectedTile.id === targetId) {
+      const tempTopChars = [...characters.topCharacters];
+      tempTopChars[targetIndex].filled = true;
+
+      const currentRow = getCurrentRow(characters.botCharacters);
+      const startIdx = currentRow * 5;
+      const endIdx = startIdx + 5;
+
+      const tempBotChars = [...characters.botCharacters]
+      tempBotChars[selectedTile.index].filled = true;
+      const row = tempBotChars.slice(startIdx, endIdx);
+      const allFilled = row.every(char => char.filled);
+
+      if (allFilled) {
+          row.forEach(char => char.render = false); // Hide the filled row
+      }
+
+      if (allFilled && (currentRow + 1) === (tempBotChars.length / 5) ){
+          setGame((prevGame) => ({
+              ...prevGame,
+              gameover: true
+          }))
+      }
+
+      setCharacters(prevChars => ({
+          ...prevChars,
+          topCharacters: tempTopChars,
+          botCharacters: tempBotChars
+      }));
+
+    }
+
+  }
+
 
   const value = {
     characters,
@@ -72,7 +124,11 @@ export const GameStateProvider = ({ children }) => {
     start,
     setStart,
     reset,
-    filterByOptions
+    filterByOptions,
+    isMobile,
+    selectedTile,
+    setSelectedTile,
+    handleDrop
   };
 
   return (

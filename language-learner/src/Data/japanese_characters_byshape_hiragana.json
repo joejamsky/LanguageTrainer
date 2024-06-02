@@ -1,58 +1,137 @@
 [
-  
-    {"romaji": "a", "hiragana": "あ", "katakana": "ア"},
-    {"romaji": "o", "hiragana": "お", "katakana": "オ"},
-    {"romaji": "nu", "hiragana": "ぬ", "katakana": "ヌ"},
-    {"romaji": "ne", "hiragana": "ね", "katakana": "ネ"},
-    {"romaji": "me", "hiragana": "め", "katakana": "メ"},
-    {"romaji": "wa", "hiragana": "わ", "katakana": "ワ"},
-    {"romaji": "wo", "hiragana": "を", "katakana": "ヲ"},
-    null,
-    {"romaji": "i", "hiragana": "い", "katakana": "イ"},
-    {"romaji": "ke", "hiragana": "け", "katakana": "ケ", "dakuten_hiragana": "げ", "dakuten_katakana": "ゲ"},
-    {"romaji": "shi", "hiragana": "し", "katakana": "シ", "dakuten_hiragana": "じ", "dakuten_katakana": "ジ"},
-    {"romaji": "ha", "hiragana": "は", "katakana": "ハ", "dakuten_hiragana": "ば", "dakuten_katakana": "バ"},
-    {"romaji": "ho", "hiragana": "ほ", "katakana": "ホ", "dakuten_hiragana": "ぼ", "dakuten_katakana": "ボ"},
-    {"romaji": "ri", "hiragana": "り", "katakana": "リ"},
-    null,
-    {"romaji": "u", "hiragana": "う", "katakana": "ウ"},
-    {"romaji": "tsu", "hiragana": "つ", "katakana": "ツ", "dakuten_hiragana": "づ", "dakuten_katakana": "ヅ"},
-    {"romaji": "to", "hiragana": "と", "katakana": "ト", "dakuten_hiragana": "ど", "dakuten_katakana": "ド"},    
-    null,
-    {"romaji": "e", "hiragana": "え", "katakana": "エ"},
-    {"romaji": "ko", "hiragana": "こ", "katakana": "コ", "dakuten_hiragana": "ご", "dakuten_katakana": "ゴ"},
-    {"romaji": "so", "hiragana": "そ", "katakana": "ソ", "dakuten_hiragana": "ぞ", "dakuten_katakana": "ゾ"},
-    {"romaji": "te", "hiragana": "て", "katakana": "テ", "dakuten_hiragana": "で", "dakuten_katakana": "デ"},
-    {"romaji": "ru", "hiragana": "る", "katakana": "ル"},
-    {"romaji": "ro", "hiragana": "ろ", "katakana": "ロ"},  
-    null,
-    {"romaji": "ka", "hiragana": "か", "katakana": "カ", "dakuten_hiragana": "が", "dakuten_katakana": "ガ"},
-    {"romaji": "ta", "hiragana": "た", "katakana": "タ", "dakuten_hiragana": "だ", "dakuten_katakana": "ダ"},
-    {"romaji": "ni", "hiragana": "に", "katakana": "ニ"},
-    {"romaji": "na", "hiragana": "な", "katakana": "ナ"},    
-    null,
-    {"romaji": "ki", "hiragana": "き", "katakana": "キ", "dakuten_hiragana": "ぎ", "dakuten_katakana": "ギ"},
-    {"romaji": "sa", "hiragana": "さ", "katakana": "サ", "dakuten_hiragana": "ざ", "dakuten_katakana": "ザ"},
-    {"romaji": "su", "hiragana": "す", "katakana": "ス", "dakuten_hiragana": "ず", "dakuten_katakana": "ズ"},
-    {"romaji": "chi", "hiragana": "ち", "katakana": "チ", "dakuten_hiragana": "ぢ", "dakuten_katakana": "ヂ"},
-    {"romaji": "ma", "hiragana": "ま", "katakana": "マ"},
-    {"romaji": "mo", "hiragana": "も", "katakana": "モ"},
-    {"romaji": "mu", "hiragana": "む", "katakana": "ム"},
-    {"romaji": "ra", "hiragana": "ら", "katakana": "ラ"},
-    {"romaji": "ya", "hiragana": "や", "katakana": "ヤ"},
-    {"romaji": "yo", "hiragana": "よ", "katakana": "ヨ"},
-    null,
-    {"romaji": "ku", "hiragana": "く", "katakana": "ク", "dakuten_hiragana": "ぐ", "dakuten_katakana": "グ"},
-    {"romaji": "he", "hiragana": "へ", "katakana": "ヘ", "dakuten_hiragana": "べ", "dakuten_katakana": "ベ"},
-    null,
-    {"romaji": "se", "hiragana": "せ", "katakana": "セ", "dakuten_hiragana": "ぜ", "dakuten_katakana": "ゼ"},
-    {"romaji": "mi", "hiragana": "み", "katakana": "ミ"},
-    null,
-    {"romaji": "no", "hiragana": "の", "katakana": "ノ"},
-    {"romaji": "hi", "hiragana": "ひ", "katakana": "ヒ", "dakuten_hiragana": "び", "dakuten_katakana": "ビ"},
-    {"romaji": "fu", "hiragana": "ふ", "katakana": "フ", "dakuten_hiragana": "ぶ", "dakuten_katakana": "ブ"},
-    {"romaji": "yu", "hiragana": "ゆ", "katakana": "ユ"},
-    null,
-    {"romaji": "re", "hiragana": "れ", "katakana": "レ"},
-    {"romaji": "n", "hiragana": "ん", "katakana": "ン"}
+    {"id": "0", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "a", "hiragana": "あ", "katakana": "ア", "misseed": 0},
+    {"id": "1", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "o", "hiragana": "お", "katakana": "オ", "misseed": 0},
+    {"id": "2", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "nu", "hiragana": "ぬ", "katakana": "ヌ", "misseed": 0},
+    {"id": "3", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "ne", "hiragana": "ね", "katakana": "ネ", "misseed": 0},
+    {"id": "4", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "me", "hiragana": "め", "katakana": "メ", "misseed": 0},
+
+    {"id": "5", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "wa", "hiragana": "わ", "katakana": "ワ", "misseed": 0},
+    {"id": "6", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "wo", "hiragana": "を", "katakana": "ヲ", "misseed": 0},
+    {"id": "7", "filled": true, "render": true, "placeholder": true, "dakuon": false},
+    {"id": "8", "filled": true, "render": true, "placeholder": true, "dakuon": false},
+    {"id": "9", "filled": true, "render": true, "placeholder": true, "dakuon": false},
+    
+    {"id": "10", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "i", "hiragana": "い", "katakana": "イ", "misseed": 0},
+    {"id": "11", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "ke", "hiragana": "け", "katakana": "ケ", "misseed": 0},
+    {"id": "12", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "ha", "hiragana": "は", "katakana": "ハ", "misseed": 0},
+    {"id": "13", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "ho", "hiragana": "ほ", "katakana": "ホ", "misseed": 0},
+    {"id": "14", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "ri", "hiragana": "り", "katakana": "リ", "misseed": 0},
+    
+    {"id": "15", "filled": false, "render": true, "placeholder": false, "dakuon": true, "romaji": "ge", "hiragana": "げ", "katakana": "ゲ", "misseed": 0},
+    {"id": "16", "filled": false, "render": true, "placeholder": false, "dakuon": true, "romaji": "ba", "hiragana": "ば", "katakana": "バ", "misseed": 0},
+    {"id": "17", "filled": false, "render": true, "placeholder": false, "dakuon": true, "romaji": "pa", "hiragana": "ぱ", "katakana": "パ", "misseed": 0},
+    {"id": "18", "filled": false, "render": true, "placeholder": false, "dakuon": true, "romaji": "bo", "hiragana": "ぼ", "katakana": "ボ", "misseed": 0},
+    {"id": "19", "filled": false, "render": true, "placeholder": false, "dakuon": true, "romaji": "po", "hiragana": "ぽ", "katakana": "ポ", "misseed": 0},
+
+
+
+    {"id": "20", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "u", "hiragana": "う", "katakana": "ウ", "misseed": 0},
+    {"id": "21", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "shi", "hiragana": "し", "katakana": "シ", "misseed": 0},
+    {"id": "22", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "tsu", "hiragana": "つ", "katakana": "ツ", "misseed": 0},
+    {"id": "23", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "to", "hiragana": "と", "katakana": "ト", "misseed": 0},
+    {"id": "24", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "te", "hiragana": "て", "katakana": "テ", "misseed": 0},
+    
+    {"id": "25", "filled": true, "render": true, "placeholder": true, "dakuon": true},
+    {"id": "26", "filled": false, "render": true, "placeholder": false, "dakuon": true, "romaji": "ji", "hiragana": "じ", "katakana": "ジ", "misseed": 0},
+    {"id": "27", "filled": false, "render": true, "placeholder": false, "dakuon": true, "romaji": "zu", "hiragana": "づ", "katakana": "ヅ", "misseed": 0},
+    {"id": "28", "filled": false, "render": true, "placeholder": false, "dakuon": true, "romaji": "do", "hiragana": "ど", "katakana": "ド", "misseed": 0},
+    {"id": "29", "filled": false, "render": true, "placeholder": false, "dakuon": true, "romaji": "de", "hiragana": "で", "katakana": "デ", "misseed": 0},
+
+    
+
+    {"id": "30", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "e", "hiragana": "え", "katakana": "エ", "misseed": 0},
+    {"id": "31", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "ko", "hiragana": "こ", "katakana": "コ", "misseed": 0},
+    {"id": "32", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "so", "hiragana": "そ", "katakana": "ソ", "misseed": 0},
+    {"id": "33", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "ru", "hiragana": "る", "katakana": "ル", "misseed": 0},
+    {"id": "34", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "ro", "hiragana": "ろ", "katakana": "ロ", "misseed": 0},
+    
+    {"id": "35", "filled": true, "render": true, "placeholder": true, "dakuon": true},
+    {"id": "36", "filled": false, "render": true, "placeholder": false, "dakuon": true, "romaji": "go", "hiragana": "ご", "katakana": "ゴ", "misseed": 0},
+    {"id": "37", "filled": false, "render": true, "placeholder": false, "dakuon": true, "romaji": "zo", "hiragana": "ぞ", "katakana": "ゾ", "misseed": 0},
+    {"id": "38", "filled": true, "render": true, "placeholder": true, "dakuon": true},
+    {"id": "39", "filled": true, "render": true, "placeholder": true, "dakuon": true},
+
+    
+    
+    {"id": "40", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "ka", "hiragana": "か", "katakana": "カ", "misseed": 0},
+    {"id": "41", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "ta", "hiragana": "た", "katakana": "タ", "misseed": 0},
+    {"id": "42", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "ni", "hiragana": "に", "katakana": "ニ", "misseed": 0},
+    {"id": "43", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "na", "hiragana": "な", "katakana": "ナ", "misseed": 0},
+    {"id": "44", "filled": true, "render": true, "placeholder": true, "dakuon": false},
+
+    {"id": "45", "filled": false, "render": true, "placeholder": false, "dakuon": true, "romaji": "ga", "hiragana": "が", "katakana": "ガ", "misseed": 0},
+    {"id": "46", "filled": false, "render": true, "placeholder": false, "dakuon": true, "romaji": "da", "hiragana": "だ", "katakana": "ダ", "misseed": 0},
+    {"id": "47", "filled": true, "render": true, "placeholder": true, "dakuon": true},
+    {"id": "48", "filled": true, "render": true, "placeholder": true, "dakuon": true},
+    {"id": "49", "filled": true, "render": true, "placeholder": true, "dakuon": true},
+
+    
+    
+    {"id": "50", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "ki", "hiragana": "き", "katakana": "キ", "misseed": 0},
+    {"id": "51", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "sa", "hiragana": "さ", "katakana": "サ", "misseed": 0},
+    {"id": "52", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "su", "hiragana": "す", "katakana": "ス", "misseed": 0},
+    {"id": "53", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "chi", "hiragana": "ち", "katakana": "チ", "misseed": 0},
+    {"id": "54", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "ma", "hiragana": "ま", "katakana": "マ", "misseed": 0},
+
+    {"id": "55", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "mo", "hiragana": "も", "katakana": "モ", "misseed": 0},   
+    {"id": "56", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "mu", "hiragana": "む", "katakana": "ム", "misseed": 0},
+    {"id": "57", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "ra", "hiragana": "ら", "katakana": "ラ", "misseed": 0},
+    {"id": "58", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "ya", "hiragana": "や", "katakana": "ヤ", "misseed": 0},
+    {"id": "59", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "yo", "hiragana": "よ", "katakana": "ヨ", "misseed": 0},
+        
+    {"id": "60", "filled": false, "render": true, "placeholder": false, "dakuon": true, "romaji": "gi", "hiragana": "ぎ", "katakana": "ギ", "misseed": 0},
+    {"id": "61", "filled": false, "render": true, "placeholder": false, "dakuon": true, "romaji": "za", "hiragana": "ざ", "katakana": "ザ", "misseed": 0},
+    {"id": "62", "filled": false, "render": true, "placeholder": false, "dakuon": true, "romaji": "zu", "hiragana": "ず", "katakana": "ズ", "misseed": 0},
+    {"id": "63", "filled": false, "render": true, "placeholder": false, "dakuon": true, "romaji": "ji", "hiragana": "ぢ", "katakana": "ヂ", "misseed": 0},
+    {"id": "64", "filled": true, "render": true, "placeholder": true, "dakuon": true},
+
+    
+    
+    {"id": "65", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "ku", "hiragana": "く", "katakana": "ク", "misseed": 0},
+    {"id": "66", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "he", "hiragana": "へ", "katakana": "ヘ", "misseed": 0},
+    {"id": "67", "filled": true, "render": true, "placeholder": true, "dakuon": false},
+    {"id": "68", "filled": true, "render": true, "placeholder": true, "dakuon": false},
+    {"id": "69", "filled": true, "render": true, "placeholder": true, "dakuon": false},
+
+    {"id": "70", "filled": false, "render": true, "placeholder": false, "dakuon": true, "romaji": "gu", "hiragana": "ぐ", "katakana": "グ", "misseed": 0},
+    {"id": "71", "filled": false, "render": true, "placeholder": false, "dakuon": true, "romaji": "be", "hiragana": "べ", "katakana": "ベ", "misseed": 0},
+    {"id": "72", "filled": false, "render": true, "placeholder": false, "dakuon": true, "romaji": "pe", "hiragana": "ぺ", "katakana": "ペ", "misseed": 0},
+    {"id": "73", "filled": true, "render": true, "placeholder": true, "dakuon": true},
+    {"id": "74", "filled": true, "render": true, "placeholder": true, "dakuon": true},
+
+    
+    
+    {"id": "75", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "se", "hiragana": "せ", "katakana": "セ", "misseed": 0},
+    {"id": "76", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "mi", "hiragana": "み", "katakana": "ミ", "misseed": 0},
+    {"id": "77", "filled": true, "render": true, "placeholder": true, "dakuon": false},
+    {"id": "78", "filled": true, "render": true, "placeholder": true, "dakuon": false},
+    {"id": "79", "filled": true, "render": true, "placeholder": true, "dakuon": false},
+
+    {"id": "80", "filled": false, "render": true, "placeholder": false, "dakuon": true, "romaji": "ze", "hiragana": "ぜ", "katakana": "ゼ", "misseed": 0},
+    {"id": "81", "filled": false, "render": true, "placeholder": false, "dakuon": true, "romaji": "bi", "hiragana": "び", "katakana": "ビ", "misseed": 0},
+    {"id": "82", "filled": false, "render": true, "placeholder": false, "dakuon": true, "romaji": "pi", "hiragana": "ぴ", "katakana": "ピ", "misseed": 0},
+    {"id": "83", "filled": true, "render": true, "placeholder": true, "dakuon": true},
+    {"id": "84", "filled": true, "render": true, "placeholder": true, "dakuon": true},
+    
+    
+    
+    {"id": "85", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "no", "hiragana": "の", "katakana": "ノ", "misseed": 0},
+    {"id": "86", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "hi", "hiragana": "ひ", "katakana": "ヒ", "misseed": 0},
+    {"id": "87", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "fu", "hiragana": "ふ", "katakana": "フ", "misseed": 0},
+    {"id": "88", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "yu", "hiragana": "ゆ", "katakana": "ユ", "misseed": 0},
+    {"id": "89", "filled": true, "render": true, "placeholder": true, "dakuon": false},
+
+    {"id": "90", "filled": false, "render": true, "placeholder": false, "dakuon": true, "romaji": "bu", "hiragana": "ぶ", "katakana": "ブ", "misseed": 0},
+    {"id": "91", "filled": false, "render": true, "placeholder": false, "dakuon": true, "romaji": "pu", "hiragana": "ぷ", "katakana": "プ", "misseed": 0},
+    {"id": "92", "filled": true, "render": true, "placeholder": true, "dakuon": true},
+    {"id": "93", "filled": true, "render": true, "placeholder": true, "dakuon": true},
+    {"id": "94", "filled": true, "render": true, "placeholder": true, "dakuon": true},
+
+
+
+    {"id": "95", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "re", "hiragana": "れ", "katakana": "レ", "misseed": 0},
+    {"id": "96", "filled": false, "render": true, "placeholder": false, "dakuon": false, "romaji": "n", "hiragana": "ん", "katakana": "ン", "misseed": 0},
+    {"id": "97", "filled": true, "render": true, "placeholder": true, "dakuon": false},
+    {"id": "98", "filled": true, "render": true, "placeholder": true, "dakuon": false},
+    {"id": "99", "filled": true, "render": true, "placeholder": true, "dakuon": false}
 ]

@@ -6,9 +6,9 @@ function DragCharacterRadio({ options, setOptions }) {
     // Set only the selected character to true for activeBot and others to false
     setOptions(prevOptions => ({
       ...prevOptions,
-      characters: Object.keys(prevOptions.characters).reduce((acc, key) => {
+      characterTypes: Object.keys(prevOptions.characterTypes).reduce((acc, key) => {
         acc[key] = {
-          ...prevOptions.characters[key],
+          ...prevOptions.characterTypes[key],
           activeBot: key === character
         };
         return acc;
@@ -23,12 +23,12 @@ function DragCharacterRadio({ options, setOptions }) {
 
       <div>
         <i className="fa-solid fa-square-caret-down"></i>
-        {Object.keys(options.characters).map(character => (
+        {Object.keys(options.characterTypes).map(character => (
           <label key={character + '-bot'}>
             <input
               type="radio"
               name="characterSelect"
-              checked={options.characters[character].activeBot}
+              checked={options.characterTypes[character].activeBot}
               onChange={() => handleChange(character)}
             />
             {character} 

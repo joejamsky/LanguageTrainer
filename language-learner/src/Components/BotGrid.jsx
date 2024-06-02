@@ -11,7 +11,7 @@ const BotGrid = () => {
 
             <div id="draggrid" className={`grid draggrid ${true ? 'vertical' : 'horizontal'}`}>
 
-                {characters.topCharacters && characters.topCharacters.map((character, index) => {
+                {characters.botCharacters && characters.botCharacters.map((character, index) => {
                     return (
                         (character && character.render) ? (
                             <DragTile

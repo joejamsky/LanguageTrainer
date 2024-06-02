@@ -1,6 +1,8 @@
 import React from 'react';
+import { useGameState } from "../Contexts/GameStateContext.js";
 
-function SortBy({ options, setOptions }) {
+function SortBy() {
+    const {options, setOptions, characters, setCharacters } = useGameState();
 
     // This function determines the correct icon class and prefix text based on the current sort method
     const getIconDetails = (currentMethod) => {
@@ -23,15 +25,15 @@ function SortBy({ options, setOptions }) {
 
         setOptions(prevOptions => ({
             ...prevOptions,
-            sorting: {
-                ...prevOptions.sorting,
+            gameMode: {
+                ...prevOptions.gameMode,
                 current: methodIndex
             }
         }));
     };
 
     // Determine icon details based on the current method
-    const { iconClass, prefix } = getIconDetails(options.sorting.methods[options.sorting.current]);
+    const { iconClass, prefix } = getIconDetails(options.gameMode.methods[options.gameMode.current]);
 
     return (
         <div>
@@ -42,8 +44,8 @@ function SortBy({ options, setOptions }) {
                 <input
                     type="range"
                     min="0"
-                    max={options.sorting.methods.length - 1}
-                    value={options.sorting.current}
+                    max={options.gameMode.methods.length - 1}
+                    value={options.gameMode.current}
                     onChange={handleSliderChange}
                 />
             </div>

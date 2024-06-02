@@ -14,6 +14,13 @@ function UIControls() {
   return (
     <div className="ui">
 
+      <div>
+        Mode
+        <div>By Consenant (standard)</div>
+        <div>By Vowel</div>
+        <div>By Shape</div>
+      </div>
+
       <CharacterCheckBox 
         options={options}
         setOptions={setOptions}
@@ -42,15 +49,10 @@ function UIControls() {
         )}
       </button> */}
 
-      <ShuffleSlider
-        options={options}
-        setOptions={setOptions}
-      />
 
-      <SortBy 
-        options={options}
-        setOptions={setOptions}
-      />
+      <ShuffleSlider/>
+
+      <SortBy/>
 
       <RowSlider
         options={options}
