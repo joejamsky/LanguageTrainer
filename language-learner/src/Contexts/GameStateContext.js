@@ -1,6 +1,6 @@
-import React, { createContext, useState, useContext } from 'react';
-// import { cloneCharacters, filterCharacters } from '../Misc/Utils'; 
-// import japanese_characters_standard from '../Data/japanese_characters_standard.json'; 
+import React, { createContext, useState, useContext, useCallback } from 'react';
+import { cloneCharacters, filterCharacters } from '../Misc/Utils'; 
+import japanese_characters_standard from '../Data/japanese_characters_standard.json'; 
 // import japanese_characters_byshape_hiragana from '../Data/japanese_characters_byshape_hiragana.json'; 
 // import japanese_characters_byshape_katakana from '../Data/japanese_characters_byshape_katakana.json'; 
 
@@ -52,31 +52,36 @@ export const GameStateProvider = ({ children }) => {
   // const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   const isMobile = true;
 
-  // const filterByOptions = useCallback((character) => {
-  //   const isDakuonEnabled = options.dakuon;
-  //   const characterIsDakuon = character.dakuon;
-  //   return isDakuonEnabled || !characterIsDakuon;
-  // });
+  const filterByOptions = useCallback(
+    (character) => {
+      const isDakuonEnabled = options.dakuon;
+      const characterIsDakuon = character.dakuon;
+      return isDakuonEnabled || !characterIsDakuon;
+    },
+    [options.dakuon]
+  );
 
-  const filterByOptions  = () => {
-    console.log('test 2')
-  }
-
-  // const reset = useCallback(() => {
-  //   setStart(initialState.start);
-  //   setGame(initialState.game);
-  //   setStats(initialState.stats);
-  //   setOptions(initialState.options);
-  //   setCharacters({
-  //       topCharacters: cloneCharacters(filterCharacters(japanese_characters_standard, filterByOptions)),
-  //       botCharacters: cloneCharacters(filterCharacters(japanese_characters_standard, filterByOptions)),
-  //       defaultCharacters: cloneCharacters(filterCharacters(japanese_characters_standard, filterByOptions))
-  //   });
-  // }, [filterByOptions]); 
-
-  const reset = () => {
-    console.log('test 1')
-  }
+  const reset = useCallback(() => {
+    setStart(initialState.start);
+    setGame(initialState.game);
+    setStats(initialState.stats);
+    setOptions(initialState.options);
+    const filteredCharacters = cloneCharacters(
+      filterCharacters(japanese_characters_standard, filterByOptions)
+    );
+    setCharacters({
+      topCharacters: filteredCharacters,
+      botCharacters: filteredCharacters,
+      defaultCharacters: filteredCharacters,
+    });
+  }, [
+    initialState.start,
+    initialState.game,
+    initialState.stats,
+    initialState.options,
+    filterByOptions,
+    japanese_characters_standard,
+  ]);
 
   const getCurrentRow = (characters) => {
     const firstRenderedIndex = characters.findIndex(char => char.render);
