@@ -52,11 +52,11 @@ export const GameStateProvider = ({ children }) => {
   // const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   const isMobile = true;
 
-  const filterByOptions = (character) => {
+  const filterByOptions = useCallback((character) => {
     const isDakuonEnabled = options.dakuon;
     const characterIsDakuon = character.dakuon;
     return isDakuonEnabled || !characterIsDakuon;
-  };
+  });
 
   const reset = useCallback(() => {
     setStart(initialState.start);
