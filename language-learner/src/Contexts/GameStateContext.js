@@ -1,6 +1,6 @@
-import React, { createContext, useState, useContext, useCallback } from 'react';
-import { cloneCharacters, filterCharacters } from '../Misc/Utils'; 
-import japanese_characters_standard from '../Data/japanese_characters_standard.json'; 
+import React, { createContext, useState, useContext } from 'react';
+// import { cloneCharacters, filterCharacters } from '../Misc/Utils'; 
+// import japanese_characters_standard from '../Data/japanese_characters_standard.json'; 
 // import japanese_characters_byshape_hiragana from '../Data/japanese_characters_byshape_hiragana.json'; 
 // import japanese_characters_byshape_katakana from '../Data/japanese_characters_byshape_katakana.json'; 
 
