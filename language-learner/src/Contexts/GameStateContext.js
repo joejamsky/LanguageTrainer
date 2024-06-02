@@ -62,7 +62,7 @@ export const GameStateProvider = ({ children }) => {
         botCharacters: cloneCharacters(filterCharacters(japanese_characters_standard, filterByOptions)),
         defaultCharacters: cloneCharacters(filterCharacters(japanese_characters_standard, filterByOptions))
     });
-  }, [filterByOptions, initialState]); 
+  }, [filterByOptions]); 
 
   const filterByOptions = (character) => {
     const isDakuonEnabled = options.dakuon;
