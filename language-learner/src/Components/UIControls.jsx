@@ -1,7 +1,7 @@
 import React from 'react';
 import '../Styles/UIControls.scss'
 // import CharacterCheckBox from './CharacterCheckBox';
-import DragChracterRadio from './DragChracterRadio';
+// import DragChracterRadio from './DragChracterRadio';
 import CharacterCheckBox from './CharacterCheckBox';
 import ShuffleSlider from './ShuffleSlider';
 import SortBy from './SortBy';

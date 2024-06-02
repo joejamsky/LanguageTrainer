@@ -12,7 +12,7 @@ function Main() {
 
     useEffect(() => {
         reset();
-    }, []);
+    }, [reset]);
   
     return (
         <div className="Main">

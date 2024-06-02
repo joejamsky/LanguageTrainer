@@ -23,7 +23,7 @@ function Timer() {
     }
 
     return () => clearInterval(timer);
-  }, [start, setTimeElapsed, timeElapsed]);
+  }, [start, setTimeElapsed, timeElapsed, gameover]);
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);

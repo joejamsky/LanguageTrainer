@@ -2,7 +2,7 @@ import React from 'react';
 import { useGameState } from "../Contexts/GameStateContext.js";
 
 function SortBy() {
-    const {options, setOptions, characters, setCharacters } = useGameState();
+    const {options, setOptions, } = useGameState();
 
     // This function determines the correct icon class and prefix text based on the current sort method
     const getIconDetails = (currentMethod) => {
