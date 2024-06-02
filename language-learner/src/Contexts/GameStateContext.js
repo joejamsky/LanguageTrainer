@@ -52,6 +52,12 @@ export const GameStateProvider = ({ children }) => {
   // const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   const isMobile = true;
 
+  const filterByOptions = (character) => {
+    const isDakuonEnabled = options.dakuon;
+    const characterIsDakuon = character.dakuon;
+    return isDakuonEnabled || !characterIsDakuon;
+  };
+
   const reset = useCallback(() => {
     setStart(initialState.start);
     setGame(initialState.game);
@@ -63,12 +69,6 @@ export const GameStateProvider = ({ children }) => {
         defaultCharacters: cloneCharacters(filterCharacters(japanese_characters_standard, filterByOptions))
     });
   }, [filterByOptions]); 
-
-  const filterByOptions = (character) => {
-    const isDakuonEnabled = options.dakuon;
-    const characterIsDakuon = character.dakuon;
-    return isDakuonEnabled || !characterIsDakuon;
-  };
 
   const getCurrentRow = (characters) => {
     const firstRenderedIndex = characters.findIndex(char => char.render);
