@@ -74,14 +74,7 @@ export const GameStateProvider = ({ children }) => {
       botCharacters: filteredCharacters,
       defaultCharacters: filteredCharacters,
     });
-  }, [
-    initialState.start,
-    initialState.game,
-    initialState.stats,
-    initialState.options,
-    filterByOptions,
-    japanese_characters_standard,
-  ]);
+  }, [filterByOptions]);
 
   const getCurrentRow = (characters) => {
     const firstRenderedIndex = characters.findIndex(char => char.render);
