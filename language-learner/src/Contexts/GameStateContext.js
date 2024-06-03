@@ -25,13 +25,13 @@ const initialState = {
     sound: false
   },
   game: {
+    start: false,
     gameover: false
   },
   stats: {
     recentTime: 0,
     bestTime: 0,
   },
-  start: false,
   selectedTile: {
     id: null,
     index: null
@@ -45,7 +45,6 @@ export const GameStateProvider = ({ children }) => {
   const [options, setOptions] = useState(initialState.options);
   const [game, setGame] = useState(initialState.game);
   const [stats, setStats] = useState(initialState.stats);
-  const [start, setStart] = useState(initialState.start);
   const [selectedTile, setSelectedTile] = useState(initialState.selectedTile);
 
 
@@ -62,9 +61,8 @@ export const GameStateProvider = ({ children }) => {
   );
 
   const reset = useCallback(() => {
-    setStart(initialState.start);
     setGame(initialState.game);
-    setStats(initialState.stats);
+    // setStats(initialState.stats);
     setOptions(initialState.options);
     const filteredCharacters = cloneCharacters(
       filterCharacters(japanese_characters_standard, filterByOptions)
@@ -127,8 +125,6 @@ export const GameStateProvider = ({ children }) => {
     setGame,
     stats,
     setStats,
-    start,
-    setStart,
     reset,
     filterByOptions,
     isMobile,

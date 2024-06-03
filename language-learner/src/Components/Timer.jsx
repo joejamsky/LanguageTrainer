@@ -3,7 +3,7 @@ import "../Styles/Timer.scss";
 import { useGameState } from "../Contexts/GameStateContext.js";
 
 function Timer() {
-  const { start, reset, gameover } = useGameState();
+  const { reset, game, stats, setStats } = useGameState();
   const [timeElapsed, setTimeElapsed] = useState(0);
 
   const handleResetClick = () => {
@@ -14,16 +14,32 @@ function Timer() {
   useEffect(() => {
     let timer;
 
-    if (start && !gameover) {
+    if (game.start && !game.gameover) {
       timer = setInterval(() => {
         setTimeElapsed((prevTime) => prevTime + 1);
       }, 1000);
-    } else if (!start && timeElapsed !== 0) {
+    } else if (!game.start || game.gameover) {
       clearInterval(timer);
     }
 
     return () => clearInterval(timer);
-  }, [start, setTimeElapsed, timeElapsed, gameover]);
+  }, [game.start, game.gameover]);
+
+  useEffect(() => {
+    if (game.gameover && timeElapsed > 0) {
+      if (timeElapsed < stats.bestTime || stats.bestTime === 0 ) {
+        setStats({
+          recentTime: timeElapsed,
+          bestTime: timeElapsed,
+        });
+      } else {
+        setStats((prevStats) => ({
+          ...prevStats,
+          recentTime: timeElapsed,
+        }));
+      }
+    }
+  }, [game.gameover, timeElapsed, setStats, stats.bestTime]);
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);

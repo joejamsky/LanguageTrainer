@@ -3,10 +3,10 @@ import "../Styles/DropTile.scss";
 import { useGameState } from "../Contexts/GameStateContext"; 
 
 
-const DropTile = ({ character, index, options }) => {
+const DropTile = ({ character, index }) => {
 
     const [dragHover, setDragHover] = useState(false);
-    const {handleDrop} = useGameState(); 
+    const {handleDrop, options} = useGameState(); 
 
     const active = !character.placeholder && !character.filled;
 
@@ -31,6 +31,7 @@ const DropTile = ({ character, index, options }) => {
 
     const onTouchEnd = (e) => {
         handleDrop(character.id, index)
+        setDragHover(false);
     }
 
 

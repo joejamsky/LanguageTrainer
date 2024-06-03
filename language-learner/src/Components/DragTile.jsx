@@ -2,9 +2,9 @@ import React, { useRef } from "react";
 import "../Styles/DragTile.scss";
 import { useGameState } from "../Contexts/GameStateContext"; 
 
-const DragTile = ({ character, index, options, setStart }) => {
+const DragTile = ({ character, index }) => {
   const dragRef = useRef(null);
-  const { selectedTile, setSelectedTile, isMobile } = useGameState();
+  const {game, setGame, selectedTile, setSelectedTile, isMobile, options} = useGameState();
 
   const onTouchEnd = (e) => {
     setSelectedTile({
@@ -14,11 +14,26 @@ const DragTile = ({ character, index, options, setStart }) => {
   };
 
   const onTouchStart = (e) => {
-    setSelectedTile({
-      id: character.id, 
-      index: index
-    });
-    setStart(true);
+
+    if(selectedTile.id === character.id){
+      setSelectedTile({
+        id: null, 
+        index: null
+      });
+    } else {
+      setSelectedTile({
+        id: character.id, 
+        index: index
+      });
+    }
+
+    if(!game.start){
+      setGame(prevGame => ({
+        ...prevGame,
+        start: true
+      }));
+    }
+    
   };
 
   const renderCharacterContainers = () => {

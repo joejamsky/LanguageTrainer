@@ -4,7 +4,7 @@ import DropTile from "./DropTile";
 import { useGameState } from "../Contexts/GameStateContext.js";
 
 const TopGrid = () => {
-  const { characters, setCharacters, options, setGame} = useGameState();
+  const { characters } = useGameState();
 
   return (
     <div className="top-grid-container">
@@ -16,10 +16,6 @@ const TopGrid = () => {
               key={`top-grid-item-${index}`}
               character={character}
               index={index}
-              characters={characters}
-              setCharacters={setCharacters}
-              setGame={setGame}
-              options={options}
             />
         ))}
       </div>

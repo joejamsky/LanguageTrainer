@@ -4,7 +4,7 @@ import DragTile from './DragTile';
 import { useGameState } from "../Contexts/GameStateContext.js";
 
 const BotGrid = () => {
-    const { characters, setStart, options } = useGameState();
+    const { characters } = useGameState();
 
     return (
         <div className="bot-grid-container">
@@ -18,8 +18,6 @@ const BotGrid = () => {
                                 key={`bot-grid-item-${index}`}
                                 index={index}
                                 character={character}
-                                setStart={setStart}
-                                options={options}
                             />
                         ) : ( // Don't render row if all characters have assigned to correct position
                             null
