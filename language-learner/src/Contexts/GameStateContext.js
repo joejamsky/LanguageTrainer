@@ -40,6 +40,13 @@ const initialState = {
 
 const GameStateContext = createContext();
 
+const breakpoints = {
+  mobile: 480,
+  tablet: 768,
+  laptop: 1024,
+  desktop: 1200,
+}
+
 export const GameStateProvider = ({ children }) => {
   const [characters, setCharacters] = useState(initialState.characters);
   const [options, setOptions] = useState(initialState.options);
@@ -47,16 +54,12 @@ export const GameStateProvider = ({ children }) => {
   const [stats, setStats] = useState(initialState.stats);
   const [selectedTile, setSelectedTile] = useState(initialState.selectedTile);
   const [screenSize, setScreenSize] = useState('desktop'); 
+  const [textInput, setTextInput] = useState('');
+
 
   // Function to determine screen size
   const updateScreenSize = useCallback(() => {
     const width = window.innerWidth;
-    const breakpoints = {
-      mobile: 480,
-      tablet: 768,
-      laptop: 1024,
-      desktop: 1200,
-    }
 
     if (width <= breakpoints.mobile) setScreenSize('mobile');
     else if (width <= breakpoints.tablet) setScreenSize('tablet');
@@ -154,7 +157,9 @@ export const GameStateProvider = ({ children }) => {
     screenSize,
     selectedTile,
     setSelectedTile,
-    handleDrop
+    handleDrop,
+    textInput, 
+    setTextInput
   };
 
   return (

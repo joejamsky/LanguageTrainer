@@ -4,16 +4,18 @@ import "../Styles/TextInput.scss";
 import { useGameState } from "../Contexts/GameStateContext.js";
 
 const TextInput = () => {
-    const [inputValue, setInputValue] = useState(''); // State to store input value
+    // const [inputValue, setInputValue] = useState(''); // State to store input value
+    const { textInput, setTextInput } = useGameState(); // Correct usage without arguments
+
 
     const handleInputChange = (e) => {
-        setInputValue(e.target.value); // Update state with new input value
+        setTextInput(e.target.value); // Update state with new input value
     };
 
     const handleSubmit = (e) => {
         e.preventDefault(); // Prevent form submission (default behavior)
-        console.log('Input Submitted:', inputValue); // Perform desired action with the input value
-        setInputValue('')
+        setTextInput('')
+        console.log('Input Submitted:', textInput); // Perform desired action with the input value
     };
 
     return (
@@ -21,7 +23,7 @@ const TextInput = () => {
             <form onSubmit={handleSubmit}>
                 <input
                     type="text"
-                    value={inputValue} // Controlled component
+                    value={textInput} // Controlled component
                     onChange={handleInputChange} // Handle input changes
                     placeholder="Type something..."
                     className="input-field"
