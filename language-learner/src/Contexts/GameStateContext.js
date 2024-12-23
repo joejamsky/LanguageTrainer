@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useCallback } from 'react';
+import React, { createContext, useState, useContext, useCallback, useEffect, useMemo } from 'react';
 import { cloneCharacters, filterCharacters } from '../Misc/Utils'; 
 import japanese_characters_standard from '../Data/japanese_characters_standard.json'; 
 // import japanese_characters_byshape_hiragana from '../Data/japanese_characters_byshape_hiragana.json'; 
@@ -35,7 +35,7 @@ const initialState = {
   selectedTile: {
     id: null,
     index: null
-  }
+  },
 };
 
 const GameStateContext = createContext();
@@ -46,7 +46,33 @@ export const GameStateProvider = ({ children }) => {
   const [game, setGame] = useState(initialState.game);
   const [stats, setStats] = useState(initialState.stats);
   const [selectedTile, setSelectedTile] = useState(initialState.selectedTile);
+  const [screenSize, setScreenSize] = useState('desktop'); 
 
+  const breakpoints = useMemo(
+    () => ({
+      mobile: 480,
+      tablet: 768,
+      laptop: 1024,
+      desktop: 1200,
+    }),
+    []
+  );
+
+  // Function to determine screen size
+  const updateScreenSize = useCallback(() => {
+    const width = window.innerWidth;
+    if (width <= breakpoints.mobile) setScreenSize('mobile');
+    else if (width <= breakpoints.tablet) setScreenSize('tablet');
+    else if (width <= breakpoints.laptop) setScreenSize('laptop');
+    else setScreenSize('desktop');
+  }, [breakpoints]);
+
+  // Set up an event listener to update screen size on resize
+  useEffect(() => {
+    updateScreenSize(); // Run on initial load
+    window.addEventListener('resize', updateScreenSize);
+    return () => window.removeEventListener('resize', updateScreenSize); // Cleanup
+  }, [updateScreenSize]);
 
   // const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   const isMobile = true;
@@ -128,6 +154,7 @@ export const GameStateProvider = ({ children }) => {
     reset,
     filterByOptions,
     isMobile,
+    screenSize,
     selectedTile,
     setSelectedTile,
     handleDrop

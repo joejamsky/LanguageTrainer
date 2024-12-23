@@ -4,7 +4,7 @@ import DragTile from './DragTile';
 import { useGameState } from "../Contexts/GameStateContext.js";
 
 const BotGrid = () => {
-    const { characters } = useGameState();
+    const { characters, screenSize } = useGameState();
 
     return (
         <div className="bot-grid-container">
