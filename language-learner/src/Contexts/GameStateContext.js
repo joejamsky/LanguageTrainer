@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useCallback, useEffect, useMemo } from 'react';
+import React, { createContext, useState, useContext, useCallback, useEffect } from 'react';
 import { cloneCharacters, filterCharacters } from '../Misc/Utils'; 
 import japanese_characters_standard from '../Data/japanese_characters_standard.json'; 
 // import japanese_characters_byshape_hiragana from '../Data/japanese_characters_byshape_hiragana.json'; 
@@ -48,24 +48,21 @@ export const GameStateProvider = ({ children }) => {
   const [selectedTile, setSelectedTile] = useState(initialState.selectedTile);
   const [screenSize, setScreenSize] = useState('desktop'); 
 
-  const breakpoints = useMemo(
-    () => ({
+  // Function to determine screen size
+  const updateScreenSize = useCallback(() => {
+    const width = window.innerWidth;
+    const breakpoints = {
       mobile: 480,
       tablet: 768,
       laptop: 1024,
       desktop: 1200,
-    }),
-    []
-  );
+    }
 
-  // Function to determine screen size
-  const updateScreenSize = useCallback(() => {
-    const width = window.innerWidth;
     if (width <= breakpoints.mobile) setScreenSize('mobile');
     else if (width <= breakpoints.tablet) setScreenSize('tablet');
     else if (width <= breakpoints.laptop) setScreenSize('laptop');
     else setScreenSize('desktop');
-  }, [breakpoints]);
+  }, []);
 
   // Set up an event listener to update screen size on resize
   useEffect(() => {
