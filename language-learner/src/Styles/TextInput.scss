@@ -1,3 +1,25 @@
-.text-input {
-    
+input.input-field {
+    background-color: rgb(226, 226, 226); /* Transparent black */
+    outline: unset;
+    border: unset;
+    border-radius: 10px;
+    font-size: 16px;
+    padding: 8px;
+    letter-spacing: 0.8px; 
+    // font-weight: 500;
+    text-align: center;
+    width: 80px;
 }
+
+input.input-field:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(256, 256, 256, 0.8); /* Subtle glowing effect */
+}
+
+.text-input {
+    position: absolute;
+    top: -50px;
+    left: 50%;
+    transform: translate(-50%, 0); 
+}
+

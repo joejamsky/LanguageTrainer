@@ -18,14 +18,16 @@ function Main() {
         <div className="Main">
             <div className={`gutter-container ${game.gameover ? 'gameover' : 'gameon'}`}>
 
-                <TopGrid/>
                 <div className="UI-container">
-                    <div className="UI-divider-container">
-                    <div className="UI-divider"></div>
-                    </div>
                     <Timer/>
-                    <Menu/>
+                    {/* <Menu/> */}
                 </div>
+                <TopGrid/>
+                {/* <div className="UI-container"> */}
+                    <div className="UI-divider-container">
+                        <div className="UI-divider"></div>
+                    </div>
+                {/* </div> */}
                 <BotGrid/>
 
 
