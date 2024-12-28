@@ -54,8 +54,6 @@ export const GameStateProvider = ({ children }) => {
   const [stats, setStats] = useState(initialState.stats);
   const [selectedTile, setSelectedTile] = useState(initialState.selectedTile);
   const [screenSize, setScreenSize] = useState('desktop'); 
-  const [textInput, setTextInput] = useState('');
-
 
   // Function to determine screen size
   const updateScreenSize = useCallback(() => {
@@ -104,7 +102,7 @@ export const GameStateProvider = ({ children }) => {
     const firstRenderedIndex = characters.findIndex(char => char.render);
     const currentRow = Math.floor(firstRenderedIndex / 5);
     return currentRow;
-};
+  };
 
   const handleDrop = (targetId, targetIndex) => {
     if(selectedTile.id === targetId) {
@@ -141,6 +139,74 @@ export const GameStateProvider = ({ children }) => {
 
   }
 
+  const handleTextSubmit = (submittedChar) => {
+    // 1) Identify which row we’re on
+    const currentRow = getCurrentRow(characters.botCharacters); // e.g. 0 for first row
+    const startIdx = currentRow * 5;
+    const endIdx = startIdx + 5;
+  
+    // 2) Clone arrays for immutability
+    const tempBotChars = [...characters.botCharacters];
+    const tempTopChars = [...characters.topCharacters];
+  
+    // 3) Slice out the 5 tiles in the current row
+    const row = tempBotChars.slice(startIdx, endIdx);
+  
+    // 4) Find the tile that matches the user's typed answer (ignoring placeholders)
+    const matchedTile = row.find(
+      (tile) => !tile.placeholder && tile.romaji === submittedChar
+    );
+  
+    // If there is no match, do nothing (or show an error, etc.)
+    if (!matchedTile) {
+      return;
+    }
+  
+    // 5) Find the same tile in the full bottom array and top array by ID
+    const bottomIndex = tempBotChars.findIndex((tile) => tile.id === matchedTile.id);
+    const topIndex = tempTopChars.findIndex((tile) => tile.id === matchedTile.id);
+  
+    // 6) Mark both matching tiles as filled (if found)
+    if (bottomIndex !== -1) {
+      tempBotChars[bottomIndex].filled = true;
+    }
+    if (topIndex !== -1) {
+      tempTopChars[topIndex].filled = true;
+    }
+  
+    // 7) Check if the entire row is now “all filled”
+    //    (again ignoring placeholders)
+    const allFilled = row
+      .filter((tile) => !tile.placeholder)
+      .every((tile) => tile.filled);
+  
+    // If they are all filled, hide (render = false) the row
+    if (allFilled) {
+      // row is just a slice referencing the same objects in tempBotChars
+      row.forEach((tile) => {
+        tile.render = false;
+      });
+    }
+  
+    // 8) Check if we've completed the final row => game over
+    const totalRows = tempBotChars.length / 5; // e.g. total # of rows
+    if (allFilled && (currentRow + 1) === totalRows) {
+      setGame((prevGame) => ({
+        ...prevGame,
+        gameover: true,
+      }));
+    }
+  
+    // 9) Update state
+    setCharacters((prevChars) => ({
+      ...prevChars,
+      topCharacters: tempTopChars,
+      botCharacters: tempBotChars,
+    }));
+  };
+  
+  
+
 
   const value = {
     characters,
@@ -158,8 +224,7 @@ export const GameStateProvider = ({ children }) => {
     selectedTile,
     setSelectedTile,
     handleDrop,
-    textInput, 
-    setTextInput
+    handleTextSubmit
   };
 
   return (
