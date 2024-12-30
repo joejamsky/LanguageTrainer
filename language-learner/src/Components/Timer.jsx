@@ -7,9 +7,9 @@ function Timer() {
   const [timeElapsed, setTimeElapsed] = useState(0);
 
   const handleResetClick = () => {
-    reset()
+    reset();
     setTimeElapsed(0);
-  }
+  };
 
   useEffect(() => {
     let timer;
@@ -18,29 +18,22 @@ function Timer() {
       timer = setInterval(() => {
         setTimeElapsed((prevTime) => prevTime + 1);
       }, 1000);
-    } else if (!game.start || game.gameover) {
-      clearInterval(timer);
     }
 
-    return () => clearInterval(timer);
+    return () => clearInterval(timer); // Ensure cleanup on dependency changes
   }, [game.start, game.gameover]);
 
   useEffect(() => {
-
     if (game.gameover && timeElapsed > 0) {
-      if (timeElapsed < stats.bestTime || stats.bestTime === 0 ) {
-        setStats({
-          recentTime: timeElapsed,
-          bestTime: timeElapsed,
-        });
-      } else {
-        setStats((prevStats) => ({
-          ...prevStats,
-          recentTime: timeElapsed,
-        }));
-      }
+      setStats((prevStats) => ({
+        recentTime: timeElapsed,
+        bestTime:
+          timeElapsed < prevStats.bestTime || prevStats.bestTime === 0
+            ? timeElapsed
+            : prevStats.bestTime,
+      }));
     }
-  }, [game.gameover, timeElapsed, setStats, stats.bestTime]);
+  }, [game.gameover, timeElapsed, stats.bestTime, setStats]);
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
@@ -48,23 +41,18 @@ function Timer() {
     return `${padTime(minutes)}:${padTime(remainingSeconds)}`;
   };
 
-  // Helper function to pad single digit numbers with a leading zero
   const padTime = (time) => {
-    return time.toString().padStart(2, '0');
+    return time.toString().padStart(2, "0");
   };
 
   return (
     <div className="timer-container">
-        
-            <button onClick={handleResetClick} className="reset-button">
-                <div className="time">{formatTime(timeElapsed)}</div>
-                <div className="reset">&#10227;</div>
-            </button>
-        
+      <button onClick={handleResetClick} className="reset-button">
+        <span className="time">{formatTime(timeElapsed)}</span>
+        <span className="reset">&#10227;</span>
+      </button>
     </div>
   );
-
-
 }
 
 export default Timer;

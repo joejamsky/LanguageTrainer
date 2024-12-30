@@ -140,6 +140,12 @@ export const GameStateProvider = ({ children }) => {
   }
 
   const handleTextSubmit = (submittedChar) => {
+    if(game.start === false) {
+      setGame((prevGame) => ({
+        ...prevGame,
+        start: true
+      }))
+    }
     // 1) Identify which row we’re on
     const currentRow = getCurrentRow(characters.botCharacters); // e.g. 0 for first row
     const startIdx = currentRow * 5;
