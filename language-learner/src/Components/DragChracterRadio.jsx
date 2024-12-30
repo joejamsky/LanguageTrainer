@@ -19,10 +19,13 @@ function DragCharacterRadio({ options, setOptions }) {
 
 
   return (
-    <div>
+    <div className="ui-component-container">
 
-      <div>
+      <div className="ui-label">
         <i className="fa-solid fa-square-caret-down"></i>
+      </div>
+
+      <div className="ui-input-container ui-radio-container">  
         {Object.keys(options.characterTypes).map(character => (
           <label key={character + '-bot'}>
             <input
@@ -35,6 +38,7 @@ function DragCharacterRadio({ options, setOptions }) {
           </label>
         ))}
       </div>
+
     </div>
   );
 }

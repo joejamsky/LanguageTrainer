@@ -36,11 +36,13 @@ function SortBy() {
     const { iconClass, prefix } = getIconDetails(options.gameMode.methods[options.gameMode.current]);
 
     return (
-        <div>
-            <div>
+        <div className="ui-component-container">
+
+            <div className="ui-label">
                 Sort by {prefix}<i className={iconClass}></i>
             </div>
-            <div>
+
+            <div className="ui-input-container ui-slider-container">
                 <input
                     type="range"
                     min="0"
@@ -49,6 +51,7 @@ function SortBy() {
                     onChange={handleSliderChange}
                 />
             </div>
+
         </div>
     );
 }

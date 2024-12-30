@@ -14,26 +14,19 @@ function UIControls() {
   return (
     <div className="ui">
 
-      <div>
-        Mode
-        <div>By Consenant (standard)</div>
-        <div>By Vowel</div>
-        <div>By Shape</div>
-      </div>
 
-      <CharacterCheckBox 
-        options={options}
-        setOptions={setOptions}
-        sectionType="activeTop"
-      />
+        <CharacterCheckBox 
+          options={options}
+          setOptions={setOptions}
+          sectionType="activeTop"
+        />
 
-      <CharacterCheckBox 
-        options={options}
-        setOptions={setOptions}
-        sectionType="activeBot"
-      />
-
-
+        <CharacterCheckBox 
+          options={options}
+          setOptions={setOptions}
+          sectionType="activeBot"
+        />
+      
       {/* <button
         className="hint-btn"
         onClick={() => setShowPlaceholders(!showPlaceholders)}
@@ -50,15 +43,16 @@ function UIControls() {
       </button> */}
 
 
-      <ShuffleSlider/>
+        <ShuffleSlider/>
 
-      <SortBy/>
+        <SortBy/>
 
-      <RowSlider
-        options={options}
-        setOptions={setOptions}
-      />
+        <RowSlider
+          options={options}
+          setOptions={setOptions}
+        />
       
+
 
 
       <div>

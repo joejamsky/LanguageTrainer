@@ -1,4 +1,5 @@
 import React from 'react';
+import '../Styles/Checkbox.scss'
 
 function CharacterCheckBox({ options, setOptions, sectionType }) {
 
@@ -26,18 +27,26 @@ function CharacterCheckBox({ options, setOptions, sectionType }) {
   };
 
   return (
-    <div>
-      <i className={`${sectionType === 'activeTop' ? 'fa-solid fa-square-caret-up' : 'fa-solid fa-square-caret-down'}`}></i>
-      {Object.keys(options.characterTypes).map(character => (
-        <label key={character + '-' + sectionType}>
-          <input
-            type="checkbox"
-            checked={options.characterTypes[character][sectionType]}
-            onChange={() => handleChange(character)}
-          />
-          {character}
-        </label>
-      ))}
+    <div className="ui-component-container">
+
+      <div className="ui-label">
+        <i className={`${sectionType === 'activeTop' ? 'fa-solid fa-square-caret-up' : 'fa-solid fa-square-caret-down'}`}></i>
+      </div>
+
+      <div className="ui-input-container">
+        {Object.keys(options.characterTypes).map(character => (
+          <label className="switch" key={character + '-' + sectionType}>
+            <input
+              type="checkbox"
+              checked={options.characterTypes[character][sectionType]}
+              onChange={() => handleChange(character)}
+            />
+            <span className="slider">{character}</span>
+            
+          </label>
+        ))}
+      </div>
+
     </div>
   );
 }

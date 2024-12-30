@@ -20,7 +20,7 @@ function Main() {
 
                 <div className="UI-container">
                     <Timer/>
-                    {/* <Menu/> */}
+                    <Menu/>
                 </div>
                 <TopGrid/>
                 <div className="UI-divider-container m-1">

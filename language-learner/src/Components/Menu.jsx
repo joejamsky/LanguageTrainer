@@ -30,7 +30,9 @@ const Menu = () => {
        
 
       <div className={`dropdown ${isDropdownOpen ? 'open' : ''}`}>
-        <UIControls/>
+        <div className="dropdown-inner">
+          <UIControls/>
+        </div>
       </div>    
     </div>
   );

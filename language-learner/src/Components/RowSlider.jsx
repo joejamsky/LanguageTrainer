@@ -11,12 +11,12 @@ function RowSlider({ options, setOptions }) {
 
 
     return (
-        <div>
-            <div>
-                Number of Rows
-            </div>
-            <div className="difficulty-container">
+        <div className="ui-component-container">
+            <div className="ui-label">
                 <i className="fa-solid fa-table"></i>
+            </div>
+
+            <div className="ui-input-container ui-slider-container">
                 <input
                 type="range"
                 min="0"
@@ -26,6 +26,7 @@ function RowSlider({ options, setOptions }) {
                 onChange={(e) => onChange(Number(e.target.value))}
                 />
             </div>
+
         </div>
     );
 }

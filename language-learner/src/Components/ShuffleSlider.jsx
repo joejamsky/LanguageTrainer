@@ -37,10 +37,13 @@ function ShuffleSlider() {
     const maxShuffleLevel = Math.floor(characters.botCharacters.length / 5);
 
     return (
-        <div>
-            <div>Shuffle level</div>
-            <div className="difficulty-container">
+        <div className="ui-component-container">
+            <div className="ui-label">
                 <i className="fa-solid fa-shuffle"></i>
+                <span>{shuffleLevel}</span>
+            </div>
+
+            <div className="ui-input-container ui-slider-container">
                 <input
                     type="range"
                     min="0"
@@ -49,8 +52,8 @@ function ShuffleSlider() {
                     className="difficulty-slider"
                     onChange={(e) => onChange(Number(e.target.value))}
                 />
-                {shuffleLevel}
             </div>
+
         </div>
     );
 }
