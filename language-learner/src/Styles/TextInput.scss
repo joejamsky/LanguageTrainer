@@ -13,7 +13,7 @@ input.input-field {
 
 input.input-field:focus {
     outline: none;
-    box-shadow: 0 0 5px rgba(256, 256, 256, 0.8); /* Subtle glowing effect */
+    animation: pulse 1.5s infinite; /* Adjust duration and repeat */
 }
 
 .text-input {
@@ -23,3 +23,16 @@ input.input-field:focus {
     transform: translate(-50%, 0); 
 }
 
+
+/* Define the animation */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 2px 15px rgba(255, 0, 0, 0.5); /* Initial glow */
+    }
+    50% {
+        box-shadow: 0 2px 20px rgba(255, 0, 0, 1); /* Intense glow */
+    }
+    100% {
+        box-shadow: 0 2px 15px rgba(255, 0, 0, 0.5); /* Back to initial */
+    }
+}

@@ -23,11 +23,9 @@ function Main() {
                     {/* <Menu/> */}
                 </div>
                 <TopGrid/>
-                {/* <div className="UI-container"> */}
-                    <div className="UI-divider-container">
-                        <div className="UI-divider"></div>
-                    </div>
-                {/* </div> */}
+                <div className="UI-divider-container m-1">
+                    <div className="UI-divider"></div>
+                </div>
                 <BotGrid/>
 
 
