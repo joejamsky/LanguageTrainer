@@ -27,12 +27,26 @@ input.input-field:focus {
 /* Define the animation */
 @keyframes pulse {
     0% {
-        box-shadow: 0 2px 15px rgba(255, 0, 0, 0.5); /* Initial glow */
+        box-shadow: 0 2px 15px rgba(255, 255, 255, 0.5); /* Initial glow */
     }
     50% {
-        box-shadow: 0 2px 20px rgba(255, 0, 0, 1); /* Intense glow */
+        box-shadow: 0 2px 20px rgba(255, 255, 255, 1); /* Intense glow */
     }
     100% {
-        box-shadow: 0 2px 15px rgba(255, 0, 0, 0.5); /* Back to initial */
+        box-shadow: 0 2px 15px rgba(255, 255, 255, 0.5); /* Back to initial */
     }
+}
+
+/* Add the shake class for incorrect input */
+.shake {
+    animation: shake 0.25s ease;
+    box-shadow: 0 2px 15px rgba(255, 0, 0, 1);
+}
+
+@keyframes shake {
+    0% { left: 50%; }
+    25% { left: calc(50% - 5px); } 
+    50% { left: calc(50% + 5px); } 
+    75% { left: calc(50% - 5px); } 
+    100% { left: 50%; } 
 }

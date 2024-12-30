@@ -159,7 +159,7 @@ export const GameStateProvider = ({ children }) => {
   
     // If there is no match, do nothing (or show an error, etc.)
     if (!matchedTile) {
-      return;
+      return -1;
     }
   
     // 5) Find the same tile in the full bottom array and top array by ID

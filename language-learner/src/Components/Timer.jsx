@@ -26,6 +26,7 @@ function Timer() {
   }, [game.start, game.gameover]);
 
   useEffect(() => {
+
     if (game.gameover && timeElapsed > 0) {
       if (timeElapsed < stats.bestTime || stats.bestTime === 0 ) {
         setStats({

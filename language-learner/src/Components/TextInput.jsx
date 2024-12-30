@@ -1,13 +1,11 @@
 import React, {useState} from 'react';
-// import React, { createContext, useState, useContext, useCallback, useEffect } from 'react';
 import "../Styles/TextInput.scss";
 import { useGameState } from "../Contexts/GameStateContext.js";
 
 const TextInput = () => {
     const {handleTextSubmit} = useGameState();
     const [textInput, setTextInput] = useState('');
-
-
+    const [shakeTimer, setShakeTimer] = useState(false);
 
     const handleInputChange = (e) => {
         setTextInput(e.target.value); // Update state with new input value
@@ -15,12 +13,18 @@ const TextInput = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault(); // Prevent form submission (default behavior)
-        handleTextSubmit(textInput)
+        if(handleTextSubmit(textInput) === -1){
+            setShakeTimer(true)
+
+            setTimeout(() => {
+                setShakeTimer(false)
+            }, 500); 
+        }
         setTextInput('')
     };
 
     return (
-        <div className="text-input">
+        <div className={shakeTimer ? "text-input shake" : "text-input"}>
             <form onSubmit={handleSubmit}>
                 <input
                     type="text"
