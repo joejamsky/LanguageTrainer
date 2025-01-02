@@ -3,6 +3,12 @@ import '../Styles/Checkbox.scss'
 
 function CharacterCheckBox({ options, setOptions, sectionType }) {
 
+  const kanaRef = {
+    hiragana: "あ",
+    katakana: "ア",
+    romaji: "A"
+  }
+
   const handleChange = (character) => {
     setOptions(prevOptions => {
       const currentSectionActive = prevOptions.characterTypes[character][sectionType];
@@ -35,15 +41,16 @@ function CharacterCheckBox({ options, setOptions, sectionType }) {
 
       <div className="ui-input-container">
         {Object.keys(options.characterTypes).map(character => (
-          <label className="switch" key={character + '-' + sectionType}>
-            <input
-              type="checkbox"
-              checked={options.characterTypes[character][sectionType]}
-              onChange={() => handleChange(character)}
-            />
-            <span className="slider">{character}</span>
-            
-          </label>
+            <label className="switch" key={character + '-' + sectionType}>
+              <input
+                type="checkbox"
+                checked={options.characterTypes[character][sectionType]}
+                onChange={() => handleChange(character)}
+                />
+              <span className="check-slider"></span>
+              <span className="check-slider-label">{kanaRef[character]}</span>
+              
+            </label>
         ))}
       </div>
 

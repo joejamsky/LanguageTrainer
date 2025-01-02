@@ -18,7 +18,7 @@
 }
 
 /* The slider */
-.slider {
+.check-slider {
     position: absolute;
     cursor: pointer;
     top: 0;
@@ -28,15 +28,15 @@
     background-color: #ccc;
     transition: 0.4s;
     border-radius: 24px;
-    height: 20px;
+    height: auto;
 }
 
 /* The circle inside the slider */
-.slider::before {
+.check-slider::before {
     position: absolute;
     content: "";
-    height: 18px;
-    width: 18px;
+    height: 22px;
+    width: 22px;
     left: 1px;
     bottom: 1px;
     background-color: white;
@@ -45,10 +45,24 @@
 }
 
 /* When the checkbox is checked */
-input:checked + .slider {
+input:checked + .check-slider {
     background-color: #4caf50;
 }
 
-input:checked + .slider::before {
+input:checked + .check-slider::before {
     transform: translateX(58px);
+}
+
+.check-slider-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    // bottom: 0;
+    // right: 0;
+    transform: translate(-50%, -50%);
+
+    // padding-left: 15px;
+    // line-height: 19px;
+    // height: 10px;
+    font-size: 16px;
 }
