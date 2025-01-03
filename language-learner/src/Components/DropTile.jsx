@@ -30,9 +30,9 @@ const DropTile = ({ character, index }) => {
                     </div>
                 </div>
                 
-                {/* <div className="UI-divider-container">
+                <div className={`${options.characterTypes.hiragana.activeTop && options.characterTypes.katakana.activeTop && options.characterTypes.romaji.activeTop? 'UI-divider-container' : 'd-none'}`}>
                     <div className="UI-divider"></div>
-                </div> */}
+                </div>
 
                 <div className={`grid-item-bot ${options.characterTypes.hiragana.activeTop || options.characterTypes.katakana.activeTop ? 'visible' : 'hidden'}`}>
                     {/* Hiragana on the left */}
@@ -41,7 +41,7 @@ const DropTile = ({ character, index }) => {
                     </div>
 
                     
-                        {/* <div className="UI-divider-vertical"></div> */}
+                        <div className={`${options.characterTypes.hiragana.activeTop && options.characterTypes.katakana.activeTop ? 'UI-divider-vertical' : 'd-none'}`}></div>
                     
                     
                     {/* Katakana on the right */}

@@ -1,0 +1,39 @@
+.start-menu{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgb(39, 39, 39);
+    z-index: 99999;
+}
+
+.start-menu-header{
+    width: 100%;
+    margin-top: 10%;
+
+    h3 {
+        text-align: center;
+    }
+}
+
+.UI-start-menu{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10%;
+}
+
+.UI-start-menu-item{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    button{
+        width: 100px;
+    }
+}

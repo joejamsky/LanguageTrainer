@@ -3,7 +3,7 @@ import "../Styles/TextInput.scss";
 import { useGameState } from "../Contexts/GameStateContext.js";
 
 const TextInput = () => {
-    const {handleTextSubmit} = useGameState();
+    const {handleTextSubmit, setOptions} = useGameState();
     const [textInput, setTextInput] = useState('');
     const [shakeTimer, setShakeTimer] = useState(false);
 
@@ -23,12 +23,53 @@ const TextInput = () => {
         setTextInput('')
     };
 
+    const handleKeyPress = (event) => {
+        const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+    
+        if (event.shiftKey && (isMac ? event.metaKey : event.ctrlKey)) {
+            event.preventDefault();
+            console.log('Shift + Command (Mac) or Shift + Ctrl (Windows) pressed!');
+            // Add your custom logic here
+
+            setOptions((prevOptions) => ({
+                ...prevOptions, // Spread the existing options
+                characterTypes: {
+                  ...prevOptions.characterTypes, // Spread the existing characterTypes
+                  romaji: {
+                    ...prevOptions.characterTypes.romaji, // Spread the existing romaji object
+                    activeTop: true, // Update the specific property
+                  },
+                },
+              }));
+        }
+    };
+
+    const handleKeyUp = (event) => {
+        const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+    
+        if (event.shiftKey === false || (isMac ? event.metaKey === false : event.ctrlKey === false)) {
+          setOptions((prevOptions) => ({
+            ...prevOptions,
+            characterTypes: {
+              ...prevOptions.characterTypes,
+              romaji: {
+                ...prevOptions.characterTypes.romaji,
+                activeTop: false, // Set back to false when keys are released
+              },
+            },
+          }));
+        }
+      };
+    
+
     return (
         <div className={shakeTimer ? "text-input shake" : "text-input"}>
             <form onSubmit={handleSubmit}>
                 <input
                     type="text"
                     value={textInput} 
+                    onKeyDown={handleKeyPress} // Add listener to the input
+                    onKeyUp={handleKeyUp}
                     onChange={handleInputChange} // Handle input changes
                     placeholder=""
                     className="input-field"

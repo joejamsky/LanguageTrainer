@@ -12,9 +12,9 @@ const initialState = {
   },
   options: {
     characterTypes: {
-      hiragana: { activeTop: false, activeBot: true },
-      katakana: { activeTop: false, activeBot: false },
-      romaji: { activeTop: true, activeBot: false },
+      hiragana: { activeTop: true, activeBot: true },
+      katakana: { activeTop: true, activeBot: false },
+      romaji: { activeTop: false, activeBot: false },
     },
     dakuon: false,
     topRowLevels: 10,
@@ -54,6 +54,7 @@ export const GameStateProvider = ({ children }) => {
   const [stats, setStats] = useState(initialState.stats);
   const [selectedTile, setSelectedTile] = useState(initialState.selectedTile);
   const [screenSize, setScreenSize] = useState('desktop'); 
+  const [startMenuOpen, setStartMenuOpen] = useState(true); 
 
   // Function to determine screen size
   const updateScreenSize = useCallback(() => {
@@ -230,7 +231,9 @@ export const GameStateProvider = ({ children }) => {
     selectedTile,
     setSelectedTile,
     handleDrop,
-    handleTextSubmit
+    handleTextSubmit,
+    startMenuOpen, 
+    setStartMenuOpen
   };
 
   return (
