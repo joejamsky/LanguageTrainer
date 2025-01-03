@@ -17,16 +17,17 @@
     background-color: #BC002D;
 }
 
-.top-grid-phonetic{
-    display: flex;   
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-    padding: 0 10px;
-    min-width: 40px;   // keeps them uniform because characters aren't uniform
-    pointer-events: none;
-}
+// .top-grid-phonetic{
+//     display: flex;   
+//     justify-content: center;
+//     align-items: center;
+//     flex-direction: column;
+//     height: 100%;
+//     width: 100%;
+//     // padding: 0 10px;
+//     // min-width: 40px;   // keeps them uniform because characters aren't uniform
+//     pointer-events: none;
+// }
 
 .top-grid-hint-container{
     position: relative;
@@ -70,3 +71,107 @@
 // .top-grid-item.gap{
 //     border: none;
 // }
+
+// .grid-item-top {
+//     width: 100%;
+//     // height: 50%;
+// }
+
+// .grid-item-bot {
+//     width: 100%;
+//     // height: 50%;
+//     display: flex;
+//     flex-direction: row;
+//     justify-content: space-evenly;
+//     position: relative;
+//     overflow: hidden;
+// }
+
+/* Default hidden state */
+.hidden {
+    opacity: 0;
+    transform: scale(0); /* Slightly shrink when hidden */
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none; /* Disable interaction when hidden */
+}
+
+/* Visible state */
+.visible {
+    opacity: 1;
+    transform: scale(1); /* Full size */
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.top-grid-phonetic {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    transition: all 0.3s ease; /* Smooth transition for flex properties */
+}
+
+.grid-item-top,
+.grid-item-bot {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* Ensure content doesn't overflow */
+    transition: flex 0.3s ease, opacity 0.3s ease; /* Smooth size and opacity changes */
+}
+
+/* When visible */
+.grid-item-top.visible,
+.grid-item-bot.visible {
+    flex: 1; /* Share space equally */
+    opacity: 1;
+}
+
+/* When hidden */
+.grid-item-top.hidden,
+.grid-item-bot.hidden {
+    flex: 0; /* Collapse to zero height */
+    opacity: 0; /* Fade out */
+    pointer-events: none; /* Prevent interaction */
+}
+
+/* Bottom Kana Grid */
+.grid-item-bot {
+    display: flex;
+    width: 100%; /* Take full width */
+    transition: all 0.3s ease; /* Smooth transitions */
+}
+
+/* Shared styles for Hiragana and Katakana */
+.phonetic-hiragana,
+.phonetic-katakana {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* Ensure content doesn't overflow */
+    transition: flex 0.3s ease, opacity 0.3s ease;
+    text-align: center;
+}
+
+/* When visible */
+.phonetic-hiragana.visible,
+.phonetic-katakana.visible {
+    flex: 1; /* Take equal space when both are active */
+    opacity: 1;
+}
+
+/* When hidden */
+.phonetic-hiragana.hidden,
+.phonetic-katakana.hidden {
+    flex: 0; /* Collapse width */
+    opacity: 0; /* Fade out */
+    pointer-events: none; /* Prevent interaction */
+}
+
+/* Additional styling for specific cases */
+.phonetic-hiragana {
+    // background-color: #f0f8ff; /* Example: Light blue for Hiragana */
+}
+
+.phonetic-katakana {
+    // background-color: #faebd7; /* Example: Light orange for Katakana */
+}

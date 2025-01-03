@@ -89,6 +89,13 @@ button {
     width: 100%;
 }
 
+.UI-divider-vertical{
+    position: absolute;
+    border-top: #282828 solid 1px;
+    width: 100%;
+    transform: rotate(90deg);
+}
+
 // Grids {
 .grid {
     display: grid;

@@ -21,13 +21,38 @@ const DropTile = ({ character, index }) => {
 
 
     const renderCharacterContainers = () => {
-        return Object.keys(options.characterTypes).map(key => {
-            if (options.characterTypes[key].activeTop) {
-                return <div key={`char-container-${character[key]}`} className={`char-container`}>{character[key]}</div>;
-            }
-            return null;
-        });
+        return (
+            <div className="top-grid-phonetic">
+                {/* Romaji on the top */}
+                <div className={`grid-item-top ${options.characterTypes.romaji.activeTop ? 'visible' : 'hidden'}`}>
+                    <div className={`phonetic-romaji`}>
+                        {character.romaji}
+                    </div>
+                </div>
+                
+                {/* <div className="UI-divider-container">
+                    <div className="UI-divider"></div>
+                </div> */}
+
+                <div className={`grid-item-bot ${options.characterTypes.hiragana.activeTop || options.characterTypes.katakana.activeTop ? 'visible' : 'hidden'}`}>
+                    {/* Hiragana on the left */}
+                    <div className={`phonetic-hiragana ${options.characterTypes.hiragana.activeTop ? 'visible' : 'hidden'}`}>
+                        {character.hiragana}
+                    </div>
+
+                    
+                        {/* <div className="UI-divider-vertical"></div> */}
+                    
+                    
+                    {/* Katakana on the right */}
+                    <div className={`phonetic-katakana ${options.characterTypes.katakana.activeTop ? 'visible' : 'hidden'}`}>
+                        {character.katakana}
+                    </div>
+                </div>
+            </div>
+        );
     };
+    
 
     const onTouchEnd = (e) => {
         handleDrop(character.id, index)
@@ -50,9 +75,9 @@ const DropTile = ({ character, index }) => {
             onTouchEnd={active ? onTouchEnd : undefined}
             onClick={active ? onTouchEnd : undefined}
         >
-            <div className="top-grid-phonetic">
-                {character.placeholder === false ? renderCharacterContainers() : null}
-            </div>
+            
+            {character.placeholder === false && renderCharacterContainers()}
+            
         </div>
     );
       

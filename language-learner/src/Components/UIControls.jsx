@@ -51,13 +51,7 @@ function UIControls() {
           options={options}
           setOptions={setOptions}
         />
-      
-
-
-
-      <div>
-        fastest time and difficult completed
-      </div>
+    
 
       <div>
         sound
@@ -65,6 +59,13 @@ function UIControls() {
 
       <div>
         reset data
+      </div>
+
+      <div>
+        <h5>Stats:</h5>
+        <p>Fastest completion</p>
+        <p>Highest difficulty</p>
+        
       </div>
     </div>
   );
