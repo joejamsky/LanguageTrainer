@@ -46,7 +46,7 @@
 
 /* When the checkbox is checked */
 input:checked + .check-slider {
-    background-color: #4caf50;
+    background-color: rgb(11, 70, 160);
 }
 
 input:checked + .check-slider::before {

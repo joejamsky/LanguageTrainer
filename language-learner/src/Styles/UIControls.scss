@@ -1,3 +1,4 @@
+@use './variables' as vars;
 
 .ui{
     display: flex;
@@ -10,6 +11,7 @@
     border: 1px white solid;
     border-radius: 20px;
     margin-top: 10px;
+    overflow: scroll;
 }
 
 button{
@@ -24,6 +26,13 @@ button{
     flex-direction: row;
     height: 50px;
     gap: 20px;
+    justify-content: space-between;
+}
+
+.ui-component-container{
+    @media screen and (max-width: vars.$breakpoint-tablet) {
+        height: auto;
+    }
 }
 
 .ui-label{
@@ -42,6 +51,12 @@ button{
     background-color: #5d5d5d;
     padding: 0 25px;
     border-radius: 5px;
+
+    @media screen and (max-width: vars.$breakpoint-tablet) {
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px 25px;
+    }
 }
 
 .ui-input-container input{
