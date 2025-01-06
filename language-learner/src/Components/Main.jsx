@@ -6,6 +6,7 @@ import BotGrid from "../Components/BotGrid.jsx";
 import Timer from "../Components/Timer.jsx";
 import Menu from "../Components/Menu.jsx";
 import StartMenu from "../Components/StartMenu.jsx";
+import MobileHint from "../Components/MobileHint.jsx";
 import { useGameState } from "../Contexts/GameStateContext.js";
 
 function Main() {
@@ -25,6 +26,7 @@ function Main() {
                         <div className="UI-container">
                             <Timer/>
                             <Menu/>
+                            <MobileHint/>
                         </div>
                         <TopGrid/>
                         <div className="UI-divider-container m-1">

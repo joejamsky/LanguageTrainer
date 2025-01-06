@@ -30,7 +30,7 @@ const DropTile = ({ character, index }) => {
                     </div>
                 </div>
                 
-                <div className={`${options.characterTypes.hiragana.activeTop && options.characterTypes.katakana.activeTop && options.characterTypes.romaji.activeTop? 'UI-divider-container' : 'd-none'}`}>
+                <div className={`${(options.characterTypes.hiragana.activeTop || options.characterTypes.katakana.activeTop) && options.characterTypes.romaji.activeTop? 'UI-divider-container' : 'd-none'}`}>
                     <div className="UI-divider"></div>
                 </div>
 
