@@ -73,8 +73,6 @@ export const GameStateProvider = ({ children }) => {
     return () => window.removeEventListener('resize', updateScreenSize); // Cleanup
   }, [updateScreenSize]);
 
-  // const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-  const isMobile = true;
 
   const filterByOptions = useCallback(
     (character) => {
@@ -226,7 +224,6 @@ export const GameStateProvider = ({ children }) => {
     setStats,
     reset,
     filterByOptions,
-    isMobile,
     screenSize,
     selectedTile,
     setSelectedTile,

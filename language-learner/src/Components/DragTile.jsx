@@ -4,7 +4,7 @@ import { useGameState } from "../Contexts/GameStateContext";
 
 const DragTile = ({ character, index }) => {
   const dragRef = useRef(null);
-  const {game, setGame, selectedTile, setSelectedTile, isMobile, options} = useGameState();
+  const {game, setGame, selectedTile, setSelectedTile, screenSize, options} = useGameState();
 
   const onTouchEnd = (e) => {
     setSelectedTile({
@@ -58,7 +58,7 @@ const DragTile = ({ character, index }) => {
       draggable={!character.placeholder && !character.filled}
       onDragStart={onTouchStart}
       onDragEnd={onTouchEnd}
-      onTouchStart={isMobile ? onTouchStart : undefined}
+      onTouchStart={screenSize === 'mobile' || 'tablet' ? onTouchStart : undefined}
       onClick={onTouchStart}
     >
       {character.placeholder === false ? renderCharacterContainers() : null}
