@@ -16,5 +16,18 @@
     transform: translate(0, -50%);
     border-radius: 50%;
     font-size: 24px;
+
+    -webkit-box-shadow: 0px 4px 0px 0px rgb(8, 46, 104);
+    -moz-box-shadow: 0px 4px 0px 0px rgb(8, 46, 104);
+    box-shadow: 0px 4px 0px 0px rgb(8, 46, 104);
+
+    border: solid 1px rgb(37, 109, 218);
 }
 
+.mobile-hint-button.active{
+    margin-top: 2px;
+    -webkit-box-shadow: 0px 2px 0px 0px rgb(27, 79, 190);
+    -moz-box-shadow: 0px 2px 0px 0px rgb(27, 79, 190);
+    box-shadow: 0px 2px 0px 0px rgb(27, 79, 190);
+    
+}
