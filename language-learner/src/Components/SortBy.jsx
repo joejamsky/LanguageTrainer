@@ -10,9 +10,9 @@ function SortBy() {
             case 'sound':
                 return { iconClass: 'fa-solid fa-music', prefix: '' };
             case 'h-shape':
-                return { iconClass: 'fa-solid fa-shapes', prefix: 'H-' };
+                return { iconClass: 'fa-solid fa-shapes', prefix: 'あ' };
             case 'k-shape':
-                return { iconClass: 'fa-solid fa-shapes', prefix: 'K-' };
+                return { iconClass: 'fa-solid fa-shapes', prefix: 'ア' };
             case 'missed':
                 return { iconClass: 'fa-solid fa-chart-simple', prefix: '' };
             default:
@@ -39,7 +39,10 @@ function SortBy() {
         <div className="ui-component-container">
 
             <div className="ui-label">
-                Sort by {prefix}<i className={iconClass}></i>
+                Sort by 
+                <div>
+                    <span className="icon-prefix">{prefix}</span><i className={iconClass}></i>
+                </div>
             </div>
 
             <div className="ui-input-container ui-slider-container">
