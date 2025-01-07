@@ -23,7 +23,7 @@ function Main() {
                 {   startMenuOpen ? 
                     <StartMenu/> : (
                     <>
-                        <div className="UI-container">
+                        <div className="UI-header">
                             <Timer/>
                             <Menu/>
                             <MobileHint/>

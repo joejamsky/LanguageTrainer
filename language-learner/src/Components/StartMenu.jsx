@@ -45,7 +45,7 @@ function StartMenu() {
     return (
         <div className={`${startMenuOpen ? 'start-menu' : 'd-none'}`}>
             <div className="start-menu-header">
-                <h3>Learn</h3>
+                <h3>Select Kana</h3>
             </div>
             <div className="UI-start-menu">
                 <div className="UI-start-menu-item">

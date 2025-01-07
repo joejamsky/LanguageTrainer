@@ -15,25 +15,25 @@ const Menu = () => {
   return (
     <div className="menu-component">
       <div className="menu-container">
-        
+
         <div className="menu-toggle-container">
 
-            <div className="menu-toggle" onClick={toggleDropdown}>
-              <span className="bar"></span>
-              <span className="bar"></span>
-              <span className="bar"></span>
-            </div>
+          <div className="menu-toggle" onClick={toggleDropdown}>
+            <span className="bar"></span>
+            <span className="bar"></span>
+            <span className="bar"></span>
+          </div>
 
         </div>
-          
-      </div>    
-       
 
-      <div className={`dropdown ${isDropdownOpen ? 'open' : ''}`}>
+      </div>
+
+
+      <div className={`dropdown ${isDropdownOpen ? 'open' : '' }`}>
         <div className="dropdown-inner">
-          <UIControls/>
+          <UIControls />
         </div>
-      </div>    
+      </div>
     </div>
   );
 };

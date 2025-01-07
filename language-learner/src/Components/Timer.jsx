@@ -51,6 +51,12 @@ function Timer() {
         <span className="time">{formatTime(timeElapsed)}</span>
         <span className="reset">&#10227;</span>
       </button>
+
+      <div className="best-time-container">
+        <span className="best-time-copy">Best</span>
+        <div className="best-time-divider"></div>
+        <span className="best-time">{formatTime(stats.bestTime)}</span>
+      </div>
     </div>
   );
 }
