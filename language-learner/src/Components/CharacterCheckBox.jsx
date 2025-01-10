@@ -6,7 +6,9 @@ function CharacterCheckBox({ options, setOptions, sectionType }) {
   const kanaRef = {
     hiragana: "あ",
     katakana: "ア",
-    romaji: "A"
+    romaji: "A",
+    dakuten: "゛",
+    handakuten: "゜"
   }
 
   const handleChange = (character) => {

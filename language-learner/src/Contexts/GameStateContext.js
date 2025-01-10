@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useCallback, useEffect } from 'react';
 import { cloneCharacters, filterCharacters } from '../Misc/Utils'; 
-import japanese_characters_standard from '../Data/japanese_characters_standard.json'; 
+import japanese_characters_standard from '../Data/japanese_characters_standard_separated.json'; 
 // import japanese_characters_byshape_hiragana from '../Data/japanese_characters_byshape_hiragana.json'; 
 // import japanese_characters_byshape_katakana from '../Data/japanese_characters_byshape_katakana.json'; 
 
@@ -15,6 +15,8 @@ const initialState = {
       hiragana: { activeTop: true, activeBot: true },
       katakana: { activeTop: true, activeBot: false },
       romaji: { activeTop: false, activeBot: false },
+      dakuten: { activeTop: false, activeBot: false},
+      handakuten: { activeTop: false, activeBot: false}
     },
     dakuon: false,
     topRowLevels: 10,

@@ -1,0 +1,282 @@
+{
+        "id": "5-dakuon",
+        "groups": ["g-row", "a-shape"],
+        "dakuten": true,
+        "placeholder": false,
+        "characters": [
+            {"type": "hiragana", "character": "が", "filled": false, "render": true, "missed": 0},
+            {"type": "katakana", "character": "ガ", "filled": false, "render": true, "missed": 0},
+            {"type": "romaji",   "character": "ga", "filled": false, "render": true, "missed": 0}
+        ]
+    },
+    {
+        "id": "6-dakuon",
+        "groups": ["g-row", "a-shape"],
+        "dakuten": true,
+        "placeholder": false,
+        "characters": [
+            {"type": "hiragana", "character": "ぎ", "filled": false, "render": true, "missed": 0},
+            {"type": "katakana", "character": "ギ", "filled": false, "render": true, "missed": 0},
+            {"type": "romaji",   "character": "gi", "filled": false, "render": true, "missed": 0}
+        ]
+    },
+    {
+        "id": "7-dakuon",
+        "groups": ["g-row", "a-shape"],
+        "dakuten": true,
+        "placeholder": false,
+        "characters": [
+            {"type": "hiragana", "character": "ぐ", "filled": false, "render": true, "missed": 0},
+            {"type": "katakana", "character": "グ", "filled": false, "render": true, "missed": 0},
+            {"type": "romaji",   "character": "gu", "filled": false, "render": true, "missed": 0}
+        ]
+    },
+    {
+        "id": "8-dakuon",
+        "groups": ["g-row", "a-shape"],
+        "dakuten": true,
+        "placeholder": false,
+        "characters": [
+            {"type": "hiragana", "character": "げ", "filled": false, "render": true, "missed": 0},
+            {"type": "katakana", "character": "ゲ", "filled": false, "render": true, "missed": 0},
+            {"type": "romaji",   "character": "ge", "filled": false, "render": true, "missed": 0}
+        ]
+    },
+    {
+        "id": "9-dakuon",
+        "groups": ["g-row", "a-shape"],
+        "dakuten": true,
+        "placeholder": false,
+        "characters": [
+            {"type": "hiragana", "character": "ご", "filled": false, "render": true, "missed": 0},
+            {"type": "katakana", "character": "ゴ", "filled": false, "render": true, "missed": 0},
+            {"type": "romaji",   "character": "go", "filled": false, "render": true, "missed": 0}
+        ]
+    },
+    {
+        "id": "15-dakuon",
+        "groups": ["z-row", "a-shape"],
+        "dakuten": true,
+        "placeholder": false,
+        "characters": [
+            {"type": "hiragana", "character": "ざ", "filled": false, "render": true, "missed": 0},
+            {"type": "katakana", "character": "ザ", "filled": false, "render": true, "missed": 0},
+            {"type": "romaji",   "character": "za", "filled": false, "render": true, "missed": 0}
+        ]
+    },
+    {
+        "id": "16-dakuon",
+        "groups": ["z-row", "a-shape"],
+        "dakuten": true,
+        "placeholder": false,
+        "characters": [
+            {"type": "hiragana", "character": "じ", "filled": false, "render": true, "missed": 0},
+            {"type": "katakana", "character": "ジ", "filled": false, "render": true, "missed": 0},
+            {"type": "romaji",   "character": "ji", "filled": false, "render": true, "missed": 0}
+        ]
+    },
+    {
+        "id": "17-dakuon",
+        "groups": ["z-row", "a-shape"],
+        "dakuten": true,
+        "placeholder": false,
+        "characters": [
+            {"type": "hiragana", "character": "ず", "filled": false, "render": true, "missed": 0},
+            {"type": "katakana", "character": "ズ", "filled": false, "render": true, "missed": 0},
+            {"type": "romaji",   "character": "zu", "filled": false, "render": true, "missed": 0}
+        ]
+    },
+    {
+        "id": "18-dakuon",
+        "groups": ["z-row", "a-shape"],
+        "dakuten": true,
+        "placeholder": false,
+        "characters": [
+            {"type": "hiragana", "character": "ぜ", "filled": false, "render": true, "missed": 0},
+            {"type": "katakana", "character": "ゼ", "filled": false, "render": true, "missed": 0},
+            {"type": "romaji",   "character": "ze", "filled": false, "render": true, "missed": 0}
+        ]
+    },
+    {
+        "id": "19-dakuon",
+        "groups": ["z-row", "a-shape"],
+        "dakuten": true,
+        "placeholder": false,
+        "characters": [
+            {"type": "hiragana", "character": "ぞ", "filled": false, "render": true, "missed": 0},
+            {"type": "katakana", "character": "ゾ", "filled": false, "render": true, "missed": 0},
+            {"type": "romaji",   "character": "zo", "filled": false, "render": true, "missed": 0}
+        ]
+    },
+    {
+        "id": "20-dakuon",
+        "groups": ["d-row", "a-shape"],
+        "dakuten": true,
+        "placeholder": false,
+        "characters": [
+            {"type": "hiragana", "character": "だ", "filled": false, "render": true, "missed": 0},
+            {"type": "katakana", "character": "ダ", "filled": false, "render": true, "missed": 0},
+            {"type": "romaji",   "character": "da", "filled": false, "render": true, "missed": 0}
+        ]
+    },
+    {
+        "id": "21-dakuon",
+        "groups": ["d-row", "a-shape"],
+        "dakuten": true,
+        "placeholder": false,
+        "characters": [
+            {"type": "hiragana", "character": "ぢ", "filled": false, "render": true, "missed": 0},
+            {"type": "katakana", "character": "ヂ", "filled": false, "render": true, "missed": 0},
+            {"type": "romaji",   "character": "ji", "filled": false, "render": true, "missed": 0}
+        ]
+    },
+    {
+        "id": "22-dakuon",
+        "groups": ["d-row", "a-shape"],
+        "dakuten": true,
+        "placeholder": false,
+        "characters": [
+            {"type": "hiragana", "character": "づ", "filled": false, "render": true, "missed": 0},
+            {"type": "katakana", "character": "ヅ", "filled": false, "render": true, "missed": 0},
+            {"type": "romaji",   "character": "zu", "filled": false, "render": true, "missed": 0}
+        ]
+    },
+    {
+        "id": "23-dakuon",
+        "groups": ["d-row", "a-shape"],
+        "dakuten": true,
+        "placeholder": false,
+        "characters": [
+            {"type": "hiragana", "character": "で", "filled": false, "render": true, "missed": 0},
+            {"type": "katakana", "character": "デ", "filled": false, "render": true, "missed": 0},
+            {"type": "romaji",   "character": "de", "filled": false, "render": true, "missed": 0}
+        ]
+    },
+    {
+        "id": "24-dakuon",
+        "groups": ["d-row", "a-shape"],
+        "dakuten": true,
+        "placeholder": false,
+        "characters": [
+            {"type": "hiragana", "character": "ど", "filled": false, "render": true, "missed": 0},
+            {"type": "katakana", "character": "ド", "filled": false, "render": true, "missed": 0},
+            {"type": "romaji",   "character": "do", "filled": false, "render": true, "missed": 0}
+        ]
+    },
+    {
+        "id": "25-dakuon",
+        "groups": ["b-row", "a-shape"],
+        "dakuten": true,
+        "placeholder": false,
+        "characters": [
+            {"type": "hiragana", "character": "ば", "filled": false, "render": true, "missed": 0},
+            {"type": "katakana", "character": "バ", "filled": false, "render": true, "missed": 0},
+            {"type": "romaji",   "character": "ba", "filled": false, "render": true, "missed": 0}
+        ]
+    },
+    {
+        "id": "26-dakuon",
+        "groups": ["b-row", "a-shape"],
+        "dakuten": true,
+        "placeholder": false,
+        "characters": [
+            {"type": "hiragana", "character": "び", "filled": false, "render": true, "missed": 0},
+            {"type": "katakana", "character": "ビ", "filled": false, "render": true, "missed": 0},
+            {"type": "romaji",   "character": "bi", "filled": false, "render": true, "missed": 0}
+        ]
+    },
+    {
+        "id": "27-dakuon",
+        "groups": ["b-row", "a-shape"],
+        "dakuten": true,
+        "placeholder": false,
+        "characters": [
+            {"type": "hiragana", "character": "ぶ", "filled": false, "render": true, "missed": 0},
+            {"type": "katakana", "character": "ブ", "filled": false, "render": true, "missed": 0},
+            {"type": "romaji",   "character": "bu", "filled": false, "render": true, "missed": 0}
+        ]
+    },
+    {
+        "id": "28-dakuon",
+        "groups": ["b-row", "a-shape"],
+        "dakuten": true,
+        "placeholder": false,
+        "characters": [
+            {"type": "hiragana", "character": "べ", "filled": false, "render": true, "missed": 0},
+            {"type": "katakana", "character": "ベ", "filled": false, "render": true, "missed": 0},
+            {"type": "romaji",   "character": "be", "filled": false, "render": true, "missed": 0}
+        ]
+    },
+    {
+        "id": "29-dakuon",
+        "groups": ["b-row", "a-shape"],
+        "dakuten": true,
+        "placeholder": false,
+        "characters": [
+            {"type": "hiragana", "character": "ぼ", "filled": false, "render": true, "missed": 0},
+            {"type": "katakana", "character": "ボ", "filled": false, "render": true, "missed": 0},
+            {"type": "romaji",   "character": "bo", "filled": false, "render": true, "missed": 0}
+        ]
+    },
+
+
+
+
+
+    
+    {
+        "id": "25-handakuten",
+        "groups": ["p-row", "a-shape"],
+        "dakuten": true,
+        "placeholder": false,
+        "characters": [
+            {"type": "hiragana", "character": "ぱ", "filled": false, "render": true, "missed": 0},
+            {"type": "katakana", "character": "パ", "filled": false, "render": true, "missed": 0},
+            {"type": "romaji",   "character": "pa", "filled": false, "render": true, "missed": 0}
+        ]
+    },
+    {
+        "id": "26-handakuten",
+        "groups": ["p-row", "a-shape"],
+        "dakuten": true,
+        "placeholder": false,
+        "characters": [
+            {"type": "hiragana", "character": "ぴ", "filled": false, "render": true, "missed": 0},
+            {"type": "katakana", "character": "ピ", "filled": false, "render": true, "missed": 0},
+            {"type": "romaji",   "character": "pi", "filled": false, "render": true, "missed": 0}
+        ]
+    },
+    {
+        "id": "27-handakuten",
+        "groups": ["p-row", "a-shape"],
+        "dakuten": true,
+        "placeholder": false,
+        "characters": [
+            {"type": "hiragana", "character": "ぷ", "filled": false, "render": true, "missed": 0},
+            {"type": "katakana", "character": "プ", "filled": false, "render": true, "missed": 0},
+            {"type": "romaji",   "character": "pu", "filled": false, "render": true, "missed": 0}
+        ]
+    },
+    {
+        "id": "28-handakuten",
+        "groups": ["p-row", "a-shape"],
+        "dakuten": true,
+        "placeholder": false,
+        "characters": [
+            {"type": "hiragana", "character": "ぺ", "filled": false, "render": true, "missed": 0},
+            {"type": "katakana", "character": "ペ", "filled": false, "render": true, "missed": 0},
+            {"type": "romaji",   "character": "pe", "filled": false, "render": true, "missed": 0}
+        ]
+    },
+    {
+        "id": "29-handakuten",
+        "groups": ["p-row", "a-shape"],
+        "dakuten": true,
+        "placeholder": false,
+        "characters": [
+            {"type": "hiragana", "character": "ぽ", "filled": false, "render": true, "missed": 0},
+            {"type": "katakana", "character": "ポ", "filled": false, "render": true, "missed": 0},
+            {"type": "romaji",   "character": "po", "filled": false, "render": true, "missed": 0}
+        ]
+    }
+    

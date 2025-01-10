@@ -19,7 +19,7 @@ const BotGrid = () => {
 
                 {characters.botCharacters && characters.botCharacters.map((character, index) => {
                     return (
-                        character?.render ? (
+                        !character?.completed ? (
                             <DragTile
                                 key={`bot-grid-item-${index}`}
                                 index={index}
