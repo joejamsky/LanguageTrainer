@@ -24,9 +24,9 @@ function Main() {
                     <StartMenu/> : (
                     <>
                         <div className="UI-header">
+                            <MobileHint/>
                             <Timer/>
                             <Menu/>
-                            <MobileHint/>
                         </div>
                         <TopGrid/>
                         <div className="UI-divider-container m-1">

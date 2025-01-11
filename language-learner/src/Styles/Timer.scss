@@ -1,17 +1,16 @@
 .timer-container{
-    position: relative;
-
-    button{
+    .reset-button{
         position: absolute;
         left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        
+        top: 0px;
+        // top: 50%;
+        transform: translate(-50%, 0);
+
         font-weight: 900;
         line-height: 0px;
         
-        height: 45px;
-        width: 70px;
+        // max-height: 35px;
+        // width: 60px;
         border-radius: 10px;
         background-color: rgb(11, 70, 160);
 
@@ -26,7 +25,7 @@
         justify-content: center;
         align-items: center;
 
-        padding: 2px 10px;
+        padding: 16px 4px;
         // gap: 1px;
         transition: all 0.1s;
 
@@ -61,11 +60,14 @@
         line-height: 20px;
     }
 
+
     .best-time-container {
         position: absolute;
         left: 50%;
-        top: 50%;
-        transform: translate(calc(-50% + 70px), -50%);
+        top: 10px;
+        // top: 50%;
+        // transform: translate(calc(-50% + 70px), -50%);
+        transform: translate(calc(-50% + 70px), 0);
         font-size: 12px;
         display: flex;
         flex-direction: column;
@@ -88,5 +90,4 @@
         }
 
     }
-    
 }

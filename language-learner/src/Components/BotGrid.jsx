@@ -5,7 +5,7 @@ import TextInput from './TextInput';
 import { useGameState } from "../Contexts/GameStateContext.js";
 
 const BotGrid = () => {
-    const { characters, screenSize } = useGameState();
+    const { characters, screenSize, options } = useGameState();
 
     return (
         <div className="bot-grid-container">
@@ -18,17 +18,21 @@ const BotGrid = () => {
             <div id="draggrid" className={`grid draggrid ${true ? 'vertical' : 'horizontal'}`}>
 
                 {characters.botCharacters && characters.botCharacters.map((character, index) => {
-                    return (
-                        !character?.completed ? (
+                    if (
+                        (character.dakuten === true && options.characterTypes.dakuten.activeTop === false) ||
+                        (character.handakuten === true && options.characterTypes.handakuten.activeTop === false) ||
+                        (character?.completed === true)
+                    ) {
+                        return null; // Render nothing
+                    } else {
+                        return (
                             <DragTile
                                 key={`bot-grid-item-${index}`}
                                 index={index}
                                 character={character}
                             />
-                        ) : ( // Don't render row if all characters have assigned to correct position
-                            null
-                        ) 
-                    )
+                        )
+                    }
                 })}
 
             </div>

@@ -49,7 +49,7 @@ function Timer() {
     <div className="timer-container">
       <button onClick={handleResetClick} className="reset-button">
         <span className="time">{formatTime(timeElapsed)}</span>
-        <span className="reset">&#10227;</span>
+        {/* <span className="reset">&#10227;</span> */}
       </button>
 
       <div className="best-time-container">

@@ -13,8 +13,8 @@ const Menu = () => {
   };
   
   return (
-    <div className="menu-component">
-      <div className="menu-container">
+    <div className="menu-container">
+      
 
         <div className="menu-toggle-container">
 
@@ -26,7 +26,7 @@ const Menu = () => {
 
         </div>
 
-      </div>
+      
 
 
       <div className={`dropdown ${isDropdownOpen ? 'open' : '' }`}>
