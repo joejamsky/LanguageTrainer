@@ -3,12 +3,12 @@ import "../Styles/DropTile.scss";
 import { useGameState } from "../Contexts/GameStateContext"; 
 
 
-const DropTile = ({ character, index }) => {
+const DropTile = ({ characterObj, index }) => {
 
     const [dragHover, setDragHover] = useState(false);
     const {handleDrop, options} = useGameState(); 
 
-    const active = !character.placeholder && !character.completed;
+    const active = !characterObj.placeholder && !characterObj.completed;
     
     const onDragOver = (e) => {
         e.preventDefault();
@@ -27,9 +27,9 @@ const DropTile = ({ character, index }) => {
                 <div className={`grid-item-top ${options.characterTypes.romaji.activeTop ? 'visible' : 'hidden'}`}>
                     <div className={`
                         phonetic-romaji
-                        ${character.completed ? 'filled' : ''}
+                        ${characterObj.completed ? 'filled' : ''}
                         `}>
-                        {character.characters[2].character}
+                        {characterObj.characters.romaji.character}
                     </div>
                 </div>
                 
@@ -37,14 +37,14 @@ const DropTile = ({ character, index }) => {
                     <div className="UI-divider"></div>
                 </div>
 
-                <div className={`grid-item-bot ${options.characterTypes.hiragana.activeTop || options.characterTypes.katakana.activeTop ? 'visible' : 'hidden'}`}>
+                <div className={`grid-item-top ${options.characterTypes.hiragana.activeTop || options.characterTypes.katakana.activeTop ? 'visible' : 'hidden'}`}>
                     {/* Hiragana on the left */}
                     <div className={`
                         phonetic-hiragana 
                         ${options.characterTypes.hiragana.activeTop ? 'visible' : 'hidden'}
-                        ${character.characters[0].filled ? 'filled' : ''}
+                        ${characterObj.characters.hiragana.filled ? 'filled' : ''}
                         `}>
-                        {character.characters[0].character}
+                        {characterObj.characters.hiragana.character}
                     </div>
 
                     
@@ -55,10 +55,10 @@ const DropTile = ({ character, index }) => {
                     <div className={`
                             phonetic-katakana 
                             ${options.characterTypes.katakana.activeTop ? 'visible' : 'hidden'}
-                            ${character.characters[1].filled ? 'filled' : ''}
-                            ${character.placeholder ? 'hide' : ''}
+                            ${characterObj.characters.katakana.filled ? 'filled' : ''}
+                            ${characterObj.placeholder ? 'hide' : ''}
                             `}>
-                        {character.characters[1].character}
+                        {characterObj.characters.katakana.character}
                     </div>
                 </div>
             </div>
@@ -67,18 +67,18 @@ const DropTile = ({ character, index }) => {
     
 
     const onTouchEnd = (e) => {
-        handleDrop(character.id, index)
+        handleDrop(characterObj.id, index)
         setDragHover(false);
     }
 
 
     return (
         <div
-            key={`drop-tile-${character.id}`}
+            key={`drop-tile-${characterObj.id}`}
             className={`
                 top-grid-item 
-                ${character.placeholder ? 'hide' : ''}
-                ${character.completed ? 'filled' : ''}
+                ${characterObj.placeholder ? 'hide' : ''}
+                ${characterObj.completed ? 'filled' : ''}
                 ${dragHover ? 'drag-proximity-hover' : ''}
             `}
             onDrop={active ? onTouchEnd : undefined} 
@@ -88,7 +88,7 @@ const DropTile = ({ character, index }) => {
             onClick={active ? onTouchEnd : undefined}
         >
             
-            {character.placeholder === false && renderCharacterContainers()}
+            {characterObj.placeholder === false && renderCharacterContainers()}
             
         </div>
     );

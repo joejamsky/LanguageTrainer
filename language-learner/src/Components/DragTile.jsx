@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import "../Styles/DragTile.scss";
 import { useGameState } from "../Contexts/GameStateContext"; 
 
-const DragTile = ({ character, index }) => {
+const DragTile = ({ characterObj, index }) => {
   const dragRef = useRef(null);
   const {game, setGame, selectedTile, setSelectedTile, screenSize, options} = useGameState();
 
@@ -15,14 +15,14 @@ const DragTile = ({ character, index }) => {
 
   const onTouchStart = (e) => {
 
-    if(selectedTile.id === character.id){
+    if(selectedTile.id === characterObj.id){
       setSelectedTile({
         id: null, 
         index: null
       });
     } else {
       setSelectedTile({
-        id: character.id, 
+        id: characterObj.id, 
         index: index
       });
     }
@@ -43,9 +43,9 @@ const DragTile = ({ character, index }) => {
             <div className={`grid-item-top ${options.characterTypes.romaji.activeBot ? 'visible' : 'hidden'}`}>
                 <div className={`
                     phonetic-romaji
-                    ${character.completed ? 'filled' : ''}
+                    ${characterObj.completed ? 'filled' : ''}
                     `}>
-                    {character.characters[2].character}
+                    {characterObj.characters.romaji.character}
                 </div>
             </div>
             
@@ -58,9 +58,9 @@ const DragTile = ({ character, index }) => {
                 <div className={`
                     phonetic-hiragana 
                     ${options.characterTypes.hiragana.activeBot ? 'visible' : 'hidden'}
-                    ${character.characters[0].filled ? 'filled' : ''}
+                    ${characterObj.characters.hiragana.filled ? 'filled' : ''}
                     `}>
-                    {character.characters[0].character}
+                    {characterObj.characters.hiragana.character}
                 </div>
 
                 
@@ -71,10 +71,10 @@ const DragTile = ({ character, index }) => {
                 <div className={`
                         phonetic-katakana 
                         ${options.characterTypes.katakana.activeBot ? 'visible' : 'hidden'}
-                        ${character.characters[1].filled ? 'filled' : ''}
-                        ${character.placeholder ? 'hide' : ''}
+                        ${characterObj.characters.katakana.filled ? 'filled' : ''}
+                        ${characterObj.placeholder ? 'hide' : ''}
                         `}>
-                    {character.characters[1].character}
+                    {characterObj.characters.katakana.character}
                 </div>
             </div>
         </div>
@@ -84,20 +84,20 @@ const DragTile = ({ character, index }) => {
   return (
     <div
       ref={dragRef}
-      key={`drag-tile-${character.id}`}
-      id={`draggable-${character.id}`}
+      key={`drag-tile-${characterObj.id}`}
+      id={`draggable-${characterObj.id}`}
       className={`
           bot-grid-item
-          ${selectedTile.id === character.id ? 'dragging' : ''}
-          ${character.placeholder || character.completed ? 'hide' : ''} 
+          ${selectedTile.id === characterObj.id ? 'dragging' : ''}
+          ${characterObj.placeholder || characterObj.completed ? 'hide' : ''} 
         `}
-      draggable={!character.placeholder && !character.completed}
+      draggable={!characterObj.placeholder && !characterObj.completed}
       onDragStart={onTouchStart}
       onDragEnd={onTouchEnd}
       onTouchStart={screenSize === 'mobile' || 'tablet' ? onTouchStart : undefined}
       onClick={onTouchStart}
     >
-      {character.placeholder === false ? renderCharacterContainers() : null}
+      {characterObj.placeholder === false ? renderCharacterContainers() : null}
     </div>
   );
 };

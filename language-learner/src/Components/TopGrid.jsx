@@ -21,7 +21,7 @@ const TopGrid = () => {
           return (
             <DropTile
               key={`top-grid-item-${index}`}
-              character={character}
+              characterObj={character}
               index={index}
             />
           );

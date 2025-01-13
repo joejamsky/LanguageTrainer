@@ -100,7 +100,7 @@ export const GameStateProvider = ({ children }) => {
   }, [filterByOptions]);
 
   const getCurrentRow = (characters) => {
-    const firstRenderedIndex = characters.findIndex(char => char.render);
+    const firstRenderedIndex = characters.findIndex(char => !char.completed);
     const currentRow = Math.floor(firstRenderedIndex / 5);
     return currentRow;
   };
@@ -158,10 +158,10 @@ export const GameStateProvider = ({ children }) => {
   
     // 3) Slice out the 5 tiles in the current row
     const row = tempBotChars.slice(startIdx, endIdx);
-  
+
     // 4) Find the tile that matches the user's typed answer (ignoring placeholders)
     const matchedTile = row.find(
-      (tile) => !tile.placeholder && tile.romaji === submittedChar
+      (tile) => !tile.placeholder && tile.characters.romaji.character === submittedChar
     );
   
     // If there is no match, do nothing (or show an error, etc.)
@@ -172,15 +172,29 @@ export const GameStateProvider = ({ children }) => {
     // 5) Find the same tile in the full bottom array and top array by ID
     const bottomIndex = tempBotChars.findIndex((tile) => tile.id === matchedTile.id);
     const topIndex = tempTopChars.findIndex((tile) => tile.id === matchedTile.id);
-  
+
     // 6) Mark both matching tiles as filled (if found)
-    if (bottomIndex !== -1) {
-      tempBotChars[bottomIndex].filled = true;
+    // options: {
+    //   characterTypes: {
+    //     hiragana: { activeTop: true, activeBot: true },
+    //     katakana: { activeTop: true, activeBot: false },
+    //     romaji: { activeTop: false, activeBot: false },
+    //     dakuten: { activeTop: false, activeBot: false},
+    //     handakuten: { activeTop: false, activeBot: false}
+    //   },
+    if (bottomIndex !== -1 && options.characterTypes.hiragana.activeBot === true) {
+      console.log('tempBotChars[bottomIndex]',tempBotChars[bottomIndex])
+      tempBotChars[bottomIndex].characters.hiragana.completed = true;
     }
-    if (topIndex !== -1) {
-      tempTopChars[topIndex].filled = true;
+    if (bottomIndex !== -1 && options.characterTypes.katakana.activeBot === true) {
+      tempBotChars[bottomIndex].characters.katakana.completed = true;
     }
-  
+    if (topIndex !== -1 && options.characterTypes.hiragana.activeTop === true) {
+      tempTopChars[topIndex].characters.hiragana.completed = true;
+    }
+    if (topIndex !== -1 && options.characterTypes.katakana.activeTop === true) {
+      tempTopChars[topIndex].characters.katakana.completed = true;
+    }
     // 7) Check if the entire row is now “all filled”
     //    (again ignoring placeholders)
     const allFilled = row

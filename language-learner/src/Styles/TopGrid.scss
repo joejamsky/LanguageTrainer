@@ -62,7 +62,7 @@
 
 .grid-item-top,
 .grid-item-bot {
-    padding: 5px;
+    // padding: 5px 0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -83,6 +83,7 @@
     flex: 0; /* Collapse to zero height */
     opacity: 0; /* Fade out */
     pointer-events: none; /* Prevent interaction */
+    padding: 0;
 }
 
 /* Bottom Kana Grid */

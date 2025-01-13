@@ -29,7 +29,7 @@ const BotGrid = () => {
                             <DragTile
                                 key={`bot-grid-item-${index}`}
                                 index={index}
-                                character={character}
+                                characterObj={character}
                             />
                         )
                     }
