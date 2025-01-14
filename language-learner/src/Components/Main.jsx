@@ -10,11 +10,11 @@ import MobileHint from "../Components/MobileHint.jsx";
 import { useGameState } from "../Contexts/GameStateContext.js";
 
 function Main() {
-    const { game, reset, startMenuOpen } = useGameState();
+    const { game, init, startMenuOpen } = useGameState();
 
     useEffect(() => {
-        reset();
-    }, [reset]);
+        init();
+    }, [init]);
   
     return (
         <div className="Main">

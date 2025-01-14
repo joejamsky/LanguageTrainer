@@ -15,7 +15,7 @@ function CharacterCheckBox({ options, setOptions, sectionType }) {
     setOptions(prevOptions => {
       const currentSectionActive = prevOptions.characterTypes[character][sectionType];
       const activeCount = Object.values(prevOptions.characterTypes).filter(c => c[sectionType]).length;
-
+      
       // If trying to uncheck the last checked checkbox, prevent it
       if (currentSectionActive && activeCount <= 1) {
         return prevOptions; // Return the current state unchanged
@@ -50,8 +50,8 @@ function CharacterCheckBox({ options, setOptions, sectionType }) {
                 onChange={() => handleChange(character)}
                 />
               <span className="check-slider"></span>
-              <span className="check-slider-label">{kanaRef[character]}</span>
               
+              <span className="check-slider-label">{kanaRef[character]}</span>
             </label>
         ))}
       </div>

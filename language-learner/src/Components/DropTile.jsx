@@ -27,7 +27,7 @@ const DropTile = ({ characterObj, index }) => {
                 <div className={`grid-item-top ${options.characterTypes.romaji.activeTop ? 'visible' : 'hidden'}`}>
                     <div className={`
                         phonetic-romaji
-                        ${characterObj.completed ? 'filled' : ''}
+                        ${characterObj.characters.romaji.filled ? 'filled' : ''}
                         `}>
                         {characterObj.characters.romaji.character}
                     </div>

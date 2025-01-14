@@ -1,10 +1,12 @@
 import React, { createContext, useState, useContext, useCallback, useEffect } from 'react';
 import { cloneCharacters, filterCharacters } from '../Misc/Utils'; 
-import japanese_characters_standard from '../Data/japanese_characters_standard_separated.json'; 
+import japanese_characters_standard from '../Data/japanese_characters_standard_top.json'; 
+import japanese_characters_standard_hiragana_bot from "../Data/japanese_characters_standard_hiragana_bot";
+import japanese_characters_standard_katakana_bot from "../Data/japanese_characters_standard_katakana_bot";
 // import japanese_characters_byshape_hiragana from '../Data/japanese_characters_byshape_hiragana.json'; 
 // import japanese_characters_byshape_katakana from '../Data/japanese_characters_byshape_katakana.json'; 
 
-const initialState = {
+const defaultState = {
   characters: {
     topCharacters: [],
     botCharacters: [],
@@ -50,11 +52,11 @@ const breakpoints = {
 }
 
 export const GameStateProvider = ({ children }) => {
-  const [characters, setCharacters] = useState(initialState.characters);
-  const [options, setOptions] = useState(initialState.options);
-  const [game, setGame] = useState(initialState.game);
-  const [stats, setStats] = useState(initialState.stats);
-  const [selectedTile, setSelectedTile] = useState(initialState.selectedTile);
+  const [characters, setCharacters] = useState(defaultState.characters);
+  const [options, setOptions] = useState(defaultState.options);
+  const [game, setGame] = useState(defaultState.game);
+  const [stats, setStats] = useState(defaultState.stats);
+  const [selectedTile, setSelectedTile] = useState(defaultState.selectedTile);
   const [screenSize, setScreenSize] = useState('desktop'); 
   const [startMenuOpen, setStartMenuOpen] = useState(true); 
 
@@ -86,9 +88,7 @@ export const GameStateProvider = ({ children }) => {
   );
 
   const reset = useCallback(() => {
-    setGame(initialState.game);
-    // setStats(initialState.stats);
-    setOptions(initialState.options);
+    setGame(defaultState.game);
     const filteredCharacters = cloneCharacters(
       filterCharacters(japanese_characters_standard, filterByOptions)
     );
@@ -98,6 +98,22 @@ export const GameStateProvider = ({ children }) => {
       defaultCharacters: filteredCharacters,
     });
   }, [filterByOptions]);
+
+
+  const init = useCallback(() => {
+    setGame(defaultState.game);
+    setStats(defaultState.stats);
+    setOptions(defaultState.options);
+    const filteredCharacters = cloneCharacters(
+      filterCharacters(japanese_characters_standard, filterByOptions)
+    );
+    setCharacters({
+      topCharacters: filteredCharacters,
+      botCharacters: filteredCharacters,
+      defaultCharacters: filteredCharacters,
+    });
+  }, [filterByOptions]);
+
 
   const getCurrentRow = (characters) => {
     const firstRenderedIndex = characters.findIndex(char => !char.completed);
@@ -174,26 +190,17 @@ export const GameStateProvider = ({ children }) => {
     const topIndex = tempTopChars.findIndex((tile) => tile.id === matchedTile.id);
 
     // 6) Mark both matching tiles as filled (if found)
-    // options: {
-    //   characterTypes: {
-    //     hiragana: { activeTop: true, activeBot: true },
-    //     katakana: { activeTop: true, activeBot: false },
-    //     romaji: { activeTop: false, activeBot: false },
-    //     dakuten: { activeTop: false, activeBot: false},
-    //     handakuten: { activeTop: false, activeBot: false}
-    //   },
     if (bottomIndex !== -1 && options.characterTypes.hiragana.activeBot === true) {
-      console.log('tempBotChars[bottomIndex]',tempBotChars[bottomIndex])
-      tempBotChars[bottomIndex].characters.hiragana.completed = true;
+      tempBotChars[bottomIndex].characters.hiragana.filled = true;
     }
     if (bottomIndex !== -1 && options.characterTypes.katakana.activeBot === true) {
-      tempBotChars[bottomIndex].characters.katakana.completed = true;
+      tempBotChars[bottomIndex].characters.katakana.filled = true;
     }
     if (topIndex !== -1 && options.characterTypes.hiragana.activeTop === true) {
-      tempTopChars[topIndex].characters.hiragana.completed = true;
+      tempTopChars[topIndex].characters.hiragana.filled = true;
     }
     if (topIndex !== -1 && options.characterTypes.katakana.activeTop === true) {
-      tempTopChars[topIndex].characters.katakana.completed = true;
+      tempTopChars[topIndex].characters.katakana.filled = true;
     }
     // 7) Check if the entire row is now “all filled”
     //    (again ignoring placeholders)
@@ -239,6 +246,7 @@ export const GameStateProvider = ({ children }) => {
     stats,
     setStats,
     reset,
+    init,
     filterByOptions,
     screenSize,
     selectedTile,
