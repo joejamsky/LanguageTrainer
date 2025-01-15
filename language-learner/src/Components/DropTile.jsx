@@ -24,7 +24,7 @@ const DropTile = ({ characterObj, index }) => {
         return (
             <div className="top-grid-phonetic">
                 {/* Romaji on the top */}
-                <div className={`grid-item-top ${options.characterTypes.romaji.activeTop ? 'visible' : 'hidden'}`}>
+                <div className={`grid-item-top ${options.characterTypes.romaji ? 'visible' : 'hidden'}`}>
                     <div className={`
                         phonetic-romaji
                         ${characterObj.characters.romaji.filled ? 'filled' : ''}
@@ -33,28 +33,28 @@ const DropTile = ({ characterObj, index }) => {
                     </div>
                 </div>
                 
-                <div className={`${(options.characterTypes.hiragana.activeTop || options.characterTypes.katakana.activeTop) && options.characterTypes.romaji.activeTop? 'UI-divider-container' : 'd-none'}`}>
+                <div className={`${(options.characterTypes.hiragana || options.characterTypes.katakana) && options.characterTypes.romaji? 'UI-divider-container' : 'd-none'}`}>
                     <div className="UI-divider"></div>
                 </div>
 
-                <div className={`grid-item-top ${options.characterTypes.hiragana.activeTop || options.characterTypes.katakana.activeTop ? 'visible' : 'hidden'}`}>
+                <div className={`grid-item-top ${options.characterTypes.hiragana || options.characterTypes.katakana ? 'visible' : 'hidden'}`}>
                     {/* Hiragana on the left */}
                     <div className={`
                         phonetic-hiragana 
-                        ${options.characterTypes.hiragana.activeTop ? 'visible' : 'hidden'}
+                        ${options.characterTypes.hiragana ? 'visible' : 'hidden'}
                         ${characterObj.characters.hiragana.filled ? 'filled' : ''}
                         `}>
                         {characterObj.characters.hiragana.character}
                     </div>
 
                     
-                    <div className={`${options.characterTypes.hiragana.activeTop && options.characterTypes.katakana.activeTop ? 'UI-divider-vertical' : 'd-none'}`}></div>
+                    <div className={`${options.characterTypes.hiragana && options.characterTypes.katakana ? 'UI-divider-vertical' : 'd-none'}`}></div>
                     
                     
                     {/* Katakana on the right */}
                     <div className={`
                             phonetic-katakana 
-                            ${options.characterTypes.katakana.activeTop ? 'visible' : 'hidden'}
+                            ${options.characterTypes.katakana ? 'visible' : 'hidden'}
                             ${characterObj.characters.katakana.filled ? 'filled' : ''}
                             ${characterObj.placeholder ? 'hide' : ''}
                             `}>

@@ -18,13 +18,6 @@ function UIControls() {
         <CharacterCheckBox 
           options={options}
           setOptions={setOptions}
-          sectionType="activeTop"
-        />
-
-        <CharacterCheckBox 
-          options={options}
-          setOptions={setOptions}
-          sectionType="activeBot"
         />
       
       {/* <button

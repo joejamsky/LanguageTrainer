@@ -19,8 +19,10 @@ const BotGrid = () => {
 
                 {characters.botCharacters && characters.botCharacters.map((character, index) => {
                     if (
-                        (character.dakuten === true && options.characterTypes.dakuten.activeTop === false) ||
-                        (character.handakuten === true && options.characterTypes.handakuten.activeTop === false) ||
+                        (character.dakuten === true && options.characterTypes.dakuten === false) ||
+                        (character.handakuten === true && options.characterTypes.handakuten === false) ||
+                        (character.group === "hiragana" && options.characterTypes.hiragana === false) ||
+                        (character.group === "katakana" && options.characterTypes.katakana === false) ||
                         (character?.completed === true)
                     ) {
                         return null; // Render nothing

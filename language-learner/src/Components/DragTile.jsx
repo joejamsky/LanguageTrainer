@@ -15,14 +15,14 @@ const DragTile = ({ characterObj, index }) => {
 
   const onTouchStart = (e) => {
 
-    if(selectedTile.id === characterObj.id){
+    if(selectedTile.id === characterObj.matchId){
       setSelectedTile({
         id: null, 
         index: null
       });
     } else {
       setSelectedTile({
-        id: characterObj.id, 
+        id: characterObj.matchId, 
         index: index
       });
     }
@@ -37,46 +37,12 @@ const DragTile = ({ characterObj, index }) => {
   };
 
   const renderCharacterContainers = () => {
+    console.log("characterObj.character", characterObj.character)
     return (
-        <div className="top-grid-phonetic">
-            {/* Romaji on the top */}
-            <div className={`grid-item-top ${options.characterTypes.romaji.activeBot ? 'visible' : 'hidden'}`}>
-                <div className={`
-                    phonetic-romaji
-                    ${characterObj.completed ? 'filled' : ''}
-                    `}>
-                    {characterObj.characters.romaji.character}
-                </div>
-            </div>
-            
-            <div className={`${(options.characterTypes.hiragana.activeBot || options.characterTypes.katakana.activeBot) && options.characterTypes.romaji.activeBot? 'UI-divider-container' : 'd-none'}`}>
-                <div className="UI-divider"></div>
-            </div>
-
-            <div className={`grid-item-bot ${options.characterTypes.hiragana.activeBot || options.characterTypes.katakana.activeBot ? 'visible' : 'hidden'}`}>
-                {/* Hiragana on the left */}
-                <div className={`
-                    phonetic-hiragana 
-                    ${options.characterTypes.hiragana.activeBot ? 'visible' : 'hidden'}
-                    ${characterObj.characters.hiragana.filled ? 'filled' : ''}
-                    `}>
-                    {characterObj.characters.hiragana.character}
-                </div>
-
-                
-                <div className={`${options.characterTypes.hiragana.activeBot && options.characterTypes.katakana.activeBot ? 'UI-divider-vertical' : 'd-none'}`}></div>
-                
-                
-                {/* Katakana on the right */}
-                <div className={`
-                        phonetic-katakana 
-                        ${options.characterTypes.katakana.activeBot ? 'visible' : 'hidden'}
-                        ${characterObj.characters.katakana.filled ? 'filled' : ''}
-                        ${characterObj.placeholder ? 'hide' : ''}
-                        `}>
-                    {characterObj.characters.katakana.character}
-                </div>
-            </div>
+        <div className="bot-grid-item">
+          <div className="char-container">
+            <div>{characterObj.character}</div>
+          </div>
         </div>
     );
   };
@@ -84,11 +50,11 @@ const DragTile = ({ characterObj, index }) => {
   return (
     <div
       ref={dragRef}
-      key={`drag-tile-${characterObj.id}`}
-      id={`draggable-${characterObj.id}`}
+      key={`drag-tile-${characterObj.matchId}`}
+      id={`draggable-${characterObj.matchId}`}
       className={`
           bot-grid-item
-          ${selectedTile.id === characterObj.id ? 'dragging' : ''}
+          ${selectedTile.id === characterObj.matchId ? 'dragging' : ''}
           ${characterObj.placeholder || characterObj.completed ? 'hide' : ''} 
         `}
       draggable={!characterObj.placeholder && !characterObj.completed}

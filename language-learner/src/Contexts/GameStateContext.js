@@ -1,58 +1,17 @@
-import React, { createContext, useState, useContext, useCallback, useEffect } from 'react';
-import { cloneCharacters, filterCharacters } from '../Misc/Utils'; 
-import japanese_characters_standard from '../Data/japanese_characters_standard_top.json'; 
-import japanese_characters_standard_hiragana_bot from "../Data/japanese_characters_standard_hiragana_bot";
-import japanese_characters_standard_katakana_bot from "../Data/japanese_characters_standard_katakana_bot";
+import React, { createContext, useState, useContext, useCallback, useEffect} from 'react';
+import { defaultState, breakpoints} from '../Misc/Utils'; 
+import japanese_characters_standard_top from '../Data/japanese_characters_standard_top.json'; 
+import japanese_characters_standard_bot from "../Data/japanese_characters_standard_bot";
 // import japanese_characters_byshape_hiragana from '../Data/japanese_characters_byshape_hiragana.json'; 
 // import japanese_characters_byshape_katakana from '../Data/japanese_characters_byshape_katakana.json'; 
 
-const defaultState = {
-  characters: {
-    topCharacters: [],
-    botCharacters: [],
-    defaultCharacters: []
-  },
-  options: {
-    characterTypes: {
-      hiragana: { activeTop: true, activeBot: true },
-      katakana: { activeTop: true, activeBot: false },
-      romaji: { activeTop: false, activeBot: false },
-      dakuten: { activeTop: false, activeBot: false},
-      handakuten: { activeTop: false, activeBot: false}
-    },
-    dakuon: false,
-    topRowLevels: 10,
-    gameMode: {
-      current: 0,
-      methods: ['sound', 'h-shape', 'k-shape', 'missed']
-    },
-    sound: false
-  },
-  game: {
-    start: false,
-    gameover: false
-  },
-  stats: {
-    recentTime: 0,
-    bestTime: 0,
-  },
-  selectedTile: {
-    id: null,
-    index: null
-  },
-};
-
 const GameStateContext = createContext();
 
-const breakpoints = {
-  mobile: 480,
-  tablet: 768,
-  laptop: 1024,
-  desktop: 1200,
-}
-
 export const GameStateProvider = ({ children }) => {
-  const [characters, setCharacters] = useState(defaultState.characters);
+  const [characters, setCharacters] = useState({
+    topCharacters: japanese_characters_standard_top, 
+    botCharacters: japanese_characters_standard_bot
+  });
   const [options, setOptions] = useState(defaultState.options);
   const [game, setGame] = useState(defaultState.game);
   const [stats, setStats] = useState(defaultState.stats);
@@ -78,42 +37,14 @@ export const GameStateProvider = ({ children }) => {
   }, [updateScreenSize]);
 
 
-  const filterByOptions = useCallback(
-    (character) => {
-      const isDakuonEnabled = options.dakuon;
-      const characterIsDakuon = character.dakuon;
-      return isDakuonEnabled || !characterIsDakuon;
-    },
-    [options.dakuon]
-  );
 
-  const reset = useCallback(() => {
+  const reset = () => {
     setGame(defaultState.game);
-    const filteredCharacters = cloneCharacters(
-      filterCharacters(japanese_characters_standard, filterByOptions)
-    );
     setCharacters({
-      topCharacters: filteredCharacters,
-      botCharacters: filteredCharacters,
-      defaultCharacters: filteredCharacters,
+      topCharacters: japanese_characters_standard_top,
+      botCharacters: japanese_characters_standard_bot,
     });
-  }, [filterByOptions]);
-
-
-  const init = useCallback(() => {
-    setGame(defaultState.game);
-    setStats(defaultState.stats);
-    setOptions(defaultState.options);
-    const filteredCharacters = cloneCharacters(
-      filterCharacters(japanese_characters_standard, filterByOptions)
-    );
-    setCharacters({
-      topCharacters: filteredCharacters,
-      botCharacters: filteredCharacters,
-      defaultCharacters: filteredCharacters,
-    });
-  }, [filterByOptions]);
-
+  };
 
   const getCurrentRow = (characters) => {
     const firstRenderedIndex = characters.findIndex(char => !char.completed);
@@ -190,16 +121,16 @@ export const GameStateProvider = ({ children }) => {
     const topIndex = tempTopChars.findIndex((tile) => tile.id === matchedTile.id);
 
     // 6) Mark both matching tiles as filled (if found)
-    if (bottomIndex !== -1 && options.characterTypes.hiragana.activeBot === true) {
+    if (bottomIndex !== -1 && options.characterTypes.hiragana === true) {
       tempBotChars[bottomIndex].characters.hiragana.filled = true;
     }
-    if (bottomIndex !== -1 && options.characterTypes.katakana.activeBot === true) {
+    if (bottomIndex !== -1 && options.characterTypes.katakana === true) {
       tempBotChars[bottomIndex].characters.katakana.filled = true;
     }
-    if (topIndex !== -1 && options.characterTypes.hiragana.activeTop === true) {
+    if (topIndex !== -1 && options.characterTypes.hiragana === true) {
       tempTopChars[topIndex].characters.hiragana.filled = true;
     }
-    if (topIndex !== -1 && options.characterTypes.katakana.activeTop === true) {
+    if (topIndex !== -1 && options.characterTypes.katakana === true) {
       tempTopChars[topIndex].characters.katakana.filled = true;
     }
     // 7) Check if the entire row is now “all filled”
@@ -233,6 +164,14 @@ export const GameStateProvider = ({ children }) => {
     }));
   };
   
+  const handleCharacterSelect = (type) => {
+    console.log('defaultAll', characters.defaultAll)
+    setCharacters((prevChars) => ({
+      ...prevChars,
+      botCharacters: prevChars[`default${type}`] || [],
+    }));
+    console.log('characters', characters.botCharacters)
+  }
   
 
 
@@ -246,15 +185,14 @@ export const GameStateProvider = ({ children }) => {
     stats,
     setStats,
     reset,
-    init,
-    filterByOptions,
     screenSize,
     selectedTile,
     setSelectedTile,
     handleDrop,
     handleTextSubmit,
     startMenuOpen, 
-    setStartMenuOpen
+    setStartMenuOpen,
+    handleCharacterSelect
   };
 
   return (

@@ -3,7 +3,7 @@ import "../Styles/StartMenu.scss";
 import { useGameState } from "../Contexts/GameStateContext.js";
 
 function StartMenu() {
-    const {setOptions, startMenuOpen, setStartMenuOpen } = useGameState();
+    const {setOptions, startMenuOpen, setStartMenuOpen, handleCharacterSelect } = useGameState();
 
     const handleSelection = (type) => {
         setOptions((prevOptions) => {
@@ -11,7 +11,7 @@ function StartMenu() {
             // Add characters to bot list depending on what is selected
             // Then feed those character lists into the bot grid.
             // then feed those visuals to the top grid (this should be setup)
-            
+
 
 
             // Update characterTypes based on the selected type
@@ -24,6 +24,7 @@ function StartMenu() {
                     katakana: { activeTop: false, activeBot: false },
                     romaji: { activeTop: false, activeBot: false },
                 };
+                handleCharacterSelect("hiragana")
             } else if (type === "katakana") {
                 updatedCharacterTypes = {
                     ...updatedCharacterTypes,
@@ -31,6 +32,7 @@ function StartMenu() {
                     katakana: { activeTop: true, activeBot: true },
                     romaji: { activeTop: false, activeBot: false },
                 };
+                handleCharacterSelect("katakana")
             } else if (type === "both") {
                 updatedCharacterTypes = {
                     ...updatedCharacterTypes,
@@ -38,6 +40,7 @@ function StartMenu() {
                     katakana: { activeTop: true, activeBot: true },
                     romaji: { activeTop: false, activeBot: false },
                 };
+                handleCharacterSelect("all")
             }
     
             return {
