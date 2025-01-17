@@ -43,7 +43,7 @@ const MobileHint = () => {
                 className={`${touched && 'active'} mobile-hint-button`}
                 onTouchStart={handleTouchStart}
                 onTouchEnd={handleTouchEnd}>
-                <i class="fa-regular fa-lightbulb"></i>
+                <i className="fa-regular fa-lightbulb"></i>
             </button>
           )}
         </div>

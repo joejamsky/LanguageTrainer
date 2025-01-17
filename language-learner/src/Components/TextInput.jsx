@@ -33,13 +33,7 @@ const TextInput = () => {
 
             setOptions((prevOptions) => ({
                 ...prevOptions, // Spread the existing options
-                characterTypes: {
-                  ...prevOptions.characterTypes, // Spread the existing characterTypes
-                  romaji: {
-                    ...prevOptions.characterTypes.romaji, // Spread the existing romaji object
-                    activeTop: true, // Update the specific property
-                  },
-                },
+                hints: true
               }));
         }
     };
@@ -50,13 +44,7 @@ const TextInput = () => {
         if (event.shiftKey === false || (isMac ? event.metaKey === false : event.ctrlKey === false)) {
           setOptions((prevOptions) => ({
             ...prevOptions,
-            characterTypes: {
-              ...prevOptions.characterTypes,
-              romaji: {
-                ...prevOptions.characterTypes.romaji,
-                activeTop: false, // Set back to false when keys are released
-              },
-            },
+            hints: false
           }));
         }
       };

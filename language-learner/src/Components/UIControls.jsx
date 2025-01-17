@@ -6,6 +6,7 @@ import CharacterCheckBox from './CharacterCheckBox';
 import ShuffleSlider from './ShuffleSlider';
 import SortBy from './SortBy';
 import RowSlider from './RowSlider';
+import HintToggle from './HintToggle';
 import { useGameState } from "../Contexts/GameStateContext.js";
 
 function UIControls() {
@@ -45,11 +46,13 @@ function UIControls() {
           setOptions={setOptions}
         />
     
+      
+        <HintToggle/>
+      
 
       <div>
         sound
       </div>
-
       <div>
         reset data
       </div>

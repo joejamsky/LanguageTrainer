@@ -103,13 +103,34 @@ export const GameStateProvider = ({ children }) => {
     const tempBotChars = [...characters.botCharacters];
     const tempTopChars = [...characters.topCharacters];
   
+    console.log("tempBotChars",tempBotChars)
+    console.log("tempTopChars",tempTopChars)
+
     // 3) Slice out the 5 tiles in the current row
     const row = tempBotChars.slice(startIdx, endIdx);
 
+    console.log("row",row)
+
     // 4) Find the tile that matches the user's typed answer (ignoring placeholders)
+
+    // The bot character list doesn't have a romaji to compare with the entered input. 
+    // Must add romaji to bot characters or find another way to check input agains the question tiles. 
     const matchedTile = row.find(
-      (tile) => !tile.placeholder && tile.characters.romaji.character === submittedChar
+      (tile) => {
+        console.log('tile', tile.character)
+        console.log('submittedChar', submittedChar)
+        if(!tile.placeholder && tile.character === submittedChar)
+        {
+          console.log("test")
+          return true
+        } else {
+          return false
+        }
+      } 
+      
     );
+
+    console.log("matchedTile",matchedTile)
   
     // If there is no match, do nothing (or show an error, etc.)
     if (!matchedTile) {

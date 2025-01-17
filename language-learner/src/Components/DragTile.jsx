@@ -4,7 +4,7 @@ import { useGameState } from "../Contexts/GameStateContext";
 
 const DragTile = ({ characterObj, index }) => {
   const dragRef = useRef(null);
-  const {game, setGame, selectedTile, setSelectedTile, screenSize, options} = useGameState();
+  const {game, setGame, selectedTile, setSelectedTile, screenSize} = useGameState();
 
   const onTouchEnd = (e) => {
     setSelectedTile({
@@ -37,7 +37,6 @@ const DragTile = ({ characterObj, index }) => {
   };
 
   const renderCharacterContainers = () => {
-    console.log("characterObj.character", characterObj.character)
     return (
         <div className="bot-grid-item">
           <div className="char-container">
