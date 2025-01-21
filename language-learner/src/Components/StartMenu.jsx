@@ -7,12 +7,6 @@ function StartMenu() {
 
     const handleSelection = (type) => {
         setOptions((prevOptions) => {
-            // TODO::
-            // Add characters to bot list depending on what is selected
-            // Then feed those character lists into the bot grid.
-            // then feed those visuals to the top grid (this should be setup)
-
-
 
             // Update characterTypes based on the selected type
             let updatedCharacterTypes = { ...prevOptions.characterTypes };

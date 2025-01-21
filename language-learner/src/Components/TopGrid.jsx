@@ -13,8 +13,8 @@ const TopGrid = () => {
 
       {characters && characters.topCharacters.map((character, index) => {
         if (
-          (character.dakuten === true && options.characterTypes.dakuten === false) ||
-          (character.handakuten === true && options.characterTypes.handakuten === false)
+          (character.modifierGroup === "dakuten" && options.characterTypes.dakuten === false) ||
+          (character.modifierGroup === "handakuten" && options.characterTypes.handakuten === false)
         ) {
           return null; // Render nothing
         } else {

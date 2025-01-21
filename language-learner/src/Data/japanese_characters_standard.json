@@ -1,961 +1,811 @@
 [
     {
-        "id": "0", 
-        "groups": ["a-row", "a-shape"],
+        "id": "0-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "a",  "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "あ", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "katakana": {"character": "ア", "filled": false, "render": true, "missed": 0, "shapeGroup": 0}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "1", 
-        "groups": ["a-row", "a-shape"],
+        "id": "1-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "i",  "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "い", "filled": false, "render": true, "missed": 0, "shapeGroup": 1},
             "katakana": {"character": "イ", "filled": false, "render": true, "missed": 0, "shapeGroup": 2}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "2", 
-        "groups": ["a-row", "a-shape"],
+        "id": "2-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "u",  "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "う", "filled": false, "render": true, "missed": 0, "shapeGroup": 2},
             "katakana": {"character": "ウ", "filled": false, "render": true, "missed": 0, "shapeGroup": 0}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "3", 
-        "groups": ["a-row", "a-shape"],
+        "id": "3-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "e",  "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "え", "filled": false, "render": true, "missed": 0, "shapeGroup": 3},
             "katakana": {"character": "エ", "filled": false, "render": true, "missed": 0, "shapeGroup": 0}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "4", 
-        "groups": ["a-row", "a-shape"],
+        "id": "4-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "o",  "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "お", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "katakana": {"character": "オ", "filled": false, "render": true, "missed": 0, "shapeGroup": 3}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "5", 
-        "groups": ["k-row", "a-shape"],
+        "id": "5-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "ka", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "か", "filled": false, "render": true, "missed": 0, "shapeGroup": 4},
             "katakana": {"character": "カ", "filled": false, "render": true, "missed": 0, "shapeGroup": 1}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "6", 
-        "groups": ["k-row", "a-shape"],
+        "id": "6-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "ki", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "き", "filled": false, "render": true, "missed": 0, "shapeGroup": 5},
             "katakana": {"character": "キ", "filled": false, "render": true, "missed": 0, "shapeGroup": 4}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "7", 
-        "groups": ["k-row", "a-shape"],
+        "id": "7-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "ku", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "く", "filled": false, "render": true, "missed": 0, "shapeGroup": 6},
             "katakana": {"character": "ク", "filled": false, "render": true, "missed": 0, "shapeGroup": 1}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "8", 
-        "groups": ["k-row", "a-shape"],
+        "id": "8-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "ke", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "け", "filled": false, "render": true, "missed": 0, "shapeGroup": 1},
             "katakana": {"character": "ケ", "filled": false, "render": true, "missed": 0, "shapeGroup": 1}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "9", 
-        "groups": ["k-row", "a-shape"],
+        "id": "9-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "ko", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "こ", "filled": false, "render": true, "missed": 0, "shapeGroup": 3},
             "katakana": {"character": "コ", "filled": false, "render": true, "missed": 0, "shapeGroup": 5}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "5-dakuon",
-        "groups": ["g-row", "a-shape"],
+        "id": "5-d",
         "placeholder": false,
+        "modifierGroup": "dakuten",
         "completed": false,
         "characters": {
             "romaji":  {"character": "ga", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "が", "filled": false, "render": true, "missed": 0, "shapeGroup": 4},
             "katakana": {"character": "ガ", "filled": false, "render": true, "missed": 0, "shapeGroup": 1}
-        },
-        "dakuten": true,
-        "handakuten": false
+        }
     },
     {
-        "id": "6-dakuon",
-        "groups": ["g-row", "a-shape"],
+        "id": "6-d",
         "placeholder": false,
+        "modifierGroup": "dakuten",
         "completed": false,
         "characters": {
             "romaji":  {"character": "gi", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ぎ", "filled": false, "render": true, "missed": 0, "shapeGroup": 5},
             "katakana": {"character": "ギ", "filled": false, "render": true, "missed": 0, "shapeGroup": 4}
-        },
-        "dakuten": true,
-        "handakuten": false
+        }
     },
     {
-        "id": "7-dakuon",
-        "groups": ["g-row", "a-shape"],
+        "id": "7-d",
         "placeholder": false,
+        "modifierGroup": "dakuten",
         "completed": false,
         "characters": {
             "romaji":  {"character": "gu", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ぐ", "filled": false, "render": true, "missed": 0, "shapeGroup": 6},
             "katakana": {"character": "グ", "filled": false, "render": true, "missed": 0, "shapeGroup": 1}
-        },
-        "dakuten": true,
-        "handakuten": false
+        }
     },
     {
-        "id": "8-dakuon",
-        "groups": ["g-row", "a-shape"],
+        "id": "8-d",
         "placeholder": false,
+        "modifierGroup": "dakuten",
         "completed": false,
         "characters": {
             "romaji":  {"character": "ge", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "げ", "filled": false, "render": true, "missed": 0, "shapeGroup": 1},
             "katakana": {"character": "ゲ", "filled": false, "render": true, "missed": 0, "shapeGroup": 1}
-        },
-        "dakuten": true,
-        "handakuten": false
+        }
     },
     {
-        "id": "9-dakuon",
-        "groups": ["g-row", "a-shape"],
+        "id": "9-d",
         "placeholder": false,
+        "modifierGroup": "dakuten",
         "completed": false,
         "characters": {
             "romaji":  {"character": "go", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ご", "filled": false, "render": true, "missed": 0, "shapeGroup": 3},
             "katakana": {"character": "ゴ", "filled": false, "render": true, "missed": 0, "shapeGroup": 5}
-        },
-        "dakuten": true,
-        "handakuten": false
+        }
     },
     {
-        "id": "10", 
-        "groups": ["s-row", "a-shape"],
+        "id": "10-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "sa", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "さ", "filled": false, "render": true, "missed": 0, "shapeGroup": 5},
             "katakana": {"character": "サ", "filled": false, "render": true, "missed": 0, "shapeGroup": 3}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "11",
-        "groups": ["s-row", "a-shape"],
+        "id": "11-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "shi", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "し", "filled": false, "render": true, "missed": 0, "shapeGroup": 2},
             "katakana": {"character": "シ", "filled": false, "render": true, "missed": 0, "shapeGroup": 6}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "12",
-        "groups": ["s-row", "a-shape"],
+        "id": "12-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "su", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "す", "filled": false, "render": true, "missed": 0, "shapeGroup": 5},
             "katakana": {"character": "ス", "filled": false, "render": true, "missed": 0, "shapeGroup": 5}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "13",
-        "groups": ["s-row", "a-shape"],
+        "id": "13-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "se", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "せ", "filled": false, "render": true, "missed": 0, "shapeGroup": 7},
             "katakana": {"character": "セ", "filled": false, "render": true, "missed": 0, "shapeGroup": 3}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "14",
-        "groups": ["s-row", "a-shape"],
+        "id": "14-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "so", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "そ", "filled": false, "render": true, "missed": 0, "shapeGroup": 3},
             "katakana": {"character": "ソ", "filled": false, "render": true, "missed": 0, "shapeGroup": 6}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "10-dakuon",
-        "groups": ["z-row", "a-shape"],
+        "id": "10-d",
         "placeholder": false,
+        "modifierGroup": "dakuten",
         "completed": false,
         "characters": {
             "romaji":  {"character": "za", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ざ", "filled": false, "render": true, "missed": 0, "shapeGroup": 5},
             "katakana": {"character": "ザ", "filled": false, "render": true, "missed": 0, "shapeGroup": 3}
-        },
-        "dakuten": true,
-        "handakuten": false
+        }
     },
     {
-        "id": "11-dakuon",
-        "groups": ["z-row", "a-shape"],
+        "id": "11-d",
         "placeholder": false,
+        "modifierGroup": "dakuten",
         "completed": false,
         "characters": {
             "romaji":  {"character": "ji", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "じ", "filled": false, "render": true, "missed": 0, "shapeGroup": 2},
             "katakana": {"character": "ジ", "filled": false, "render": true, "missed": 0, "shapeGroup": 6}
-        },
-        "dakuten": true,
-        "handakuten": false
+        }
     },
     {
-        "id": "12-dakuon",
-        "groups": ["z-row", "a-shape"],
+        "id": "12-d",
         "placeholder": false,
+        "modifierGroup": "dakuten",
         "completed": false,
         "characters": {
             "romaji":  {"character": "zu", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ず", "filled": false, "render": true, "missed": 0, "shapeGroup": 5},
             "katakana": {"character": "ズ", "filled": false, "render": true, "missed": 0, "shapeGroup": 5}
-        },
-        "dakuten": true,
-        "handakuten": false
+        }
     },
     {
-        "id": "13-dakuon",
-        "groups": ["z-row", "a-shape"],
+        "id": "13-d",
         "placeholder": false,
+        "modifierGroup": "dakuten",
         "completed": false,
         "characters": {
             "romaji":  {"character": "ze", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ぜ", "filled": false, "render": true, "missed": 0, "shapeGroup": 7},
             "katakana": {"character": "ゼ", "filled": false, "render": true, "missed": 0, "shapeGroup": 3}
-        },
-        "dakuten": true,
-        "handakuten": false
+        }
     },
     {
-        "id": "14-dakuon",
-        "groups": ["z-row", "a-shape"],
+        "id": "14-d",
         "placeholder": false,
+        "modifierGroup": "dakuten",
         "completed": false,
         "characters": {
             "romaji":  {"character": "zo", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ぞ", "filled": false, "render": true, "missed": 0, "shapeGroup": 3},
             "katakana": {"character": "ゾ", "filled": false, "render": true, "missed": 0, "shapeGroup": 6}
-        },
-        "dakuten": true,
-        "handakuten": false
+        }
     },
     {
-        "id": "15",
-        "groups": ["t-row", "a-shape"],
+        "id": "15-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "ta", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "た", "filled": false, "render": true, "missed": 0, "shapeGroup": 4},
             "katakana": {"character": "タ", "filled": false, "render": true, "missed": 0, "shapeGroup": 1}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "16",
-        "groups": ["t-row", "a-shape"],
+        "id": "16-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "chi", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ち", "filled": false, "render": true, "missed": 0, "shapeGroup": 5},
             "katakana": {"character": "チ", "filled": false, "render": true, "missed": 0, "shapeGroup": 4}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "17",
-        "groups": ["t-row", "a-shape"],
+        "id": "17-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "tsu", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "つ", "filled": false, "render": true, "missed": 0, "shapeGroup": 2},
             "katakana": {"character": "ツ", "filled": false, "render": true, "missed": 0, "shapeGroup": 6}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "18",
-        "groups": ["t-row", "a-shape"],
+        "id": "18-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "te", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "て", "filled": false, "render": true, "missed": 0, "shapeGroup": 2},
             "katakana": {"character": "テ", "filled": false, "render": true, "missed": 0, "shapeGroup": 4}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "19",
-        "groups": ["t-row", "a-shape"],
+        "id": "19-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "to", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "と", "filled": false, "render": true, "missed": 0, "shapeGroup": 2},
             "katakana": {"character": "ト", "filled": false, "render": true, "missed": 0, "shapeGroup": 2}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "15-dakuon",
-        "groups": ["d-row", "a-shape"],
+        "id": "15-d",
         "placeholder": false,
+        "modifierGroup": "dakuten",
         "completed": false,
         "characters": {
             "romaji":  {"character": "da", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "だ", "filled": false, "render": true, "missed": 0, "shapeGroup": 4},
             "katakana": {"character": "ダ", "filled": false, "render": true, "missed": 0, "shapeGroup": 1}
-        },
-        "dakuten": true,
-        "handakuten": false
+        }
     },
     {
-        "id": "16-dakuon",
-        "groups": ["d-row", "a-shape"],
+        "id": "16-d",
         "placeholder": false,
+        "modifierGroup": "dakuten",
         "completed": false,
         "characters": {
             "romaji":  {"character": "ji", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ぢ", "filled": false, "render": true, "missed": 0, "shapeGroup": 5},
             "katakana": {"character": "ヂ", "filled": false, "render": true, "missed": 0, "shapeGroup": 4}
-        },
-        "dakuten": true,
-        "handakuten": false
+        }
     },
     {
-        "id": "17-dakuon",
-        "groups": ["d-row", "a-shape"],
+        "id": "17-d",
         "placeholder": false,
+        "modifierGroup": "dakuten",
         "completed": false,
         "characters": {
             "romaji":  {"character": "zu", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "づ", "filled": false, "render": true, "missed": 0, "shapeGroup": 2},
             "katakana": {"character": "ヅ", "filled": false, "render": true, "missed": 0, "shapeGroup": 6}
-        },
-        "dakuten": true,
-        "handakuten": false
+        }
     },
     {
-        "id": "18-dakuon",
-        "groups": ["d-row", "a-shape"],
+        "id": "18-d",
         "placeholder": false,
+        "modifierGroup": "dakuten",
         "completed": false,
         "characters": {
             "romaji":  {"character": "de", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "で", "filled": false, "render": true, "missed": 0, "shapeGroup": 2},
             "katakana": {"character": "デ", "filled": false, "render": true, "missed": 0, "shapeGroup": 4}
-        },
-        "dakuten": true,
-        "handakuten": false
+        }
     },
     {
-        "id": "19-dakuon",
-        "groups": ["d-row", "a-shape"],
+        "id": "19-d",
         "placeholder": false,
+        "modifierGroup": "dakuten",
         "completed": false,
         "characters": {
             "romaji":  {"character": "do", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ど", "filled": false, "render": true, "missed": 0, "shapeGroup": 2},
             "katakana": {"character": "ド", "filled": false, "render": true, "missed": 0, "shapeGroup": 2}
-        },
-        "dakuten": true,
-        "handakuten": false
+        }
     },
     {
-        "id": "20",
-        "groups": ["n-row", "a-shape"],
+        "id": "20-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "na", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "な", "filled": false, "render": true, "missed": 0, "shapeGroup": 4},
             "katakana": {"character": "ナ", "filled": false, "render": true, "missed": 0, "shapeGroup": 4}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "21",
-        "groups": ["n-row", "a-shape"],
+        "id": "21-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "ni", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "に", "filled": false, "render": true, "missed": 0, "shapeGroup": 4},
             "katakana": {"character": "ニ", "filled": false, "render": true, "missed": 0, "shapeGroup": 0}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "22",
-        "groups": ["n-row", "a-shape"],
+        "id": "22-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "nu", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ぬ", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "katakana": {"character": "ヌ", "filled": false, "render": true, "missed": 0, "shapeGroup": 1}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "23",
-        "groups": ["n-row", "a-shape"],
+        "id": "23-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "ne", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ね", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "katakana": {"character": "ネ", "filled": false, "render": true, "missed": 0, "shapeGroup": 3}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "24",
-        "groups": ["n-row", "a-shape"],
+        "id": "24-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "no", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "の", "filled": false, "render": true, "missed": 0, "shapeGroup": 8},
             "katakana": {"character": "ノ", "filled": false, "render": true, "missed": 0, "shapeGroup": 6}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "25",
-        "groups": ["h-row", "a-shape"],
+        "id": "25-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "ha", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "は", "filled": false, "render": true, "missed": 0, "shapeGroup": 1},
             "katakana": {"character": "ハ", "filled": false, "render": true, "missed": 0, "shapeGroup": 7}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "26",
-        "groups": ["h-row", "a-shape"],
+        "id": "26-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "hi", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ひ", "filled": false, "render": true, "missed": 0, "shapeGroup": 8},
             "katakana": {"character": "ヒ", "filled": false, "render": true, "missed": 0, "shapeGroup": 2}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "27",
-        "groups": ["h-row", "a-shape"],
+        "id": "27-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "fu", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ふ", "filled": false, "render": true, "missed": 0, "shapeGroup": 8},
             "katakana": {"character": "フ", "filled": false, "render": true, "missed": 0, "shapeGroup": 0}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "28",
-        "groups": ["h-row", "a-shape"],
+        "id": "28-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "he", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "へ", "filled": false, "render": true, "missed": 0, "shapeGroup": 6},
             "katakana": {"character": "ヘ", "filled": false, "render": true, "missed": 0, "shapeGroup": 7}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "29",
-        "groups": ["h-row", "a-shape"],
+        "id": "29-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "ho", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ほ", "filled": false, "render": true, "missed": 0, "shapeGroup": 1},
             "katakana": {"character": "ホ", "filled": false, "render": true, "missed": 0, "shapeGroup": 3}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "25-dakuon",
-        "groups": ["b-row", "a-shape"],
+        "id": "25-d",
         "placeholder": false,
+        "modifierGroup": "dakuten",
         "completed": false,
         "characters": {
             "romaji":  {"character": "ba", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ば", "filled": false, "render": true, "missed": 0, "shapeGroup": 1},
             "katakana": {"character": "バ", "filled": false, "render": true, "missed": 0, "shapeGroup": 7}
-        },
-        "dakuten": true,
-        "handakuten": false
+        }
     },
     {
-        "id": "26-dakuon",
-        "groups": ["b-row", "a-shape"],
+        "id": "26-d",
         "placeholder": false,
+        "modifierGroup": "dakuten",
         "completed": false,
         "characters": {
             "romaji":  {"character": "bi", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "び", "filled": false, "render": true, "missed": 0, "shapeGroup": 8},
             "katakana": {"character": "ビ", "filled": false, "render": true, "missed": 0, "shapeGroup": 2}
-        },
-        "dakuten": true,
-        "handakuten": false
+        }
     },
     {
-        "id": "27-dakuon",
-        "groups": ["b-row", "a-shape"],
+        "id": "27-d",
         "placeholder": false,
+        "modifierGroup": "dakuten",
         "completed": false,
         "characters": {
             "romaji":  {"character": "bu", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ぶ", "filled": false, "render": true, "missed": 0, "shapeGroup": 8},
             "katakana": {"character": "ブ", "filled": false, "render": true, "missed": 0, "shapeGroup": 0}
-        },
-        "dakuten": true,
-        "handakuten": false
+        }
     },
     {
-        "id": "28-dakuon",
-        "groups": ["b-row", "a-shape"],
+        "id": "28-d",
         "placeholder": false,
+        "modifierGroup": "dakuten",
         "completed": false,
         "characters": {
             "romaji":  {"character": "be", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "べ", "filled": false, "render": true, "missed": 0, "shapeGroup": 6},
             "katakana": {"character": "ベ", "filled": false, "render": true, "missed": 0, "shapeGroup": 7}
-        },
-        "dakuten": true,
-        "handakuten": false
+        }
     },
     {
-        "id": "29-dakuon",
-        "groups": ["b-row", "a-shape"],
+        "id": "29-d",
         "placeholder": false,
+        "modifierGroup": "dakuten",
         "completed": false,
         "characters": {
             "romaji":  {"character": "bo", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ぼ", "filled": false, "render": true, "missed": 0, "shapeGroup": 1},
             "katakana": {"character": "ボ", "filled": false, "render": true, "missed": 0, "shapeGroup": 3}
-        },
-        "dakuten": true,
-        "handakuten": false
+        }
     },
     {
-        "id": "25-handakuten",
-        "groups": ["p-row", "a-shape"],
+        "id": "25-h",
         "placeholder": false,
+        "modifierGroup": "handakuten",
         "completed": false,
         "characters": {
             "romaji":  {"character": "pa", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ぱ", "filled": false, "render": true, "missed": 0, "shapeGroup": 1},
             "katakana": {"character": "パ", "filled": false, "render": true, "missed": 0, "shapeGroup": 7}
-        },
-        "dakuten": false,
-        "handakuten": true
+        }
     },
     {
-        "id": "26-handakuten",
-        "groups": ["p-row", "a-shape"],
+        "id": "26-h",
         "placeholder": false,
+        "modifierGroup": "handakuten",
         "completed": false,
         "characters": {
             "romaji":  {"character": "pi", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ぴ", "filled": false, "render": true, "missed": 0, "shapeGroup": 8},
             "katakana": {"character": "ピ", "filled": false, "render": true, "missed": 0, "shapeGroup": 2}
-        },
-        "dakuten": false,
-        "handakuten": true
+        }
     },
     {
-        "id": "27-handakuten",
-        "groups": ["p-row", "a-shape"],
+        "id": "27-h",
         "placeholder": false,
+        "modifierGroup": "handakuten",
         "completed": false,
         "characters": {
             "romaji":  {"character": "pu", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ぷ", "filled": false, "render": true, "missed": 0, "shapeGroup": 8},
             "katakana": {"character": "プ", "filled": false, "render": true, "missed": 0, "shapeGroup": 0}
-        },
-        "dakuten": false,
-        "handakuten": true
+        }
     },
     {
-        "id": "28-handakuten",
-        "groups": ["p-row", "a-shape"],
+        "id": "28-h",
         "placeholder": false,
+        "modifierGroup": "handakuten",
         "completed": false,
         "characters": {
             "romaji":  {"character": "pe", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ぺ", "filled": false, "render": true, "missed": 0, "shapeGroup": 6},
             "katakana": {"character": "ペ", "filled": false, "render": true, "missed": 0, "shapeGroup": 7}
-        },
-        "dakuten": false,
-        "handakuten": true
+        }
     },
     {
-        "id": "29-handakuten",
-        "groups": ["p-row", "a-shape"],
+        "id": "29-h",
         "placeholder": false,
+        "modifierGroup": "handakuten",
         "completed": false,
         "characters": {
             "romaji":  {"character": "po", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ぽ", "filled": false, "render": true, "missed": 0, "shapeGroup": 1},
             "katakana": {"character": "ポ", "filled": false, "render": true, "missed": 0, "shapeGroup": 3}
-        },
-        "dakuten": false,
-        "handakuten": true
+        }
     },
     {
-        "id": "30",
-        "groups": ["m-row", "a-shape"],
+        "id": "30-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "ma", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ま", "filled": false, "render": true, "missed": 0, "shapeGroup": 5},
             "katakana": {"character": "マ", "filled": false, "render": true, "missed": 0, "shapeGroup": 0}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "31",
-        "groups": ["m-row", "a-shape"],
+        "id": "31-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "mi", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "み", "filled": false, "render": true, "missed": 0, "shapeGroup": 7},
             "katakana": {"character": "ミ", "filled": false, "render": true, "missed": 0, "shapeGroup": 0}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "32",
-        "groups": ["m-row", "a-shape"],
+        "id": "32-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "mu", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "む", "filled": false, "render": true, "missed": 0, "shapeGroup": 5},
             "katakana": {"character": "ム", "filled": false, "render": true, "missed": 0, "shapeGroup": 0}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "33",
-        "groups": ["m-row", "a-shape"],
+        "id": "33-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "me", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "め", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "katakana": {"character": "メ", "filled": false, "render": true, "missed": 0, "shapeGroup": 2}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "34",
-        "groups": ["m-row", "a-shape"],
+        "id": "34-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "mo", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "も", "filled": false, "render": true, "missed": 0, "shapeGroup": 5},
             "katakana": {"character": "モ", "filled": false, "render": true, "missed": 0, "shapeGroup": 4}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "35",
-        "groups": ["r-row", "a-shape"],
+        "id": "35-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "ra", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ら", "filled": false, "render": true, "missed": 0, "shapeGroup": 5},
             "katakana": {"character": "ラ", "filled": false, "render": true, "missed": 0, "shapeGroup": 0}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "36",
-        "groups": ["r-row", "a-shape"],
+        "id": "36-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "ri", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "り", "filled": false, "render": true, "missed": 0, "shapeGroup": 1},
             "katakana": {"character": "リ", "filled": false, "render": true, "missed": 0, "shapeGroup": 0}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "37",
-        "groups": ["r-row", "a-shape"],
+        "id": "37-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "ru", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "る", "filled": false, "render": true, "missed": 0, "shapeGroup": 3},
             "katakana": {"character": "ル", "filled": false, "render": true, "missed": 0, "shapeGroup": 0}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "38",
-        "groups": ["r-row", "a-shape"],
+        "id": "38-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "re", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "れ", "filled": false, "render": true, "missed": 0, "shapeGroup": 9},
             "katakana": {"character": "レ", "filled": false, "render": true, "missed": 0, "shapeGroup": 7}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "39",
-        "groups": ["r-row", "a-shape"],
+        "id": "39-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "ro", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ろ", "filled": false, "render": true, "missed": 0, "shapeGroup": 3},
             "katakana": {"character": "ロ", "filled": false, "render": true, "missed": 0, "shapeGroup": 5}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "40",
-        "groups": ["y-row", "a-shape"],
+        "id": "40-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "ya", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "や", "filled": false, "render": true, "missed": 0, "shapeGroup": 5},
             "katakana": {"character": "ヤ", "filled": false, "render": true, "missed": 0, "shapeGroup": 0}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "",
-        "groups": [],
+        "id": "-b",
         "placeholder": true,
+        "modifierGroup": "base",
         "completed": true,
-        "characters": [],
-        "dakuten": false,
-        "handakuten": false
+        "characters": []
     },
     {
-        "id": "41",
-        "groups": ["y-row", "a-shape"],
+        "id": "41-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "yu", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ゆ", "filled": false, "render": true, "missed": 0, "shapeGroup": 8},
             "katakana": {"character": "ユ", "filled": false, "render": true, "missed": 0, "shapeGroup": 5}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "",
-        "groups": [],
+        "id": "-b",
         "placeholder": true,
+        "modifierGroup": "base",
         "completed": true,
-        "characters": [],
-        "dakuten": false,
-        "handakuten": false
+        "characters": []
     },
     {
-        "id": "42",
-        "groups": ["y-row", "a-shape"],
+        "id": "42-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "yo", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "よ", "filled": false, "render": true, "missed": 0, "shapeGroup": 5},
             "katakana": {"character": "ヨ", "filled": false, "render": true, "missed": 0, "shapeGroup": 0}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "43",
-        "groups": ["w-row", "a-shape"],
+        "id": "43-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "wa", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "わ", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "katakana": {"character": "ワ", "filled": false, "render": true, "missed": 0, "shapeGroup": 0}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "",
-        "groups": [],
+        "id": "-b",
         "placeholder": true,
+        "modifierGroup": "base",
         "completed": true,
-        "characters": [],
-        "dakuten": false,
-        "handakuten": false
+        "characters": []
     },
     {
-        "id": "44",
-        "groups": ["w-row", "a-shape"],
+        "id": "44-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "n", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ん", "filled": false, "render": true, "missed": 0, "shapeGroup": 9},
             "katakana": {"character": "ン", "filled": false, "render": true, "missed": 0, "shapeGroup": 6}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     },
     {
-        "id": "",
-        "groups": [],
+        "id": "-b",
         "placeholder": true,
+        "modifierGroup": "base",
         "completed": true,
-        "characters": [],
-        "dakuten": false,
-        "handakuten": false
+        "characters": []
     },
     {
-        "id": "45",
-        "groups": ["w-row", "a-shape"],
+        "id": "45-b",
         "placeholder": false,
+        "modifierGroup": "base",
         "completed": false,
         "characters": {
             "romaji":  {"character": "wo", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "を", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "katakana": {"character": "ヲ", "filled": false, "render": true, "missed": 0, "shapeGroup": 0}
-        },
-        "dakuten": false,
-        "handakuten": false
+        }
     }
 ]

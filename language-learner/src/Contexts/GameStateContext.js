@@ -1,7 +1,7 @@
 import React, { createContext, useState, useContext, useCallback, useEffect} from 'react';
 import { defaultState, breakpoints} from '../Misc/Utils'; 
-import japanese_characters_standard_top from '../Data/japanese_characters_standard_top.json'; 
-import japanese_characters_standard_bot from "../Data/japanese_characters_standard_bot";
+import japanese_characters_standard from '../Data/japanese_characters_standard.json'; 
+// import japanese_characters_standard_bot from "../Data/japanese_characters_standard_bot";
 // import japanese_characters_byshape_hiragana from '../Data/japanese_characters_byshape_hiragana.json'; 
 // import japanese_characters_byshape_katakana from '../Data/japanese_characters_byshape_katakana.json'; 
 
@@ -9,8 +9,8 @@ const GameStateContext = createContext();
 
 export const GameStateProvider = ({ children }) => {
   const [characters, setCharacters] = useState({
-    topCharacters: japanese_characters_standard_top, 
-    botCharacters: japanese_characters_standard_bot
+    topCharacters: japanese_characters_standard, 
+    botCharacters: japanese_characters_standard
   });
   const [options, setOptions] = useState(defaultState.options);
   const [game, setGame] = useState(defaultState.game);
@@ -41,8 +41,8 @@ export const GameStateProvider = ({ children }) => {
   const reset = () => {
     setGame(defaultState.game);
     setCharacters({
-      topCharacters: japanese_characters_standard_top,
-      botCharacters: japanese_characters_standard_bot,
+      topCharacters: japanese_characters_standard,
+      botCharacters: japanese_characters_standard,
     });
   };
 
@@ -88,94 +88,75 @@ export const GameStateProvider = ({ children }) => {
   }
 
   const handleTextSubmit = (submittedChar) => {
-    if(game.start === false) {
+    if (!game.start) {
       setGame((prevGame) => ({
         ...prevGame,
-        start: true
-      }))
+        start: true,
+      }));
     }
-    // 1) Identify which row we’re on
-    const currentRow = getCurrentRow(characters.botCharacters); // e.g. 0 for first row
-    const startIdx = currentRow * 5;
-    const endIdx = startIdx + 5;
+  
+    // 1) Identify the current row
+    // const currentRow = getCurrentRow(characters.botCharacters); // e.g. 0 for first row
+    // const startIdx = currentRow * 5;
+    // const endIdx = startIdx + 5;
   
     // 2) Clone arrays for immutability
     const tempBotChars = [...characters.botCharacters];
     const tempTopChars = [...characters.topCharacters];
   
-    console.log("tempBotChars",tempBotChars)
-    console.log("tempTopChars",tempTopChars)
-
     // 3) Slice out the 5 tiles in the current row
-    const row = tempBotChars.slice(startIdx, endIdx);
-
-    console.log("row",row)
-
-    // 4) Find the tile that matches the user's typed answer (ignoring placeholders)
-
-    // The bot character list doesn't have a romaji to compare with the entered input. 
-    // Must add romaji to bot characters or find another way to check input agains the question tiles. 
-    const matchedTile = row.find(
-      (tile) => {
-        console.log('tile', tile.character)
-        console.log('submittedChar', submittedChar)
-        if(!tile.placeholder && tile.character === submittedChar)
-        {
-          console.log("test")
-          return true
-        } else {
-          return false
-        }
-      } 
-      
-    );
-
-    console.log("matchedTile",matchedTile)
+    // const row = tempBotChars.slice(startIdx, endIdx);
   
-    // If there is no match, do nothing (or show an error, etc.)
+    // 4) Check if the text input matches any `character` in the row
+    const matchedTile = tempBotChars.find((tile) => {
+
+      console.log("tile", tile)
+      
+      if (!tile.placeholder && tile.characters.romaji.character === submittedChar) {
+        return true;
+      }
+      return false;
+    });
+  
     if (!matchedTile) {
-      return -1;
+      console.log("No match found for input:", matchedTile);
+      return -1; // No match, exit function
     }
   
-    // 5) Find the same tile in the full bottom array and top array by ID
+    console.log("Matched Tile:", matchedTile);
+  
+    // 5) Find the index of the matched tile in botCharacters and topCharacters
     const bottomIndex = tempBotChars.findIndex((tile) => tile.id === matchedTile.id);
     const topIndex = tempTopChars.findIndex((tile) => tile.id === matchedTile.id);
-
+  
     // 6) Mark both matching tiles as filled (if found)
-    if (bottomIndex !== -1 && options.characterTypes.hiragana === true) {
-      tempBotChars[bottomIndex].characters.hiragana.filled = true;
+    if (bottomIndex !== -1) {
+      tempBotChars[bottomIndex].completed = true; // Mark tile as completed
     }
-    if (bottomIndex !== -1 && options.characterTypes.katakana === true) {
-      tempBotChars[bottomIndex].characters.katakana.filled = true;
+    if (topIndex !== -1) {
+      tempTopChars[topIndex].completed = true; // Mark tile as completed
     }
-    if (topIndex !== -1 && options.characterTypes.hiragana === true) {
-      tempTopChars[topIndex].characters.hiragana.filled = true;
-    }
-    if (topIndex !== -1 && options.characterTypes.katakana === true) {
-      tempTopChars[topIndex].characters.katakana.filled = true;
-    }
+  
     // 7) Check if the entire row is now “all filled”
-    //    (again ignoring placeholders)
-    const allFilled = row
-      .filter((tile) => !tile.placeholder)
-      .every((tile) => tile.filled);
+    // const allFilled = row
+    //   .filter((tile) => !tile.placeholder)
+    //   .every((tile) => tile.completed);
   
-    // If they are all filled, hide (render = false) the row
-    if (allFilled) {
-      // row is just a slice referencing the same objects in tempBotChars
-      row.forEach((tile) => {
-        tile.render = false;
-      });
-    }
+    // // If all tiles in the row are filled, hide the row (set render = false)
+    // if (allFilled) {
+    //   row.forEach((tile) => {
+    //     tile.render = false;
+    //   });
+    // }
   
-    // 8) Check if we've completed the final row => game over
-    const totalRows = tempBotChars.length / 5; // e.g. total # of rows
-    if (allFilled && (currentRow + 1) === totalRows) {
-      setGame((prevGame) => ({
-        ...prevGame,
-        gameover: true,
-      }));
-    }
+    // 8) Check if game over (last row fully completed)
+    // const totalRows = tempBotChars.length / 5; // e.g. total # of rows
+    // if (allFilled && currentRow + 1 === totalRows) {
+    //   setGame((prevGame) => ({
+    //     ...prevGame,
+    //     gameover: true,
+    //   }));
+    // }
   
     // 9) Update state
     setCharacters((prevChars) => ({
@@ -184,6 +165,7 @@ export const GameStateProvider = ({ children }) => {
       botCharacters: tempBotChars,
     }));
   };
+  
   
   const handleCharacterSelect = (type) => {
     console.log('defaultAll', characters.defaultAll)
