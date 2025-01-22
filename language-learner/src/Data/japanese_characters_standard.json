@@ -4,6 +4,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "a",  "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "あ", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
@@ -15,6 +16,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "i",  "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "い", "filled": false, "render": true, "missed": 0, "shapeGroup": 1},
@@ -26,6 +28,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "u",  "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "う", "filled": false, "render": true, "missed": 0, "shapeGroup": 2},
@@ -37,6 +40,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "e",  "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "え", "filled": false, "render": true, "missed": 0, "shapeGroup": 3},
@@ -48,6 +52,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "o",  "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "お", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
@@ -59,6 +64,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "ka", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "か", "filled": false, "render": true, "missed": 0, "shapeGroup": 4},
@@ -70,6 +76,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "ki", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "き", "filled": false, "render": true, "missed": 0, "shapeGroup": 5},
@@ -81,6 +88,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "ku", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "く", "filled": false, "render": true, "missed": 0, "shapeGroup": 6},
@@ -92,6 +100,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "ke", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "け", "filled": false, "render": true, "missed": 0, "shapeGroup": 1},
@@ -103,6 +112,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "ko", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "こ", "filled": false, "render": true, "missed": 0, "shapeGroup": 3},
@@ -114,6 +124,7 @@
         "placeholder": false,
         "modifierGroup": "dakuten",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "ga", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "が", "filled": false, "render": true, "missed": 0, "shapeGroup": 4},
@@ -125,6 +136,7 @@
         "placeholder": false,
         "modifierGroup": "dakuten",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "gi", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ぎ", "filled": false, "render": true, "missed": 0, "shapeGroup": 5},
@@ -136,6 +148,7 @@
         "placeholder": false,
         "modifierGroup": "dakuten",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "gu", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ぐ", "filled": false, "render": true, "missed": 0, "shapeGroup": 6},
@@ -147,6 +160,7 @@
         "placeholder": false,
         "modifierGroup": "dakuten",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "ge", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "げ", "filled": false, "render": true, "missed": 0, "shapeGroup": 1},
@@ -158,6 +172,7 @@
         "placeholder": false,
         "modifierGroup": "dakuten",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "go", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ご", "filled": false, "render": true, "missed": 0, "shapeGroup": 3},
@@ -169,6 +184,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "sa", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "さ", "filled": false, "render": true, "missed": 0, "shapeGroup": 5},
@@ -180,6 +196,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "shi", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "し", "filled": false, "render": true, "missed": 0, "shapeGroup": 2},
@@ -191,6 +208,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "su", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "す", "filled": false, "render": true, "missed": 0, "shapeGroup": 5},
@@ -202,6 +220,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "se", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "せ", "filled": false, "render": true, "missed": 0, "shapeGroup": 7},
@@ -213,6 +232,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "so", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "そ", "filled": false, "render": true, "missed": 0, "shapeGroup": 3},
@@ -224,6 +244,7 @@
         "placeholder": false,
         "modifierGroup": "dakuten",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "za", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ざ", "filled": false, "render": true, "missed": 0, "shapeGroup": 5},
@@ -235,6 +256,7 @@
         "placeholder": false,
         "modifierGroup": "dakuten",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "ji", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "じ", "filled": false, "render": true, "missed": 0, "shapeGroup": 2},
@@ -246,6 +268,7 @@
         "placeholder": false,
         "modifierGroup": "dakuten",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "zu", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ず", "filled": false, "render": true, "missed": 0, "shapeGroup": 5},
@@ -257,6 +280,7 @@
         "placeholder": false,
         "modifierGroup": "dakuten",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "ze", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ぜ", "filled": false, "render": true, "missed": 0, "shapeGroup": 7},
@@ -268,6 +292,7 @@
         "placeholder": false,
         "modifierGroup": "dakuten",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "zo", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ぞ", "filled": false, "render": true, "missed": 0, "shapeGroup": 3},
@@ -279,6 +304,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "ta", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "た", "filled": false, "render": true, "missed": 0, "shapeGroup": 4},
@@ -290,6 +316,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "chi", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ち", "filled": false, "render": true, "missed": 0, "shapeGroup": 5},
@@ -301,6 +328,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "tsu", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "つ", "filled": false, "render": true, "missed": 0, "shapeGroup": 2},
@@ -312,6 +340,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "te", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "て", "filled": false, "render": true, "missed": 0, "shapeGroup": 2},
@@ -323,6 +352,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "to", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "と", "filled": false, "render": true, "missed": 0, "shapeGroup": 2},
@@ -334,6 +364,7 @@
         "placeholder": false,
         "modifierGroup": "dakuten",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "da", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "だ", "filled": false, "render": true, "missed": 0, "shapeGroup": 4},
@@ -345,6 +376,7 @@
         "placeholder": false,
         "modifierGroup": "dakuten",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "ji", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ぢ", "filled": false, "render": true, "missed": 0, "shapeGroup": 5},
@@ -356,6 +388,7 @@
         "placeholder": false,
         "modifierGroup": "dakuten",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "zu", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "づ", "filled": false, "render": true, "missed": 0, "shapeGroup": 2},
@@ -367,6 +400,7 @@
         "placeholder": false,
         "modifierGroup": "dakuten",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "de", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "で", "filled": false, "render": true, "missed": 0, "shapeGroup": 2},
@@ -378,6 +412,7 @@
         "placeholder": false,
         "modifierGroup": "dakuten",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "do", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ど", "filled": false, "render": true, "missed": 0, "shapeGroup": 2},
@@ -389,6 +424,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "na", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "な", "filled": false, "render": true, "missed": 0, "shapeGroup": 4},
@@ -400,6 +436,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "ni", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "に", "filled": false, "render": true, "missed": 0, "shapeGroup": 4},
@@ -411,6 +448,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "nu", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ぬ", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
@@ -422,6 +460,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "ne", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ね", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
@@ -433,6 +472,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "no", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "の", "filled": false, "render": true, "missed": 0, "shapeGroup": 8},
@@ -444,6 +484,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "ha", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "は", "filled": false, "render": true, "missed": 0, "shapeGroup": 1},
@@ -455,6 +496,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "hi", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ひ", "filled": false, "render": true, "missed": 0, "shapeGroup": 8},
@@ -466,6 +508,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "fu", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ふ", "filled": false, "render": true, "missed": 0, "shapeGroup": 8},
@@ -477,6 +520,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "he", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "へ", "filled": false, "render": true, "missed": 0, "shapeGroup": 6},
@@ -488,6 +532,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "ho", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ほ", "filled": false, "render": true, "missed": 0, "shapeGroup": 1},
@@ -499,6 +544,7 @@
         "placeholder": false,
         "modifierGroup": "dakuten",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "ba", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ば", "filled": false, "render": true, "missed": 0, "shapeGroup": 1},
@@ -510,6 +556,7 @@
         "placeholder": false,
         "modifierGroup": "dakuten",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "bi", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "び", "filled": false, "render": true, "missed": 0, "shapeGroup": 8},
@@ -521,6 +568,7 @@
         "placeholder": false,
         "modifierGroup": "dakuten",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "bu", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ぶ", "filled": false, "render": true, "missed": 0, "shapeGroup": 8},
@@ -532,6 +580,7 @@
         "placeholder": false,
         "modifierGroup": "dakuten",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "be", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "べ", "filled": false, "render": true, "missed": 0, "shapeGroup": 6},
@@ -543,6 +592,7 @@
         "placeholder": false,
         "modifierGroup": "dakuten",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "bo", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ぼ", "filled": false, "render": true, "missed": 0, "shapeGroup": 1},
@@ -554,6 +604,7 @@
         "placeholder": false,
         "modifierGroup": "handakuten",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "pa", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ぱ", "filled": false, "render": true, "missed": 0, "shapeGroup": 1},
@@ -565,6 +616,7 @@
         "placeholder": false,
         "modifierGroup": "handakuten",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "pi", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ぴ", "filled": false, "render": true, "missed": 0, "shapeGroup": 8},
@@ -576,6 +628,7 @@
         "placeholder": false,
         "modifierGroup": "handakuten",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "pu", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ぷ", "filled": false, "render": true, "missed": 0, "shapeGroup": 8},
@@ -587,6 +640,7 @@
         "placeholder": false,
         "modifierGroup": "handakuten",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "pe", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ぺ", "filled": false, "render": true, "missed": 0, "shapeGroup": 6},
@@ -598,6 +652,7 @@
         "placeholder": false,
         "modifierGroup": "handakuten",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "po", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ぽ", "filled": false, "render": true, "missed": 0, "shapeGroup": 1},
@@ -609,6 +664,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "ma", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ま", "filled": false, "render": true, "missed": 0, "shapeGroup": 5},
@@ -620,6 +676,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "mi", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "み", "filled": false, "render": true, "missed": 0, "shapeGroup": 7},
@@ -631,6 +688,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "mu", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "む", "filled": false, "render": true, "missed": 0, "shapeGroup": 5},
@@ -642,6 +700,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "me", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "め", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
@@ -653,6 +712,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "mo", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "も", "filled": false, "render": true, "missed": 0, "shapeGroup": 5},
@@ -664,6 +724,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "ra", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ら", "filled": false, "render": true, "missed": 0, "shapeGroup": 5},
@@ -675,6 +736,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "ri", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "り", "filled": false, "render": true, "missed": 0, "shapeGroup": 1},
@@ -686,6 +748,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "ru", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "る", "filled": false, "render": true, "missed": 0, "shapeGroup": 3},
@@ -697,6 +760,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "re", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "れ", "filled": false, "render": true, "missed": 0, "shapeGroup": 9},
@@ -708,6 +772,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "ro", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ろ", "filled": false, "render": true, "missed": 0, "shapeGroup": 3},
@@ -719,6 +784,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "ya", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "や", "filled": false, "render": true, "missed": 0, "shapeGroup": 5},
@@ -737,6 +803,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "yu", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ゆ", "filled": false, "render": true, "missed": 0, "shapeGroup": 8},
@@ -755,6 +822,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "yo", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "よ", "filled": false, "render": true, "missed": 0, "shapeGroup": 5},
@@ -766,6 +834,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "wa", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "わ", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
@@ -784,6 +853,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "n", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "ん", "filled": false, "render": true, "missed": 0, "shapeGroup": 9},
@@ -802,6 +872,7 @@
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
+        "render": true,
         "characters": {
             "romaji":  {"character": "wo", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
             "hiragana": {"character": "を", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},

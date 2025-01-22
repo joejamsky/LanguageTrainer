@@ -7,10 +7,48 @@ import japanese_characters_standard from '../Data/japanese_characters_standard.j
 
 const GameStateContext = createContext();
 
+const generateBotCharacters = (botCharacters, options) => {
+  const hiraganaItems = [];
+  const katakanaItems = [];
+  const romajiItems = [];
+
+  // Group items by type
+  botCharacters.forEach((char) => {
+    if (!char.characters) return;
+
+    if (char.modifierGroup === "dakuten" && !options.characterTypes.dakuten) return;
+    if (char.modifierGroup === "handakuten" && !options.characterTypes.handakuten) return;
+
+    if (options.characterTypes.hiragana && char.characters.hiragana?.render) {
+      hiraganaItems.push({ type: "hiragana", ...char.characters.hiragana, id: char.id, matchDesktop: char.characters.romaji.character });
+    }
+    if (options.characterTypes.katakana && char.characters.katakana?.render) {
+      katakanaItems.push({ type: "katakana", ...char.characters.katakana, id: char.id, matchDesktop: char.characters.romaji.character });
+    }
+    if (options.characterTypes.romaji && char.characters.romaji?.render) {
+      romajiItems.push({ type: "romaji", ...char.characters.romaji, id: char.id, matchDesktop: char.characters.romaji.character });
+    }
+  });
+
+  // Combine items row by row (5 items per row)
+  const combinedRows = [];
+  const maxLength = Math.max(hiraganaItems.length, katakanaItems.length, romajiItems.length);
+
+  for (let i = 0; i < maxLength; i += 5) {
+    combinedRows.push(
+      ...hiraganaItems.slice(i, i + 5),
+      ...katakanaItems.slice(i, i + 5),
+      ...romajiItems.slice(i, i + 5)
+    );
+  }
+
+  return combinedRows;
+};
+
 export const GameStateProvider = ({ children }) => {
   const [characters, setCharacters] = useState({
     topCharacters: japanese_characters_standard, 
-    botCharacters: japanese_characters_standard
+    botCharacters: generateBotCharacters(japanese_characters_standard, defaultState.options)
   });
   const [options, setOptions] = useState(defaultState.options);
   const [game, setGame] = useState(defaultState.game);
@@ -107,35 +145,47 @@ export const GameStateProvider = ({ children }) => {
     // 3) Slice out the 5 tiles in the current row
     // const row = tempBotChars.slice(startIdx, endIdx);
   
-    // 4) Check if the text input matches any `character` in the row
-    const matchedTile = tempBotChars.find((tile) => {
-
-      console.log("tile", tile)
+    if(submittedChar === tempBotChars[game.tileIndex].matchDesktop){
       
-      if (!tile.placeholder && tile.characters.romaji.character === submittedChar) {
-        return true;
-      }
-      return false;
-    });
-  
-    if (!matchedTile) {
-      console.log("No match found for input:", matchedTile);
-      return -1; // No match, exit function
+      setGame((prevGame) => ({
+        ...prevGame,
+        tileIndex: prevGame.tileIndex + 1,
+      }));
+
+      tempBotChars[game.tileIndex].render = false
+      // tempBotChars[game.tileIndex].characters.katakana.render 
+
     }
+
+    // // 4) Check if the text input matches any `character` in the row
+    // const matchedTile = tempBotChars.find((tile) => {
+
+    //   console.log("tile", tile)
+      
+    //   if (!tile.placeholder && tile.characters.romaji.character === submittedChar) {
+    //     return true;
+    //   }
+    //   return false;
+    // });
   
-    console.log("Matched Tile:", matchedTile);
+    // if (!matchedTile) {
+    //   console.log("No match found for input:", matchedTile);
+    //   return -1; // No match, exit function
+    // }
   
-    // 5) Find the index of the matched tile in botCharacters and topCharacters
-    const bottomIndex = tempBotChars.findIndex((tile) => tile.id === matchedTile.id);
-    const topIndex = tempTopChars.findIndex((tile) => tile.id === matchedTile.id);
+    // console.log("Matched Tile:", matchedTile);
   
-    // 6) Mark both matching tiles as filled (if found)
-    if (bottomIndex !== -1) {
-      tempBotChars[bottomIndex].completed = true; // Mark tile as completed
-    }
-    if (topIndex !== -1) {
-      tempTopChars[topIndex].completed = true; // Mark tile as completed
-    }
+    // // 5) Find the index of the matched tile in botCharacters and topCharacters
+    // const bottomIndex = tempBotChars.findIndex((tile) => tile.id === matchedTile.id);
+    // const topIndex = tempTopChars.findIndex((tile) => tile.id === matchedTile.id);
+  
+    // // 6) Mark both matching tiles as filled (if found)
+    // if (bottomIndex !== -1) {
+    //   tempBotChars[bottomIndex].completed = true; // Mark tile as completed
+    // }
+    // if (topIndex !== -1) {
+    //   tempTopChars[topIndex].completed = true; // Mark tile as completed
+    // }
   
     // 7) Check if the entire row is now “all filled”
     // const allFilled = row

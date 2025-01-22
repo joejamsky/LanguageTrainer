@@ -23,7 +23,8 @@ export const defaultState = {
   },
   game: {
     start: false,
-    gameover: false
+    gameover: false,
+    tileIndex: 0
   },
   stats: {
     recentTime: 0,
