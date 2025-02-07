@@ -1,7 +1,7 @@
 import React from 'react';
 import '../Styles/Checkbox.scss';
 
-function CharacterCheckBox({ options, setOptions }) {
+function CharacterCheckBox({ filters, setFilters }) {
   // Mapping for labels
   const kanaRef = {
     hiragana: "あ",
@@ -13,20 +13,20 @@ function CharacterCheckBox({ options, setOptions }) {
 
   // Unified handleChange function that accepts the group key
   const handleChange = (group, key) => {
-    setOptions((prevOptions) => {
+    setFilters((prevFilters) => {
       // For base types, enforce that at least one remains checked.
       if (group === "characterTypes") {
-        const activeCount = Object.values(prevOptions.characterTypes).filter(Boolean).length;
-        if (prevOptions.characterTypes[key] && activeCount <= 1) {
-          return prevOptions; // Prevent unchecking the last base option.
+        const activeCount = Object.values(prevFilters.characterTypes).filter(Boolean).length;
+        if (prevFilters.characterTypes[key] && activeCount <= 1) {
+          return prevFilters; // Prevent unchecking the last base option.
         }
       }
 
       return {
-        ...prevOptions,
+        ...prevFilters,
         [group]: {
-          ...prevOptions[group],
-          [key]: !prevOptions[group][key]
+          ...prevFilters[group],
+          [key]: !prevFilters[group][key]
         }
       };
     });
@@ -41,11 +41,11 @@ function CharacterCheckBox({ options, setOptions }) {
       <div className="ui-input-container">
         {/* Base Character Types */}
         <div className="checkbox-group base-types">
-          {Object.keys(options.characterTypes).map((character) => (
+          {Object.keys(filters.characterTypes).map((character) => (
             <label className="switch" key={`base-${character}`}>
               <input
                 type="checkbox"
-                checked={options.characterTypes[character]}
+                checked={filters.characterTypes[character]}
                 onChange={() => handleChange("characterTypes", character)}
               />
               <span className="check-slider"></span>
@@ -56,11 +56,11 @@ function CharacterCheckBox({ options, setOptions }) {
 
         {/* Modifier Group */}
         <div className="checkbox-group modifier-group">
-          {Object.keys(options.modifierGroup).map((character) => (
+          {Object.keys(filters.modifierGroup).map((character) => (
             <label className="switch" key={`modifier-${character}`}>
               <input
                 type="checkbox"
-                checked={options.modifierGroup[character]}
+                checked={filters.modifierGroup[character]}
                 onChange={() => handleChange("modifierGroup", character)}
               />
               <span className="check-slider"></span>

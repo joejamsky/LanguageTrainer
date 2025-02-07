@@ -4,7 +4,7 @@ import DropTile from "./DropTile";
 import { useGameState } from "../Contexts/GameStateContext.js";
 
 const TopGrid = () => {
-  const { characters, options } = useGameState();
+  const { characters, filters } = useGameState();
 
   return (
     <div className="top-grid-container">
@@ -14,8 +14,8 @@ const TopGrid = () => {
       {characters &&
         characters.masterTopCharacters.map((character, index) => {
           if (
-            (character.modifierGroup === "dakuten" && !options.modifierGroup.dakuten) ||
-            (character.modifierGroup === "handakuten" && !options.modifierGroup.handakuten)
+            (character.modifierGroup === "dakuten" && !filters.modifierGroup.dakuten) ||
+            (character.modifierGroup === "handakuten" && !filters.modifierGroup.handakuten)
           ) {
             return null;
           }

@@ -7,7 +7,7 @@ export const defaultState = {
     topCharacters: [],
     botCharacters: []
   },
-  options: {
+  filters: {
     characterTypes: {
       hiragana: true,
       katakana: false,
@@ -16,14 +16,19 @@ export const defaultState = {
     modifierGroup: {
       dakuten: false,
       handakuten: false
-    },
+    }
+  },
+  options: {
     topRowLevels: 10,
     gameMode: {
       current: 0,
       methods: ['sound', 'h-shape', 'k-shape', 'missed']
     },
     hints: false,
-    sound: false
+    sound: false,
+    sorting: {
+      shuffleLevel: 0
+    }
   },
   game: {
     start: false,

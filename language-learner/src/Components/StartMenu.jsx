@@ -3,13 +3,13 @@ import "../Styles/StartMenu.scss";
 import { useGameState } from "../Contexts/GameStateContext.js";
 
 function StartMenu() {
-    const {setOptions, startMenuOpen, setStartMenuOpen, handleCharacterSelect } = useGameState();
+    const {setFilters, startMenuOpen, setStartMenuOpen, handleCharacterSelect } = useGameState();
 
     const handleSelection = (type) => {
-        setOptions((prevOptions) => {
+        setFilters((prevFilters) => {
 
             // Update characterTypes based on the selected type
-            let updatedCharacterTypes = { ...prevOptions.characterTypes };
+            let updatedCharacterTypes = { ...prevFilters.characterTypes };
     
             if (type === "hiragana") {
                 updatedCharacterTypes = {
@@ -38,7 +38,7 @@ function StartMenu() {
             }
     
             return {
-                ...prevOptions,
+                ...prevFilters,
                 characterTypes: updatedCharacterTypes,
             };
         });

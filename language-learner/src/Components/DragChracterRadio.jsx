@@ -1,14 +1,14 @@
 import React from 'react';
 
-function DragCharacterRadio({ options, setOptions }) {
+function DragCharacterRadio({ filters, setFilters }) {
 
   const handleChange = (character) => {
     // Set only the selected character to true for activeBot and others to false
-    setOptions(prevOptions => ({
-      ...prevOptions,
-      characterTypes: Object.keys(prevOptions.characterTypes).reduce((acc, key) => {
+    setFilters(prevFilters => ({
+      ...prevFilters,
+      characterTypes: Object.keys(prevFilters.characterTypes).reduce((acc, key) => {
         acc[key] = {
-          ...prevOptions.characterTypes[key],
+          ...prevFilters.characterTypes[key],
           activeBot: key === character
         };
         return acc;
@@ -26,12 +26,12 @@ function DragCharacterRadio({ options, setOptions }) {
       </div>
 
       <div className="ui-input-container ui-radio-container">  
-        {Object.keys(options.characterTypes).map(character => (
+        {Object.keys(filters.characterTypes).map(character => (
           <label key={character + '-bot'}>
             <input
               type="radio"
               name="characterSelect"
-              checked={options.characterTypes[character].activeBot}
+              checked={filters.characterTypes[character].activeBot}
               onChange={() => handleChange(character)}
             />
             {character} 

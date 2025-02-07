@@ -6,36 +6,20 @@ import CharacterCheckBox from './CharacterCheckBox';
 import ShuffleSlider from './ShuffleSlider';
 import SortBy from './SortBy';
 import RowSlider from './RowSlider';
-import HintToggle from './HintToggle';
+// import HintToggle from './HintToggle';
 import { useGameState } from "../Contexts/GameStateContext.js";
 
 function UIControls() {
-  const { options, setOptions} = useGameState();
+  const { options, setOptions, filters, setFilters} = useGameState();
   
   return (
     <div className="ui">
 
 
         <CharacterCheckBox 
-          options={options}
-          setOptions={setOptions}
+          filters={filters}
+          setFilters={setFilters}
         />
-      
-      {/* <button
-        className="hint-btn"
-        onClick={() => setShowPlaceholders(!showPlaceholders)}
-      >
-        {showPlaceholders ? (
-          <span>
-            Hint: <i className="fa-regular fa-eye"></i>
-          </span>
-        ) : (
-          <span>
-            Hint: <i className="fa-regular fa-eye-slash"></i>
-          </span>
-        )}
-      </button> */}
-
 
         <ShuffleSlider/>
 
@@ -47,10 +31,10 @@ function UIControls() {
         />
     
       
-        <HintToggle/>
+        {/* <HintToggle/> */}
       
 
-      <div>
+      {/* <div>
         sound
       </div>
       <div>
@@ -61,8 +45,8 @@ function UIControls() {
         <h5>Stats:</h5>
         <p>Fastest completion</p>
         <p>Highest difficulty</p>
-        
-      </div>
+      </div> */}
+      
     </div>
   );
 }

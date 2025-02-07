@@ -16,25 +16,25 @@ const matchInput = (scriptObj, userInput) => {
 };
 
 /** Checks toggles to decide if a character should be visible. */
-const handleCharRenderToggles = (item, options) => {
+const handleCharRenderToggles = (item, filters) => {
   // Always filter out items that are placeholders or not meant to render
   if (item.placeholder || !item.render) return false;
 
   // Determine if the base type is enabled
   let baseEnabled = false;
   if (item.type === "hiragana") {
-    baseEnabled = options.characterTypes.hiragana;
+    baseEnabled = filters.characterTypes.hiragana;
   } else if (item.type === "katakana") {
-    baseEnabled = options.characterTypes.katakana;
+    baseEnabled = filters.characterTypes.katakana;
   } else if (item.type === "romaji") {
-    baseEnabled = options.characterTypes.romaji;
+    baseEnabled = filters.characterTypes.romaji;
   }
 
   // If the item is a modifier, require that both the base and modifier toggles are enabled
   if (item.modifierGroup === "dakuten") {
-    return baseEnabled && options.modifierGroup.dakuten;
+    return baseEnabled && filters.modifierGroup.dakuten;
   } else if (item.modifierGroup === "handakuten") {
-    return baseEnabled && options.modifierGroup.handakuten;
+    return baseEnabled && filters.modifierGroup.handakuten;
   } else {
     // For items that are not modifiers (or considered "base")
     return baseEnabled;
@@ -48,9 +48,9 @@ const GameStateContext = createContext();
 
 export const GameStateProvider = ({ children }) => {
 
-  // 1) Filter the default arrays right away, using the defaultState.options
+  // 1) Filter the default arrays right away, using the defaultState.filters
   const initialFilteredBot = japanese_characters_standard_bot.filter(item =>
-    handleCharRenderToggles(item, defaultState.options)
+    handleCharRenderToggles(item, defaultState.filters)
   );
 
   const [characters, setCharacters] = useState({
@@ -59,6 +59,7 @@ export const GameStateProvider = ({ children }) => {
     topCharacters: japanese_characters_standard_top, 
     botCharacters: initialFilteredBot
   });
+  const [filters, setFilters] = useState(defaultState.filters)
   const [options, setOptions] = useState(defaultState.options);
   const [game, setGame] = useState(defaultState.game);
   const [stats, setStats] = useState(defaultState.stats);
@@ -84,22 +85,37 @@ export const GameStateProvider = ({ children }) => {
 
 
   // Only filter the master lists (and update the visible top/bot characters)
-  // when options change AND the game has not started yet.
+  // when filters change AND the game has not started yet.
   // This prevents reinitializing botCharacters mid-game.
   useEffect(() => {
-    if (!game.start) { // <<-- ADDED: Check that the game hasn't started
+    
       setCharacters(prevChars => {
         const filteredBot = prevChars.masterBotCharacters.filter(item =>
-          handleCharRenderToggles(item, options)
+          handleCharRenderToggles(item, filters)
         );
+
+          
+        let filteredSortedBot;
+        if (options.sorting.shuffleLevel === 0) {
+          filteredSortedBot = filteredBot;
+        } else {
+          const elementsToShuffle = options.sorting.shuffleLevel * 5;
+          let mutableChars = [...filteredBot];
+          const partToShuffle = mutableChars.slice(0, elementsToShuffle);
+          for (let i = partToShuffle.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [partToShuffle[i], partToShuffle[j]] = [partToShuffle[j], partToShuffle[i]];
+          }
+          filteredSortedBot = [...partToShuffle, ...mutableChars.slice(elementsToShuffle)];
+        }
         return {
           ...prevChars,
-          botCharacters: filteredBot,
+          botCharacters: filteredSortedBot,
           topCharacters: japanese_characters_standard_top
         };
       });
-    }
-  }, [options, game.start]); // <<-- UPDATED: added game.start to dependencies
+      
+  }, [filters, options.sorting.shuffleLevel]); 
 
 
   const reset = () => {
@@ -217,6 +233,8 @@ export const GameStateProvider = ({ children }) => {
   const value = {
     characters,
     setCharacters,
+    filters,
+    setFilters,
     options,
     setOptions,
     game,

@@ -1,61 +1,44 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useGameState } from "../Contexts/GameStateContext.js";
 
 function ShuffleSlider() {
-    const {characters, setCharacters } = useGameState();
-    const [shuffleLevel, setShuffleLevel] = useState(0)
+  // Assuming you've moved shuffleLevel into your context
+  const { options, setOptions, characters } = useGameState();
 
-    const shuffleArray = (intensity) => {
-        if (intensity === 0) { 
-            return [...characters.defaultCharacters];       //If shuffle is 0 return unshuffled array
-        }
-    
-        const elementsToShuffle = intensity * 5;
-        let mutableChars = [...characters.botCharacters];
-    
-        const partToShuffle = mutableChars.slice(0, elementsToShuffle);
-        for (let i = partToShuffle.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [partToShuffle[i], partToShuffle[j]] = [partToShuffle[j], partToShuffle[i]];
-        }
-        mutableChars = [...partToShuffle, ...mutableChars.slice(elementsToShuffle)];
-    
-        return mutableChars;
-    };
-    
-    
+  // Use the master bot list length here so that the max is independent of any current shuffling
+//   const maxShuffleLevel = Math.floor(characters.masterBotCharacters.length / 5);
+  const botShuffleLevel = Math.floor(characters.botCharacters.length / 5);
 
-    const onChange = (num) => {
-        const shuffledCharacters = shuffleArray(num);
-        setShuffleLevel(num);
-        setCharacters(prevChars => ({
-            ...prevChars,
-            botCharacters: shuffledCharacters
-        }));
-    };
+  const handleChange = (e) => {
 
-    const maxShuffleLevel = Math.floor(characters.botCharacters.length / 5);
+    setOptions((prevOptions) => ({
+        ...prevOptions, 
+        sorting: {
+          ...(prevOptions.sorting || {}), 
+          shuffleLevel: Number(e.target.value),
+        },
+      }));
+        
+  };
 
-    return (
-        <div className="ui-component-container">
-            <div className="ui-label">
-                <i className="fa-solid fa-shuffle"></i>
-                <span>{shuffleLevel}</span>
-            </div>
-
-            <div className="ui-input-container ui-slider-container">
-                <input
-                    type="range"
-                    min="0"
-                    max={maxShuffleLevel}
-                    value={shuffleLevel}
-                    className="difficulty-slider"
-                    onChange={(e) => onChange(Number(e.target.value))}
-                />
-            </div>
-
-        </div>
-    );
+  return (
+    <div className="ui-component-container">
+      <div className="ui-label">
+        <i className="fa-solid fa-shuffle"></i>
+        <span>{options.sorting.shuffleLevel}</span>
+      </div>
+      <div className="ui-input-container ui-slider-container">
+        <input
+          type="range"
+          min="0"
+          max={botShuffleLevel}
+          value={options.sorting.shuffleLevel}
+          className="difficulty-slider"
+          onChange={handleChange}
+        />
+      </div>
+    </div>
+  );
 }
 
 export default ShuffleSlider;
