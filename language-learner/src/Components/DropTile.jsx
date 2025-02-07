@@ -27,9 +27,9 @@ const DropTile = ({ characterObj, index }) => {
                 <div className={`grid-item-top ${(options.characterTypes.romaji || options.hints) ? 'visible' : 'hidden'}`}>
                     <div className={`
                         phonetic-romaji
-                        ${characterObj.characters.romaji.filled ? 'filled' : ''}
+                        ${characterObj.scripts.romaji.filled ? 'filled' : ''}
                         `}>
-                        {characterObj.characters.romaji.character}
+                        {characterObj.scripts.romaji.character}
                     </div>
                 </div>
                 
@@ -42,9 +42,9 @@ const DropTile = ({ characterObj, index }) => {
                     <div className={`
                         phonetic-hiragana 
                         ${options.characterTypes.hiragana ? 'visible' : 'hidden'}
-                        ${characterObj.characters.hiragana.filled ? 'filled' : ''}
+                        ${characterObj.scripts.hiragana.filled ? 'filled' : ''}
                         `}>
-                        {characterObj.characters.hiragana.character}
+                        {characterObj.scripts.hiragana.character}
                     </div>
 
                     
@@ -55,10 +55,10 @@ const DropTile = ({ characterObj, index }) => {
                     <div className={`
                             phonetic-katakana 
                             ${options.characterTypes.katakana ? 'visible' : 'hidden'}
-                            ${characterObj.characters.katakana.filled ? 'filled' : ''}
+                            ${characterObj.scripts.katakana.filled ? 'filled' : ''}
                             ${characterObj.placeholder ? 'hide' : ''}
                             `}>
-                        {characterObj.characters.katakana.character}
+                        {characterObj.scripts.katakana.character}
                     </div>
                 </div>
             </div>

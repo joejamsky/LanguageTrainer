@@ -1,54 +1,63 @@
 import React, { createContext, useState, useContext, useCallback, useEffect} from 'react';
-import { defaultState, breakpoints} from '../Misc/Utils'; 
-import japanese_characters_standard from '../Data/japanese_characters_standard.json'; 
-// import japanese_characters_standard_bot from "../Data/japanese_characters_standard_bot";
-// import japanese_characters_byshape_hiragana from '../Data/japanese_characters_byshape_hiragana.json'; 
-// import japanese_characters_byshape_katakana from '../Data/japanese_characters_byshape_katakana.json'; 
+import { defaultState, breakpoints, dictionaryKanaToRomaji} from '../Misc/Utils'; 
+import japanese_characters_standard_bot from '../Data/japanese_characters_standard_bot.json'; 
+import japanese_characters_standard_top from '../Data/japanese_characters_standard_top.json';
+
+/** Helper function to see if user's input matches a script object. */
+const matchInput = (scriptObj, userInput) => {
+  // If it's already romaji, just compare directly
+  if (scriptObj.type === "romaji") {
+    return scriptObj.character.toLowerCase() === userInput.toLowerCase();
+  }
+  
+  // Otherwise, it's hiragana or katakana: check dictionary
+  const romaji = dictionaryKanaToRomaji[scriptObj.character] || "";
+  return romaji.toLowerCase() === userInput.toLowerCase();
+};
+
+/** Checks toggles to decide if a character should be visible. */
+const handleCharRenderToggles = (item, options) => {
+  // Always filter out items that are placeholders or not meant to render
+  if (item.placeholder || !item.render) return false;
+
+  // Determine if the base type is enabled
+  let baseEnabled = false;
+  if (item.type === "hiragana") {
+    baseEnabled = options.characterTypes.hiragana;
+  } else if (item.type === "katakana") {
+    baseEnabled = options.characterTypes.katakana;
+  } else if (item.type === "romaji") {
+    baseEnabled = options.characterTypes.romaji;
+  }
+
+  // If the item is a modifier, require that both the base and modifier toggles are enabled
+  if (item.modifierGroup === "dakuten") {
+    return baseEnabled && options.modifierGroup.dakuten;
+  } else if (item.modifierGroup === "handakuten") {
+    return baseEnabled && options.modifierGroup.handakuten;
+  } else {
+    // For items that are not modifiers (or considered "base")
+    return baseEnabled;
+  }
+};
+
+
+
 
 const GameStateContext = createContext();
 
-const generateBotCharacters = (botCharacters, options) => {
-  const hiraganaItems = [];
-  const katakanaItems = [];
-  const romajiItems = [];
-
-  // Group items by type
-  botCharacters.forEach((char) => {
-    if (!char.characters) return;
-
-    if (char.modifierGroup === "dakuten" && !options.characterTypes.dakuten) return;
-    if (char.modifierGroup === "handakuten" && !options.characterTypes.handakuten) return;
-
-    if (options.characterTypes.hiragana && char.characters.hiragana?.render) {
-      hiraganaItems.push({ type: "hiragana", ...char.characters.hiragana, id: char.id, matchDesktop: char.characters.romaji.character });
-    }
-    if (options.characterTypes.katakana && char.characters.katakana?.render) {
-      katakanaItems.push({ type: "katakana", ...char.characters.katakana, id: char.id, matchDesktop: char.characters.romaji.character });
-    }
-    if (options.characterTypes.romaji && char.characters.romaji?.render) {
-      romajiItems.push({ type: "romaji", ...char.characters.romaji, id: char.id, matchDesktop: char.characters.romaji.character });
-    }
-  });
-
-  // Combine items row by row (5 items per row)
-  const combinedRows = [];
-  const maxLength = Math.max(hiraganaItems.length, katakanaItems.length, romajiItems.length);
-
-  for (let i = 0; i < maxLength; i += 5) {
-    combinedRows.push(
-      ...hiraganaItems.slice(i, i + 5),
-      ...katakanaItems.slice(i, i + 5),
-      ...romajiItems.slice(i, i + 5)
-    );
-  }
-
-  return combinedRows;
-};
-
 export const GameStateProvider = ({ children }) => {
+
+  // 1) Filter the default arrays right away, using the defaultState.options
+  const initialFilteredBot = japanese_characters_standard_bot.filter(item =>
+    handleCharRenderToggles(item, defaultState.options)
+  );
+
   const [characters, setCharacters] = useState({
-    topCharacters: japanese_characters_standard, 
-    botCharacters: generateBotCharacters(japanese_characters_standard, defaultState.options)
+    masterTopCharacters: japanese_characters_standard_top, 
+    masterBotCharacters: japanese_characters_standard_bot,
+    topCharacters: japanese_characters_standard_top, 
+    botCharacters: initialFilteredBot
   });
   const [options, setOptions] = useState(defaultState.options);
   const [game, setGame] = useState(defaultState.game);
@@ -57,10 +66,9 @@ export const GameStateProvider = ({ children }) => {
   const [screenSize, setScreenSize] = useState('desktop'); 
   const [startMenuOpen, setStartMenuOpen] = useState(true); 
 
-  // Function to determine screen size
+  // Breakpoints logic
   const updateScreenSize = useCallback(() => {
     const width = window.innerWidth;
-
     if (width <= breakpoints.mobile) setScreenSize('mobile');
     else if (width <= breakpoints.tablet) setScreenSize('tablet');
     else if (width <= breakpoints.laptop) setScreenSize('laptop');
@@ -75,12 +83,32 @@ export const GameStateProvider = ({ children }) => {
   }, [updateScreenSize]);
 
 
+  // Only filter the master lists (and update the visible top/bot characters)
+  // when options change AND the game has not started yet.
+  // This prevents reinitializing botCharacters mid-game.
+  useEffect(() => {
+    if (!game.start) { // <<-- ADDED: Check that the game hasn't started
+      setCharacters(prevChars => {
+        const filteredBot = prevChars.masterBotCharacters.filter(item =>
+          handleCharRenderToggles(item, options)
+        );
+        return {
+          ...prevChars,
+          botCharacters: filteredBot,
+          topCharacters: japanese_characters_standard_top
+        };
+      });
+    }
+  }, [options, game.start]); // <<-- UPDATED: added game.start to dependencies
+
 
   const reset = () => {
     setGame(defaultState.game);
     setCharacters({
-      topCharacters: japanese_characters_standard,
-      botCharacters: japanese_characters_standard,
+      masterTopCharacters: japanese_characters_standard_top,
+      masterBotCharacters: japanese_characters_standard_bot,
+      topCharacters: japanese_characters_standard_top,
+      botCharacters: japanese_characters_standard_bot
     });
   };
 
@@ -126,93 +154,51 @@ export const GameStateProvider = ({ children }) => {
   }
 
   const handleTextSubmit = (submittedChar) => {
+    const tempBotChars = [...characters.botCharacters];
+    const tempTopChars = [...characters.topCharacters];
+    const currentTile = tempBotChars[0];
+    
     if (!game.start) {
-      setGame((prevGame) => ({
+      setGame(prevGame => ({
         ...prevGame,
         start: true,
       }));
     }
   
-    // 1) Identify the current row
-    // const currentRow = getCurrentRow(characters.botCharacters); // e.g. 0 for first row
-    // const startIdx = currentRow * 5;
-    // const endIdx = startIdx + 5;
-  
-    // 2) Clone arrays for immutability
-    const tempBotChars = [...characters.botCharacters];
-    const tempTopChars = [...characters.topCharacters];
-  
-    // 3) Slice out the 5 tiles in the current row
-    // const row = tempBotChars.slice(startIdx, endIdx);
-  
-    if(submittedChar === tempBotChars[game.tileIndex].matchDesktop){
-      
-      setGame((prevGame) => ({
-        ...prevGame,
-        tileIndex: prevGame.tileIndex + 1,
-      }));
-
-      tempBotChars[game.tileIndex].render = false
-      // tempBotChars[game.tileIndex].characters.katakana.render 
-
+    // Guard if out of range
+    if (tempBotChars.length <= 0) {
+      console.log("No more tiles to match.");
+      return;
     }
 
-    // // 4) Check if the text input matches any `character` in the row
-    // const matchedTile = tempBotChars.find((tile) => {
+      // Exit early if the submitted character doesn't match.
+    if (!matchInput(currentTile, submittedChar)) {
+      return -1;
+    }
 
-    //   console.log("tile", tile)
+    // Find the corresponding top tile by parentId.
+    const topTile = tempTopChars.find(tile => tile.id === currentTile.parentId);
+    // If found, look for the matching script (using Object.values to directly access the scripts)
+    const matchingScript = topTile?.scripts && Object.values(topTile.scripts)
+      .find(script => script.id === currentTile.id);
       
-    //   if (!tile.placeholder && tile.characters.romaji.character === submittedChar) {
-    //     return true;
-    //   }
-    //   return false;
-    // });
-  
-    // if (!matchedTile) {
-    //   console.log("No match found for input:", matchedTile);
-    //   return -1; // No match, exit function
-    // }
-  
-    // console.log("Matched Tile:", matchedTile);
-  
-    // // 5) Find the index of the matched tile in botCharacters and topCharacters
-    // const bottomIndex = tempBotChars.findIndex((tile) => tile.id === matchedTile.id);
-    // const topIndex = tempTopChars.findIndex((tile) => tile.id === matchedTile.id);
-  
-    // // 6) Mark both matching tiles as filled (if found)
-    // if (bottomIndex !== -1) {
-    //   tempBotChars[bottomIndex].completed = true; // Mark tile as completed
-    // }
-    // if (topIndex !== -1) {
-    //   tempTopChars[topIndex].completed = true; // Mark tile as completed
-    // }
-  
-    // 7) Check if the entire row is now “all filled”
-    // const allFilled = row
-    //   .filter((tile) => !tile.placeholder)
-    //   .every((tile) => tile.completed);
-  
-    // // If all tiles in the row are filled, hide the row (set render = false)
-    // if (allFilled) {
-    //   row.forEach((tile) => {
-    //     tile.render = false;
-    //   });
-    // }
-  
-    // 8) Check if game over (last row fully completed)
-    // const totalRows = tempBotChars.length / 5; // e.g. total # of rows
-    // if (allFilled && currentRow + 1 === totalRows) {
-    //   setGame((prevGame) => ({
-    //     ...prevGame,
-    //     gameover: true,
-    //   }));
-    // }
-  
-    // 9) Update state
-    setCharacters((prevChars) => ({
+    if (matchingScript) {
+      matchingScript.filled = true;
+    }
+
+    tempBotChars.shift();
+
+    if(tempBotChars.length === 0){
+      setGame((prevGame) => ({
+        ...prevGame,
+        gameover: true
+      }))
+    }
+
+    setCharacters(prevChars => ({
       ...prevChars,
       topCharacters: tempTopChars,
-      botCharacters: tempBotChars,
+      botCharacters: tempBotChars
     }));
   };
   

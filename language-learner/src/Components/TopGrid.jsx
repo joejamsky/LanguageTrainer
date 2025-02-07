@@ -11,13 +11,14 @@ const TopGrid = () => {
 
       <div className={`grid dropgrid ${true ? 'vertical' : 'horizontal'}`}>
 
-      {characters && characters.topCharacters.map((character, index) => {
-        if (
-          (character.modifierGroup === "dakuten" && options.characterTypes.dakuten === false) ||
-          (character.modifierGroup === "handakuten" && options.characterTypes.handakuten === false)
-        ) {
-          return null; // Render nothing
-        } else {
+      {characters &&
+        characters.masterTopCharacters.map((character, index) => {
+          if (
+            (character.modifierGroup === "dakuten" && !options.modifierGroup.dakuten) ||
+            (character.modifierGroup === "handakuten" && !options.modifierGroup.handakuten)
+          ) {
+            return null;
+          }
           return (
             <DropTile
               key={`top-grid-item-${index}`}
@@ -25,8 +26,8 @@ const TopGrid = () => {
               index={index}
             />
           );
-        }
-      })}
+        })
+      }
 
       </div>
     </div>
