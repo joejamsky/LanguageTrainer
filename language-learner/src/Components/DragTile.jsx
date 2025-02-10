@@ -4,7 +4,7 @@ import { useGameState } from "../Contexts/GameStateContext";
 
 const DragTile = ({ characterObj, index }) => {
   const dragRef = useRef(null);
-  const { game, setGame, selectedTile, setSelectedTile, screenSize } = useGameState();
+  const { game, setGame, selectedTile, setSelectedTile, screenSize, options } = useGameState();
 
   const onTouchEnd = () => {
     setSelectedTile({
@@ -42,7 +42,8 @@ const DragTile = ({ characterObj, index }) => {
       className={`
           bot-grid-item
           ${selectedTile.id === characterObj.id ? "dragging" : ""}
-          ${characterObj.placeholder || characterObj.completed ? "hide" : ""} 
+          ${characterObj.placeholder || characterObj.completed ? "hide" : ""}
+          ${options.hints ? `column-${Number(characterObj.parentId.split('-')[0]) % 5}` : ''}
         `}
       draggable={!characterObj.placeholder && !characterObj.completed}
       onDragStart={onTouchStart}

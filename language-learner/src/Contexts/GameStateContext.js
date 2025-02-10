@@ -124,7 +124,7 @@ export const GameStateProvider = ({ children }) => {
       masterTopCharacters: japanese_characters_standard_top,
       masterBotCharacters: japanese_characters_standard_bot,
       topCharacters: japanese_characters_standard_top,
-      botCharacters: japanese_characters_standard_bot
+      botCharacters: japanese_characters_standard_bot.filter(item => handleCharRenderToggles(item, defaultState.filters) )
     });
   };
 

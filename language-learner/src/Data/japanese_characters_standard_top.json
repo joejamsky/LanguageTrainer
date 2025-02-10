@@ -733,43 +733,14 @@
         "scripts": {}
     },
     {
-        "id": "41-b",
-        "placeholder": false,
-        "modifierGroup": "base",
-        "completed": false,
-        "scripts": {
-            "romaji": {"id": "41-b-r", "character": "yu", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
-            "hiragana": {"id": "41-b-h", "character": "ゆ", "filled": false, "render": true, "missed": 0, "shapeGroup": 8},
-            "katakana": {"id": "41-b-k", "character": "ユ", "filled": false, "render": true, "missed": 0, "shapeGroup": 5}
-        }
-    },
-    {
-        "id": "0-p",
-        "placeholder": true,
-        "modifierGroup": "base",
-        "completed": true,
-        "scripts": {}
-    },
-   {
         "id": "42-b",
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
         "scripts": {
-            "romaji": {"id": "42-b-r", "character": "yo", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
-            "hiragana": {"id": "42-b-h", "character": "よ", "filled": false, "render": true, "missed": 0, "shapeGroup": 5},
-            "katakana": {"id": "42-b-k", "character": "ヨ", "filled": false, "render": true, "missed": 0, "shapeGroup": 0}
-        }
-    },
-    {
-        "id": "43-b",
-        "placeholder": false,
-        "modifierGroup": "base",
-        "completed": false,
-        "scripts": {
-            "romaji": {"id": "43-b-r", "character": "wa", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
-            "hiragana": {"id": "43-b-h", "character": "わ", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
-            "katakana": {"id": "43-b-k", "character": "ワ", "filled": false, "render": true, "missed": 0, "shapeGroup": 0}
+            "romaji": {"id": "42-b-r", "character": "yu", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
+            "hiragana": {"id": "42-b-h", "character": "ゆ", "filled": false, "render": true, "missed": 0, "shapeGroup": 8},
+            "katakana": {"id": "42-b-k", "character": "ユ", "filled": false, "render": true, "missed": 0, "shapeGroup": 5}
         }
     },
     {
@@ -785,9 +756,20 @@
         "modifierGroup": "base",
         "completed": false,
         "scripts": {
-            "romaji": {"id": "44-b-r", "character": "n", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
-            "hiragana": {"id": "44-b-h", "character": "ん", "filled": false, "render": true, "missed": 0, "shapeGroup": 9},
-            "katakana": {"id": "44-b-k", "character": "ン", "filled": false, "render": true, "missed": 0, "shapeGroup": 6}
+            "romaji": {"id": "44-b-r", "character": "yo", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
+            "hiragana": {"id": "44-b-h", "character": "よ", "filled": false, "render": true, "missed": 0, "shapeGroup": 5},
+            "katakana": {"id": "44-b-k", "character": "ヨ", "filled": false, "render": true, "missed": 0, "shapeGroup": 0}
+        }
+    },
+    {
+        "id": "45-b",
+        "placeholder": false,
+        "modifierGroup": "base",
+        "completed": false,
+        "scripts": {
+            "romaji": {"id": "45-b-r", "character": "wa", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
+            "hiragana": {"id": "45-b-h", "character": "わ", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
+            "katakana": {"id": "45-b-k", "character": "ワ", "filled": false, "render": true, "missed": 0, "shapeGroup": 0}
         }
     },
     {
@@ -798,14 +780,32 @@
         "scripts": {}
     },
    {
-        "id": "45-b",
+        "id": "47-b",
         "placeholder": false,
         "modifierGroup": "base",
         "completed": false,
         "scripts": {
-            "romaji": {"id": "45-b-r", "character": "wo", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
-            "hiragana": {"id": "45-b-h", "character": "を", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
-            "katakana": {"id": "45-b-k", "character": "ヲ", "filled": false, "render": true, "missed": 0, "shapeGroup": 0}
+            "romaji": {"id": "47-b-r", "character": "n", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
+            "hiragana": {"id": "47-b-h", "character": "ん", "filled": false, "render": true, "missed": 0, "shapeGroup": 9},
+            "katakana": {"id": "47-b-k", "character": "ン", "filled": false, "render": true, "missed": 0, "shapeGroup": 6}
+        }
+    },
+    {
+        "id": "0-p",
+        "placeholder": true,
+        "modifierGroup": "base",
+        "completed": true,
+        "scripts": {}
+    },
+   {
+        "id": "49-b",
+        "placeholder": false,
+        "modifierGroup": "base",
+        "completed": false,
+        "scripts": {
+            "romaji": {"id": "49-b-r", "character": "wo", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
+            "hiragana": {"id": "49-b-h", "character": "を", "filled": false, "render": true, "missed": 0, "shapeGroup": 0},
+            "katakana": {"id": "49-b-k", "character": "ヲ", "filled": false, "render": true, "missed": 0, "shapeGroup": 0}
         }
     }
 ]
