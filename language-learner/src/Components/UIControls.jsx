@@ -3,9 +3,10 @@ import '../Styles/UIControls.scss'
 // import CharacterCheckBox from './CharacterCheckBox';
 // import DragChracterRadio from './DragChracterRadio';
 import CharacterCheckBox from './CharacterCheckBox';
-import ShuffleSlider from './ShuffleSlider';
+// import ShuffleSlider from './ShuffleSlider';
 import SortBy from './SortBy';
 import RowSlider from './RowSlider';
+import ShuffleToggle from './ShuffleToggle';
 // import HintToggle from './HintToggle';
 import { useGameState } from "../Contexts/GameStateContext.js";
 
@@ -21,7 +22,8 @@ function UIControls() {
           setFilters={setFilters}
         />
 
-        <ShuffleSlider/>
+        {/* <ShuffleSlider/> */}
+        <ShuffleToggle/>
 
         <SortBy/>
 

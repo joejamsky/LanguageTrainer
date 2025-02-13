@@ -1,5 +1,11 @@
 import React, { createContext, useState, useContext, useCallback, useEffect} from 'react';
-import { defaultState, breakpoints, dictionaryKanaToRomaji} from '../Misc/Utils'; 
+import { 
+  defaultState, 
+  breakpoints, 
+  dictionaryKanaToRomaji,
+  shuffleColumns, 
+  shuffleArray,
+  shuffleRows} from '../Misc/Utils'; 
 import japanese_characters_standard_bot from '../Data/japanese_characters_standard_bot.json'; 
 import japanese_characters_standard_top from '../Data/japanese_characters_standard_top.json';
 
@@ -18,7 +24,7 @@ const matchInput = (scriptObj, userInput) => {
 /** Checks toggles to decide if a character should be visible. */
 const handleCharRenderToggles = (item, filters) => {
   // Always filter out items that are placeholders or not meant to render
-  if (item.placeholder || !item.render) return false;
+  // if (item.placeholder || !item.render) return false;
 
   // Determine if the base type is enabled
   let baseEnabled = false;
@@ -88,34 +94,66 @@ export const GameStateProvider = ({ children }) => {
   // when filters change AND the game has not started yet.
   // This prevents reinitializing botCharacters mid-game.
   useEffect(() => {
-    
-      setCharacters(prevChars => {
-        const filteredBot = prevChars.masterBotCharacters.filter(item =>
-          handleCharRenderToggles(item, filters)
-        );
+    setCharacters(prevChars => {
+      // 1. Filter the master bot characters using your filtering function.
+      const filteredBot = prevChars.masterBotCharacters.filter(item =>
+        handleCharRenderToggles(item, filters)
+      );
+  
+      // 2. Define the grid dimensions.
+      const numCols = 5;
+      const numRows = Math.floor(filteredBot.length / numCols);
+  
+      // 3. Create the grid (array of rows)
+      let grid = [];
+      for (let r = 0; r < numRows; r++) {
+        grid.push(filteredBot.slice(r * numCols, r * numCols + numCols));
+      }
 
-          
-        let filteredSortedBot;
-        if (options.sorting.shuffleLevel === 0) {
-          filteredSortedBot = filteredBot;
-        } else {
-          const elementsToShuffle = options.sorting.shuffleLevel * 5;
-          let mutableChars = [...filteredBot];
-          const partToShuffle = mutableChars.slice(0, elementsToShuffle);
-          for (let i = partToShuffle.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [partToShuffle[i], partToShuffle[j]] = [partToShuffle[j], partToShuffle[i]];
+      // --- Apply Shuffling Based on Options ---
+  
+      // If row shuffling is enabled, shuffle each row.
+      if (options.sorting.rowShuffle) {
+        grid = shuffleRows(grid);
+      }
+  
+      // If column shuffling is enabled, shuffle each column.
+      if (options.sorting.columnShuffle) {
+        for (let col = 0; col < numCols; col++) {
+          // Extract the column.
+          let colItems = grid.map(row => row[col]);
+
+          console.log('colItems 1', colItems)
+  
+          // For the "i" (col 1) and "e" (col 3) columns, only shuffle non-placeholders.
+          if (col === 1 || col === 3) {
+            const nonPlaceholders = colItems.filter(item => !item.placeholder);
+            const placeholders = colItems.filter(item => item.placeholder);
+            const shuffledNonPlaceholders = shuffleArray(nonPlaceholders);
+            colItems = [...shuffledNonPlaceholders, ...placeholders];
+            console.log('colItems 2', colItems)
+          } else {
+            // For all other columns, shuffle normally.
+            colItems = shuffleArray(colItems);
           }
-          filteredSortedBot = [...partToShuffle, ...mutableChars.slice(elementsToShuffle)];
+  
+          // Put the shuffled column items back into the grid.
+          for (let row = 0; row < numRows; row++) {
+            grid[row][col] = colItems[row];
+          }
         }
-        return {
-          ...prevChars,
-          botCharacters: filteredSortedBot,
-          topCharacters: japanese_characters_standard_top
-        };
-      });
-      
-  }, [filters, options.sorting.shuffleLevel]); 
+      }
+  
+      // 4. Flatten the grid back to a one-dimensional array.
+      const filteredSortedBot = grid.flat();
+  
+      return {
+        ...prevChars,
+        botCharacters: filteredSortedBot,
+        topCharacters: japanese_characters_standard_top,
+      };
+    });
+  }, [filters, options.sorting.rowShuffle, options.sorting.columnShuffle]);
 
 
   const reset = () => {
@@ -203,6 +241,8 @@ export const GameStateProvider = ({ children }) => {
     }
 
     tempBotChars.shift();
+
+    tempBotChars[0]?.placeholder === true && tempBotChars.shift()
 
     if(tempBotChars.length === 0){
       setGame((prevGame) => ({

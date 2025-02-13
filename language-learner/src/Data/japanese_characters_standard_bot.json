@@ -2584,6 +2584,19 @@
         "shapeGroup": 0
     },
     {
+        "id": "41-b-r",
+        "parentId": "41-b",
+        "placeholder": true,
+        "modifierGroup": "base",
+        "completed": false,
+        "type": "romaji",
+        "character": "x",
+        "filled": false, 
+        "render": false, 
+        "missed": 0, 
+        "shapeGroup": 0
+    },
+    {
         "id": "42-b-r",
         "parentId": "42-b",
         "placeholder": false,
@@ -2593,6 +2606,19 @@
         "character": "yu",
         "filled": false, 
         "render": true, 
+        "missed": 0, 
+        "shapeGroup": 0
+    },
+    {
+        "id": "43-b-r",
+        "parentId": "43-b",
+        "placeholder": true,
+        "modifierGroup": "base",
+        "completed": false,
+        "type": "romaji",
+        "character": "x",
+        "filled": false, 
+        "render": false, 
         "missed": 0, 
         "shapeGroup": 0
     },
@@ -2623,6 +2649,19 @@
         "shapeGroup": 5
     },
     {
+        "id": "41-b-h",
+        "parentId": "41-b",
+        "placeholder": true,
+        "modifierGroup": "base",
+        "completed": false,
+        "type": "hiragana",
+        "character": "x",
+        "filled": false, 
+        "render": false, 
+        "missed": 0, 
+        "shapeGroup": 0
+    },
+    {
         "id": "42-b-h",
         "parentId": "42-b",
         "placeholder": false,
@@ -2634,6 +2673,19 @@
         "render": true, 
         "missed": 0, 
         "shapeGroup": 8
+    },
+    {
+        "id": "43-b-h",
+        "parentId": "43-b",
+        "placeholder": true,
+        "modifierGroup": "base",
+        "completed": false,
+        "type": "hiragana",
+        "character": "x",
+        "filled": false, 
+        "render": false, 
+        "missed": 0, 
+        "shapeGroup": 0
     },
     {
         "id": "44-b-h",
@@ -2662,6 +2714,19 @@
         "shapeGroup": 0
     },
     {
+        "id": "41-b-k",
+        "parentId": "41-b",
+        "placeholder": true,
+        "modifierGroup": "base",
+        "completed": false,
+        "type": "katakana",
+        "character": "x",
+        "filled": false, 
+        "render": false, 
+        "missed": 0, 
+        "shapeGroup": 0
+    },
+    {
         "id": "42-b-k",
         "parentId": "42-b",
         "placeholder": false,
@@ -2673,6 +2738,19 @@
         "render": true, 
         "missed": 0, 
         "shapeGroup": 5
+    },
+    {
+        "id": "43-b-k",
+        "parentId": "43-b",
+        "placeholder": true,
+        "modifierGroup": "base",
+        "completed": false,
+        "type": "katakana",
+        "character": "x",
+        "filled": false, 
+        "render": false, 
+        "missed": 0, 
+        "shapeGroup": 0
     },
     {
         "id": "44-b-k",
@@ -2704,6 +2782,19 @@
         "shapeGroup": 0
     },
     {
+        "id": "46-b-r",
+        "parentId": "46-b",
+        "placeholder": true,
+        "modifierGroup": "base",
+        "completed": false,
+        "type": "romaji",
+        "character": "x",
+        "filled": false, 
+        "render": false, 
+        "missed": 0, 
+        "shapeGroup": 0
+    },
+    {
         "id": "47-b-r",
         "parentId": "47-b",
         "placeholder": false,
@@ -2713,6 +2804,19 @@
         "character": "n",
         "filled": false, 
         "render": true, 
+        "missed": 0, 
+        "shapeGroup": 0
+    },
+    {
+        "id": "48-b-r",
+        "parentId": "48-b",
+        "placeholder": true,
+        "modifierGroup": "base",
+        "completed": false,
+        "type": "romaji",
+        "character": "x",
+        "filled": false, 
+        "render": false, 
         "missed": 0, 
         "shapeGroup": 0
     },
@@ -2743,6 +2847,19 @@
         "shapeGroup": 0
     },
     {
+        "id": "46-b-h",
+        "parentId": "46-b",
+        "placeholder": true,
+        "modifierGroup": "base",
+        "completed": false,
+        "type": "hiragana",
+        "character": "x",
+        "filled": false, 
+        "render": false, 
+        "missed": 0, 
+        "shapeGroup": 0
+    },
+    {
         "id": "47-b-h",
         "parentId": "47-b",
         "placeholder": false,
@@ -2754,6 +2871,19 @@
         "render": true, 
         "missed": 0, 
         "shapeGroup": 9
+    },
+    {
+        "id": "48-b-h",
+        "parentId": "48-b",
+        "placeholder": true,
+        "modifierGroup": "base",
+        "completed": false,
+        "type": "hiragana",
+        "character": "x",
+        "filled": false, 
+        "render": false, 
+        "missed": 0, 
+        "shapeGroup": 0
     },
     {
         "id": "49-b-h",
@@ -2782,6 +2912,19 @@
         "shapeGroup": 0
     },
     {
+        "id": "46-b-k",
+        "parentId": "46-b",
+        "placeholder": true,
+        "modifierGroup": "base",
+        "completed": false,
+        "type": "katakana",
+        "character": "x",
+        "filled": false, 
+        "render": false, 
+        "missed": 0, 
+        "shapeGroup": 0
+    },
+    {
         "id": "47-b-k",
         "parentId": "47-b",
         "placeholder": false,
@@ -2793,6 +2936,19 @@
         "render": true, 
         "missed": 0, 
         "shapeGroup": 6
+    },
+    {
+        "id": "48-b-k",
+        "parentId": "48-b",
+        "placeholder": true,
+        "modifierGroup": "base",
+        "completed": false,
+        "type": "katakana",
+        "character": "x",
+        "filled": false, 
+        "render": false, 
+        "missed": 0, 
+        "shapeGroup": 0
     },
     {
         "id": "49-b-k",

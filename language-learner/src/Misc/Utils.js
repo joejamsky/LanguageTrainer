@@ -27,7 +27,9 @@ export const defaultState = {
     hints: false,
     sound: false,
     sorting: {
-      shuffleLevel: 0
+      shuffleLevel: 0,
+      rowShuffle: false,
+      columnShuffle: false
     }
   },
   game: {
@@ -98,21 +100,21 @@ export const breakpoints = {
 // };
 
 
-export const handleCharRenderToggles = (item, options) => {
-  if (item.placeholder) return false;
-  if (!item.render) return false;
-  if (item.modifierGroup === "dakuten" && !options.modifierGroup.dakuten) return false;
-  if (item.modifierGroup === "handakuten" && !options.modifierGroup.handakuten) return false;
-  if (item.type === "hiragana" && !options.characterTypes.hiragana) return false;
-  if (item.type === "katakana" && !options.characterTypes.katakana) return false;
-  if (item.type === "romaji" && !options.characterTypes.romaji) return false;
+// export const handleCharRenderToggles = (item, options) => {
+//   if (item.placeholder) return false;
+//   if (!item.render) return false;
+//   if (item.modifierGroup === "dakuten" && !options.modifierGroup.dakuten) return false;
+//   if (item.modifierGroup === "handakuten" && !options.modifierGroup.handakuten) return false;
+//   if (item.type === "hiragana" && !options.characterTypes.hiragana) return false;
+//   if (item.type === "katakana" && !options.characterTypes.katakana) return false;
+//   if (item.type === "romaji" && !options.characterTypes.romaji) return false;
 
-  return true; 
-};
+//   return true; 
+// };
 
-export const handleCharSort = (item, options) => {
+// export const handleCharSort = (item, options) => {
 
-}
+// }
 
 
 export const checkUniqueArrayIDs = (data) => {
@@ -128,6 +130,79 @@ export const checkUniqueArrayIDs = (data) => {
   
   console.log("Duplicate IDs:", duplicates);
 }
+
+
+// --- Helper Functions ---
+
+// Fisher-Yates shuffle for a one-dimensional array.
+export const shuffleArray = (arr) => {
+  let array = [...arr];
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+};
+
+// Shuffle each row independently.
+export const shuffleRows = (grid) => {
+  return grid.map(row => shuffleArray(row));
+};
+
+// Shuffle each column independently.
+// For each column, extract its values, shuffle them, then reassign back.
+export const shuffleColumns = (grid, numCols) => {
+  let newGrid = grid.map(row => [...row]); // copy grid
+  for (let col = 0; col < numCols; col++) {
+    // Extract the column values.
+    let colArr = [];
+    for (let row = 0; row < newGrid.length; row++) {
+      colArr.push(newGrid[row][col]);
+    }
+    // Shuffle the column.
+    colArr = shuffleArray(colArr);
+    // Put the shuffled column values back.
+    for (let row = 0; row < newGrid.length; row++) {
+      newGrid[row][col] = colArr[row];
+    }
+  }
+  return newGrid;
+};
+
+// Helper: Shuffle a single column while keeping placeholders at the bottom.
+export const shuffleColumnKeepPlaceholders = (colArr) => {
+  // Separate non-placeholders and placeholders.
+  const nonPlaceholders = colArr.filter(item => item !== "placeholder");
+  const placeholders = colArr.filter(item => item === "placeholder");
+
+  // Shuffle only the non-placeholder items.
+  const shuffledNonPlaceholders = shuffleArray(nonPlaceholders);
+
+  // Return the new column: shuffled non-placeholders at the top, then placeholders.
+  return [...shuffledNonPlaceholders, ...placeholders];
+};
+
+// Apply the above to each column in your grid.
+export const shuffleColumnsWithPlaceholdersAtBottom = (grid, numCols) => {
+  const totalRows = grid.length;
+  // Create a copy of the grid.
+  let newGrid = grid.map(row => [...row]);
+
+  for (let col = 0; col < numCols; col++) {
+    // Extract the column into an array.
+    let colItems = [];
+    for (let row = 0; row < totalRows; row++) {
+      colItems.push(newGrid[row][col]);
+    }
+    // Shuffle the column while preserving placeholders at the bottom.
+    let newCol = shuffleColumnKeepPlaceholders(colItems);
+    // Write the new column back into the grid.
+    for (let row = 0; row < totalRows; row++) {
+      newGrid[row][col] = newCol[row];
+    }
+  }
+  return newGrid;
+};
 
 
 export const dictionaryKanaToRomaji = {
