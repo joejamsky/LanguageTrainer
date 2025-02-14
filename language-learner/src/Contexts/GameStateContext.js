@@ -3,9 +3,9 @@ import {
   defaultState, 
   breakpoints, 
   dictionaryKanaToRomaji,
-  shuffleColumns, 
   shuffleArray,
-  shuffleRows} from '../Misc/Utils'; 
+  shuffleRows
+} from '../Misc/Utils'; 
 import japanese_characters_standard_bot from '../Data/japanese_characters_standard_bot.json'; 
 import japanese_characters_standard_top from '../Data/japanese_characters_standard_top.json';
 
@@ -48,23 +48,38 @@ const handleCharRenderToggles = (item, filters) => {
 };
 
 
+// When updating a miss, update a separate stats object.
+const updateMissedStats = (currentTileId) => {
+  const stats = JSON.parse(localStorage.getItem('tileStats')) || {};
+  stats[currentTileId] = (stats[currentTileId] || 0) + 1;
+  localStorage.setItem('tileStats', JSON.stringify(stats));
+};
 
+
+const getInitialCharacters = () => {
+  const stats = JSON.parse(localStorage.getItem('tileStats')) || {};
+  const defaultBot = japanese_characters_standard_bot.map(tile => ({
+    ...tile,
+    // Overwrite the missed count if stored, otherwise use the default.
+    missed: stats[tile.id] || tile.missed,
+    // Reset ephemeral fields:
+    filled: false,
+    render: false,
+  }));
+  
+  return {
+    masterTopCharacters: japanese_characters_standard_top,
+    masterBotCharacters: defaultBot,
+    topCharacters: japanese_characters_standard_top,
+    botCharacters: defaultBot.filter(item => handleCharRenderToggles(item, defaultState.filters)),
+  };
+};
 
 const GameStateContext = createContext();
 
 export const GameStateProvider = ({ children }) => {
 
-  // 1) Filter the default arrays right away, using the defaultState.filters
-  const initialFilteredBot = japanese_characters_standard_bot.filter(item =>
-    handleCharRenderToggles(item, defaultState.filters)
-  );
-
-  const [characters, setCharacters] = useState({
-    masterTopCharacters: japanese_characters_standard_top, 
-    masterBotCharacters: japanese_characters_standard_bot,
-    topCharacters: japanese_characters_standard_top, 
-    botCharacters: initialFilteredBot
-  });
+  const [characters, setCharacters] = useState(getInitialCharacters);
   const [filters, setFilters] = useState(defaultState.filters)
   const [options, setOptions] = useState(defaultState.options);
   const [game, setGame] = useState(defaultState.game);
@@ -114,7 +129,8 @@ export const GameStateProvider = ({ children }) => {
   
       // If row shuffling is enabled, shuffle each row.
       if (options.sorting.rowShuffle) {
-        grid = shuffleRows(grid);
+        grid = shuffleRows
+        (grid);
       }
   
       // If column shuffling is enabled, shuffle each column.
@@ -122,8 +138,6 @@ export const GameStateProvider = ({ children }) => {
         for (let col = 0; col < numCols; col++) {
           // Extract the column.
           let colItems = grid.map(row => row[col]);
-
-          console.log('colItems 1', colItems)
   
           // For the "i" (col 1) and "e" (col 3) columns, only shuffle non-placeholders.
           if (col === 1 || col === 3) {
@@ -131,7 +145,6 @@ export const GameStateProvider = ({ children }) => {
             const placeholders = colItems.filter(item => item.placeholder);
             const shuffledNonPlaceholders = shuffleArray(nonPlaceholders);
             colItems = [...shuffledNonPlaceholders, ...placeholders];
-            console.log('colItems 2', colItems)
           } else {
             // For all other columns, shuffle normally.
             colItems = shuffleArray(colItems);
@@ -207,56 +220,79 @@ export const GameStateProvider = ({ children }) => {
 
   }
 
+  // Helper to update local storage
+  const saveCharactersToLocalStorage = (state) => {
+    localStorage.setItem('characters', JSON.stringify(state));
+  };
+
+  // Helper to update the missed count for the current tile
+  const updateMissedTile = (currentTile, characters) => {
+    return {
+      ...characters,
+      masterBotCharacters: characters.masterBotCharacters.map(tile =>
+        tile.id === currentTile.id ? { ...tile, missed: tile.missed + 1 } : tile
+      )
+    };
+  };
+
   const handleTextSubmit = (submittedChar) => {
     const tempBotChars = [...characters.botCharacters];
     const tempTopChars = [...characters.topCharacters];
     const currentTile = tempBotChars[0];
-    
+
+    // Start game if not already started.
     if (!game.start) {
-      setGame(prevGame => ({
-        ...prevGame,
-        start: true,
-      }));
+      setGame(prevGame => ({ ...prevGame, start: true }));
     }
-  
-    // Guard if out of range
-    if (tempBotChars.length <= 0) {
+
+    // Guard: if no more tiles, exit.
+    if (tempBotChars.length === 0) {
       console.log("No more tiles to match.");
       return;
     }
 
-      // Exit early if the submitted character doesn't match.
+    // Handle a miss.
     if (!matchInput(currentTile, submittedChar)) {
+      const newState = updateMissedTile(currentTile, characters);
+      setCharacters(newState);
+      saveCharactersToLocalStorage(newState);
+      updateMissedStats(currentTile.id);
       return -1;
     }
 
-    // Find the corresponding top tile by parentId.
+    // Handle a correct match:
+    // 1. Mark the matching script as filled.
     const topTile = tempTopChars.find(tile => tile.id === currentTile.parentId);
-    // If found, look for the matching script (using Object.values to directly access the scripts)
-    const matchingScript = topTile?.scripts && Object.values(topTile.scripts)
-      .find(script => script.id === currentTile.id);
-      
-    if (matchingScript) {
-      matchingScript.filled = true;
+    if (topTile?.scripts) {
+      Object.values(topTile.scripts).forEach(script => {
+        if (script.id === currentTile.id) {
+          script.filled = true;
+        }
+      });
     }
 
+    // 2. Remove the current tile and any contiguous placeholders.
     tempBotChars.shift();
-
-    tempBotChars[0]?.placeholder === true && tempBotChars.shift()
-
-    if(tempBotChars.length === 0){
-      setGame((prevGame) => ({
-        ...prevGame,
-        gameover: true
-      }))
+    while (tempBotChars[0]?.placeholder) {
+      tempBotChars.shift();
     }
 
-    setCharacters(prevChars => ({
-      ...prevChars,
+    // 3. Check for game over.
+    if (tempBotChars.length === 0) {
+      setGame(prevGame => ({ ...prevGame, gameover: true }));
+    }
+
+    // 4. Update state and local storage.
+    const newState = {
+      ...characters,
       topCharacters: tempTopChars,
-      botCharacters: tempBotChars
-    }));
+      botCharacters: tempBotChars,
+    };
+
+    setCharacters(newState);
+    saveCharactersToLocalStorage(newState);
   };
+
   
   
   const handleCharacterSelect = (type) => {

@@ -8,6 +8,7 @@ import { useGameState } from "../Contexts/GameStateContext.js";
 const BotGrid = () => {
   const { characters, screenSize } = useGameState();
 
+  console.log("characters",characters)
   return (
     <div className="bot-grid-container">
       {(screenSize === 'laptop' || screenSize === 'desktop') && (

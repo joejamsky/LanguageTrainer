@@ -5,13 +5,13 @@ import '../Styles/UIControls.scss'
 import CharacterCheckBox from './CharacterCheckBox';
 // import ShuffleSlider from './ShuffleSlider';
 import SortBy from './SortBy';
-import RowSlider from './RowSlider';
+// import RowSlider from './RowSlider';
 import ShuffleToggle from './ShuffleToggle';
 // import HintToggle from './HintToggle';
 import { useGameState } from "../Contexts/GameStateContext.js";
 
 function UIControls() {
-  const { options, setOptions, filters, setFilters} = useGameState();
+  const { filters, setFilters } = useGameState();
   
   return (
     <div className="ui">
@@ -27,10 +27,10 @@ function UIControls() {
 
         <SortBy/>
 
-        <RowSlider
+        {/* <RowSlider
           options={options}
           setOptions={setOptions}
-        />
+        /> */}
     
       
         {/* <HintToggle/> */}

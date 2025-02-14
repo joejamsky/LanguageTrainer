@@ -149,25 +149,6 @@ export const shuffleRows = (grid) => {
   return grid.map(row => shuffleArray(row));
 };
 
-// Shuffle each column independently.
-// For each column, extract its values, shuffle them, then reassign back.
-export const shuffleColumns = (grid, numCols) => {
-  let newGrid = grid.map(row => [...row]); // copy grid
-  for (let col = 0; col < numCols; col++) {
-    // Extract the column values.
-    let colArr = [];
-    for (let row = 0; row < newGrid.length; row++) {
-      colArr.push(newGrid[row][col]);
-    }
-    // Shuffle the column.
-    colArr = shuffleArray(colArr);
-    // Put the shuffled column values back.
-    for (let row = 0; row < newGrid.length; row++) {
-      newGrid[row][col] = colArr[row];
-    }
-  }
-  return newGrid;
-};
 
 // Helper: Shuffle a single column while keeping placeholders at the bottom.
 export const shuffleColumnKeepPlaceholders = (colArr) => {

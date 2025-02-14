@@ -26,23 +26,41 @@ function ShuffleToggles() {
     };
 
     return (
-        <div>
-            <label>
-                <input
-                type="checkbox"
-                checked={options.sorting.rowShuffle || false}
-                onChange={handleRowToggle}
-                />
-                Shuffle by Row
-            </label>
-            <label>
-                <input
-                type="checkbox"
-                checked={options.sorting.columnShuffle || false}
-                onChange={handleColumnToggle}
-                />
-                Shuffle by Column
-            </label>
+        <div className="ui-component-container">
+            <div className="ui-label">
+                <i className="fa-solid fa-shuffle"></i>
+                {/* <label>Shuffle</label> */}
+            </div>
+
+            <div className="ui-input-container ui-slider-container">
+                <label className="switch">
+                    <input
+                        type="checkbox"
+                        checked={options.sorting.rowShuffle || false}
+                        onChange={handleRowToggle}
+                    />
+                    <span className="check-slider"></span>
+                    <span className="check-slider-label">
+                        <i className="fa-solid fa-arrow-right"></i>
+                    </span>
+                    
+                </label>
+
+                
+
+                <label className="switch">
+                    <input
+                        type="checkbox"
+                        checked={options.sorting.columnShuffle || false}
+                        onChange={handleColumnToggle}
+                    />
+                    <span className="check-slider"></span>
+                    <span className="check-slider-label">
+                        <i className="fa-solid fa-arrow-down"></i>
+                    </span>
+                </label>
+            </div>
+
         </div>
     );
 }

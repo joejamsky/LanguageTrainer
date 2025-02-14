@@ -24,7 +24,7 @@ button{
     width: 100%;
     display: flex;
     flex-direction: row;
-    height: 50px;
+    height: 80px;
     gap: 20px;
     justify-content: space-between;
 }
@@ -49,10 +49,10 @@ button{
     justify-content: space-between;
     align-items: center;
     background-color: #5d5d5d;
-    padding: 0 25px;
+    padding: 10px 25px;
     border-radius: 5px;
 
-    @media screen and (max-width: vars.$breakpoint-tablet) {
+    @media screen and (max-width: vars.$breakpoint-mobile) {
         flex-direction: column;
         gap: 10px;
         padding: 10px 25px;
