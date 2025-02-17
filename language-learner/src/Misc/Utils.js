@@ -52,70 +52,6 @@ export const breakpoints = {
   laptop: 1024,
   desktop: 1200,
 }
-// export const cloneCharacters = (charArray) => {
-//   return charArray.map(char => ({ ...char }));
-// };
-
-// export const filterCharacters = (charArray, filterFunction) => {
-//   return charArray.filter(filterFunction);
-// };
-
-// export const filterByOptions = (character, characterTypes, context) => {
-//   const isHiraganaActive = characterTypes.hiragana;
-//   const isKatakanaActive = characterTypes.katakana;
-//   const isDakutenActive = characterTypes.dakuten;
-//   const isHandakutenActive = characterTypes.handakuten;
-
-//   const characterIsHiragana = character.group === "hiragana";
-//   const characterIsKatakana = character.group === "katakana";
-//   const characterIsDakuten = character.dakuten;
-//   const characterIsHandakuten = character.handakuten;
-  
-
-//   return (
-//     (isHiraganaActive && characterIsHiragana) ||
-//     (isKatakanaActive && characterIsKatakana) ||
-//     (isDakutenActive && characterIsDakuten) ||
-//     (isHandakutenActive && characterIsHandakuten)
-//   );
-// };
-
-
-
-// export const handleDefaultCharacters = (botData, characterTypes = defaultState.options.characterTypes) => {
-//   const filteredTopCharacters = filterCharacters(botData, (character) => 
-//     filterByOptions(character, characterTypes)
-//   );
-
-//   const filteredBotCharacters = filterCharacters(botData, (character) => 
-//     filterByOptions(character, characterTypes, "activeBot")
-//   );
-
-//   return {
-//     topCharacters: filteredTopCharacters,
-//     botCharacters: filteredBotCharacters,
-//     defaultTop: topData,
-//     defaultBot: botData,
-//   };
-// };
-
-
-// export const handleCharRenderToggles = (item, options) => {
-//   if (item.placeholder) return false;
-//   if (!item.render) return false;
-//   if (item.modifierGroup === "dakuten" && !options.modifierGroup.dakuten) return false;
-//   if (item.modifierGroup === "handakuten" && !options.modifierGroup.handakuten) return false;
-//   if (item.type === "hiragana" && !options.characterTypes.hiragana) return false;
-//   if (item.type === "katakana" && !options.characterTypes.katakana) return false;
-//   if (item.type === "romaji" && !options.characterTypes.romaji) return false;
-
-//   return true; 
-// };
-
-// export const handleCharSort = (item, options) => {
-
-// }
-
 
 export const checkUniqueArrayIDs = (data) => {
   console.log('data',data)
@@ -133,59 +69,6 @@ export const checkUniqueArrayIDs = (data) => {
 
 
 // --- Helper Functions ---
-
-// Fisher-Yates shuffle for a one-dimensional array.
-export const shuffleArray = (arr) => {
-  let array = [...arr];
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
-};
-
-// Shuffle each row independently.
-export const shuffleRows = (grid) => {
-  return grid.map(row => shuffleArray(row));
-};
-
-
-// Helper: Shuffle a single column while keeping placeholders at the bottom.
-export const shuffleColumnKeepPlaceholders = (colArr) => {
-  // Separate non-placeholders and placeholders.
-  const nonPlaceholders = colArr.filter(item => item !== "placeholder");
-  const placeholders = colArr.filter(item => item === "placeholder");
-
-  // Shuffle only the non-placeholder items.
-  const shuffledNonPlaceholders = shuffleArray(nonPlaceholders);
-
-  // Return the new column: shuffled non-placeholders at the top, then placeholders.
-  return [...shuffledNonPlaceholders, ...placeholders];
-};
-
-// Apply the above to each column in your grid.
-export const shuffleColumnsWithPlaceholdersAtBottom = (grid, numCols) => {
-  const totalRows = grid.length;
-  // Create a copy of the grid.
-  let newGrid = grid.map(row => [...row]);
-
-  for (let col = 0; col < numCols; col++) {
-    // Extract the column into an array.
-    let colItems = [];
-    for (let row = 0; row < totalRows; row++) {
-      colItems.push(newGrid[row][col]);
-    }
-    // Shuffle the column while preserving placeholders at the bottom.
-    let newCol = shuffleColumnKeepPlaceholders(colItems);
-    // Write the new column back into the grid.
-    for (let row = 0; row < totalRows; row++) {
-      newGrid[row][col] = newCol[row];
-    }
-  }
-  return newGrid;
-};
-
-
 export const dictionaryKanaToRomaji = {
   // A-line
   "あ": "a",   "ア": "a",

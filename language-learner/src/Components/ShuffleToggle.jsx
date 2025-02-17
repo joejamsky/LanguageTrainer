@@ -1,6 +1,7 @@
 // ShuffleToggles.jsx
 import React from 'react';
 import { useGameState } from "../Contexts/GameStateContext.js";
+import '../Styles/ShuffleToggle.scss';
 
 function ShuffleToggles() {
     const { options, setOptions } = useGameState();
@@ -29,10 +30,9 @@ function ShuffleToggles() {
         <div className="ui-component-container">
             <div className="ui-label">
                 <i className="fa-solid fa-shuffle"></i>
-                {/* <label>Shuffle</label> */}
             </div>
 
-            <div className="ui-input-container ui-slider-container">
+            <div className="shuffle-toggle-container">
                 <label className="switch">
                     <input
                         type="checkbox"
@@ -43,10 +43,7 @@ function ShuffleToggles() {
                     <span className="check-slider-label">
                         <i className="fa-solid fa-arrow-right"></i>
                     </span>
-                    
                 </label>
-
-                
 
                 <label className="switch">
                     <input
