@@ -27,7 +27,7 @@ const BotGrid = () => {
         ))}
       </div>
 
-      <div className='shadow-gradient'></div>
+      {/* <div className='shadow-gradient'></div> */}
     </div>
   );
 };
