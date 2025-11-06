@@ -1,9 +1,9 @@
 import React, { createContext, useState, useContext, useCallback, useEffect } from 'react';
-import { 
-  defaultState, 
-  breakpoints, 
+import {
+  defaultState,
+  breakpoints,
   dictionaryKanaToRomaji
-} from '../Misc/Utils'; 
+} from '../Misc/Utils';
 import { getSoundSorted, shuffleByShapeGroup } from '../Misc/ShuffleSort'
 import japanese_characters_standard_bot from '../Data/japanese_characters_standard_bot.json'; 
 import japanese_characters_standard_top from '../Data/japanese_characters_standard_top.json';
@@ -21,12 +21,84 @@ const matchInput = (scriptObj, userInput) => {
   return romaji.toLowerCase() === userInput.toLowerCase();
 };
 
-// Determines whether a character should render based on filters.
-const handleCharRenderToggles = (item, filters) => {
+const SETTINGS_STORAGE_KEY = 'languageTrainerSettings';
+const isBrowser = typeof window !== 'undefined';
+
+const mergeDeep = (target, source) => {
+  const output = Array.isArray(target) ? [...target] : { ...target };
+  if (!source || typeof source !== 'object') {
+    return output;
+  }
+
+  Object.keys(source).forEach((key) => {
+    const sourceValue = source[key];
+    const targetValue = target ? target[key] : undefined;
+
+    if (
+      sourceValue &&
+      typeof sourceValue === 'object' &&
+      !Array.isArray(sourceValue)
+    ) {
+      output[key] = mergeDeep(
+        targetValue && typeof targetValue === 'object' ? targetValue : {},
+        sourceValue
+      );
+    } else {
+      output[key] = sourceValue;
+    }
+  });
+
+  return output;
+};
+
+const loadSettingsFromStorage = () => {
+  if (!isBrowser) return null;
+  try {
+    const raw = localStorage.getItem(SETTINGS_STORAGE_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch (error) {
+    console.warn('Failed to load settings from storage:', error);
+    return null;
+  }
+};
+
+const persistSettingsToStorage = (filters, options) => {
+  if (!isBrowser) return;
+  try {
+    localStorage.setItem(
+      SETTINGS_STORAGE_KEY,
+      JSON.stringify({ filters, options })
+    );
+  } catch (error) {
+    console.warn('Failed to persist settings to storage:', error);
+  }
+};
+
+const getRowIndexFromId = (identifier) => {
+  if (!identifier) return null;
+  const numericPortion = parseInt(identifier, 10);
+  if (Number.isNaN(numericPortion)) return null;
+  return Math.floor(numericPortion / 5);
+};
+
+const isWithinRowLevel = (item, rowLevel) => {
+  if (!rowLevel || rowLevel < 1) return false;
+  const sourceId = item.parentId || item.id;
+  const rowIndex = getRowIndexFromId(sourceId);
+  if (rowIndex === null) return false;
+  return rowIndex < rowLevel;
+};
+
+const handleCharRenderToggles = (item, filters, rowLevel) => {
+  const effectiveRowLevel = rowLevel || defaultState.options.rowLevel;
   let baseEnabled = false;
   if (item.type === "hiragana") baseEnabled = filters.characterTypes.hiragana;
   else if (item.type === "katakana") baseEnabled = filters.characterTypes.katakana;
   else if (item.type === "romaji") baseEnabled = filters.characterTypes.romaji;
+
+  if (!baseEnabled) return false;
+  if (!isWithinRowLevel(item, effectiveRowLevel)) return false;
 
   if (item.modifierGroup === "dakuten") {
     return baseEnabled && filters.modifierGroup.dakuten;
@@ -45,7 +117,7 @@ const updateMissedStats = (currentTileId) => {
 };
 
 // Initialize characters from defaults and stored stats.
-const getInitialCharacters = () => {
+const getInitialCharacters = (filters = defaultState.filters, options = defaultState.options) => {
   const stats = JSON.parse(localStorage.getItem('tileStats')) || {};
   const defaultBot = japanese_characters_standard_bot.map(tile => ({
     ...tile,
@@ -57,7 +129,7 @@ const getInitialCharacters = () => {
     masterTopCharacters: japanese_characters_standard_top,
     masterBotCharacters: defaultBot,
     topCharacters: japanese_characters_standard_top,
-    botCharacters: defaultBot.filter(item => handleCharRenderToggles(item, defaultState.filters)),
+    botCharacters: defaultBot.filter(item => handleCharRenderToggles(item, filters, options?.rowLevel)),
   };
 };
 
@@ -69,9 +141,13 @@ const getInitialCharacters = () => {
 const GameStateContext = createContext();
 
 export const GameStateProvider = ({ children }) => {
-  const [characters, setCharacters] = useState(getInitialCharacters);
-  const [filters, setFilters] = useState(defaultState.filters);
-  const [options, setOptions] = useState(defaultState.options);
+  const storedSettings = loadSettingsFromStorage();
+  const initialFilters = mergeDeep(defaultState.filters, storedSettings?.filters);
+  const initialOptions = mergeDeep(defaultState.options, storedSettings?.options);
+
+  const [filters, setFilters] = useState(initialFilters);
+  const [options, setOptions] = useState(initialOptions);
+  const [characters, setCharacters] = useState(() => getInitialCharacters(initialFilters, initialOptions));
   const [game, setGame] = useState(defaultState.game);
   const [stats, setStats] = useState(defaultState.stats);
   const [selectedTile, setSelectedTile] = useState(defaultState.selectedTile);
@@ -93,15 +169,20 @@ export const GameStateProvider = ({ children }) => {
     return () => window.removeEventListener('resize', updateScreenSize);
   }, [updateScreenSize]);
 
+  useEffect(() => {
+    persistSettingsToStorage(filters, options);
+  }, [filters, options]);
+
   // Destructure sorting and game mode options for clarity.
   const { rowShuffle, columnShuffle } = options.sorting;
+  const { rowLevel = defaultState.options.rowLevel } = options;
   const { current, methods } = options.gameMode;
 
   // Re-sort botCharacters when filters, shuffling, or game mode change.
   useEffect(() => {
     setCharacters(prevChars => {
       const filteredBot = prevChars.masterBotCharacters.filter(item =>
-        handleCharRenderToggles(item, filters)
+        handleCharRenderToggles(item, filters, rowLevel)
       );
       let updatedBotCharacters;
       switch (methods[current]) {
@@ -127,12 +208,12 @@ export const GameStateProvider = ({ children }) => {
         topCharacters: japanese_characters_standard_top,
       };
     });
-  }, [filters, rowShuffle, columnShuffle, current, methods]);
+  }, [filters, rowShuffle, columnShuffle, current, methods, rowLevel]);
 
   // Reset game and characters to initial state.
   const reset = () => {
     setGame(defaultState.game);
-    setCharacters(getInitialCharacters());
+    setCharacters(getInitialCharacters(filters, options));
   };
 
   const getCurrentRow = (chars) => {

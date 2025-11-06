@@ -6,22 +6,37 @@ import '../Styles/ShuffleToggle.scss';
 function ShuffleToggles() {
     const { options, setOptions } = useGameState();
 
+    const resolveShuffleLevel = (rowShuffle, columnShuffle) => {
+        if (rowShuffle && columnShuffle) return 2;
+        if (rowShuffle) return 1;
+        if (columnShuffle) return 2;
+        return 0;
+    };
+
     const handleRowToggle = (e) => {
+        const nextRowShuffle = e.target.checked;
+        const nextColumnShuffle = options.sorting.columnShuffle;
         setOptions(prev => ({
         ...prev,
         sorting: {
             ...prev.sorting,
-            rowShuffle: e.target.checked,
+            rowShuffle: nextRowShuffle,
+            columnShuffle: nextColumnShuffle,
+            shuffleLevel: resolveShuffleLevel(nextRowShuffle, nextColumnShuffle),
         },
         }));
     };
 
     const handleColumnToggle = (e) => {
+        const toggledOn = e.target.checked;
+        const nextRowShuffle = toggledOn ? true : options.sorting.rowShuffle;
         setOptions(prev => ({
         ...prev,
         sorting: {
             ...prev.sorting,
-            columnShuffle: e.target.checked,
+            rowShuffle: nextRowShuffle,
+            columnShuffle: toggledOn,
+            shuffleLevel: resolveShuffleLevel(nextRowShuffle, toggledOn),
         },
         }));
     };

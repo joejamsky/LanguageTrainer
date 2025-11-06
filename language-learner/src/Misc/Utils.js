@@ -19,7 +19,7 @@ export const defaultState = {
     }
   },
   options: {
-    topRowLevels: 10,
+    rowLevel: 1,
     gameMode: {
       current: 0,
       methods: ['sound', 'h-shape', 'k-shape', 'missed']

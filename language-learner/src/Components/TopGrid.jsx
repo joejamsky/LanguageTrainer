@@ -4,7 +4,15 @@ import DropTile from "./DropTile";
 import { useGameState } from "../Contexts/GameStateContext.js";
 
 const TopGrid = () => {
-  const { characters, filters } = useGameState();
+  const { characters, filters, options } = useGameState();
+  const rowLevel = options.rowLevel || 1;
+
+  const isWithinRowLevel = (identifier) => {
+    if (!identifier) return true;
+    const numericPortion = parseInt(identifier, 10);
+    if (Number.isNaN(numericPortion)) return true;
+    return Math.floor(numericPortion / 5) < rowLevel;
+  };
 
   return (
     <div className="top-grid-container">
@@ -13,6 +21,9 @@ const TopGrid = () => {
 
       {characters &&
         characters.masterTopCharacters.map((character, index) => {
+          if (!isWithinRowLevel(character.id)) {
+            return null;
+          }
           if (
             (character.modifierGroup === "dakuten" && !filters.modifierGroup.dakuten) ||
             (character.modifierGroup === "handakuten" && !filters.modifierGroup.handakuten)

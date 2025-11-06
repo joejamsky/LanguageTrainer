@@ -5,7 +5,7 @@ function RowSlider({ options, setOptions }) {
     const onChange = (num) => {
         setOptions({
             ...options, // Spread the existing options to maintain other properties
-            topRowLevels: num // Update botRowShuffleLevel
+            rowLevel: num // Update base row level
         });
     };
 
@@ -21,7 +21,7 @@ function RowSlider({ options, setOptions }) {
                 type="range"
                 min="0"
                 max="10"
-                value={options.topRowLevels}
+                value={options.rowLevel}
                 className="difficulty-slider"
                 onChange={(e) => onChange(Number(e.target.value))}
                 />
