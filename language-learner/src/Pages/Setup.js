@@ -227,6 +227,9 @@ const Setup = () => {
           <Link to="/game" className="setup-start">
             Continue
           </Link>
+          <Link to="/stats" className="setup-secondary">
+            View stats
+          </Link>
         </div>
       </div>
     </main>

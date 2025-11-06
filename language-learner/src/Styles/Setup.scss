@@ -286,6 +286,28 @@
     box-shadow: 0 8px 16px rgba(188, 0, 45, 0.3);
 }
 
+.setup-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 28px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    letter-spacing: 0.8px;
+    transition: transform 0.2s ease, border 0.2s ease, color 0.2s ease;
+}
+
+.setup-secondary:hover,
+.setup-secondary:focus-visible {
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.45);
+    color: #ffffff;
+}
+
 @media (max-width: 640px) {
     .setup {
         padding: 28px 16px;
@@ -303,5 +325,9 @@
         width: 100%;
         padding: 12px 0;
         font-size: 15px;
+    }
+
+    .setup-secondary {
+        width: 100%;
     }
 }
