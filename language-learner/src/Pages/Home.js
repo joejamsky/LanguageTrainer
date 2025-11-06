@@ -7,8 +7,8 @@ const Home = () => {
     <main className="home">
       <div className="home-content">
         <h1 className="home-title">Welcome to Language Learner</h1>
-        <Link to="/game" className="home-cta">
-          Start Practicing
+        <Link to="/setup" className="home-cta">
+          Choose Your Level
         </Link>
       </div>
     </main>
