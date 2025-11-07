@@ -12,7 +12,7 @@ const formatTime = (seconds = 0) => {
 };
 
 const LevelCompleteModal = () => {
-  const { game, stats, currentLevel, goToNextLevel, reset } = useGameState();
+  const { game, stats, currentLevel, goToNextLevel, applyLevelConfiguration } = useGameState();
 
   useEffect(() => {
     if (!game.gameover) return;
@@ -37,7 +37,9 @@ const LevelCompleteModal = () => {
   const isNewBest = currentTime > 0 && currentTime === bestForLevel;
 
   const handleReplay = () => {
-    reset();
+    if (currentLevel) {
+      applyLevelConfiguration(currentLevel);
+    }
   };
 
   return (

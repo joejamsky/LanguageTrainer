@@ -3,7 +3,7 @@ import "../Styles/TextInput.scss";
 import { useGameState } from "../Contexts/GameStateContext.js";
 
 const TextInput = () => {
-    const {handleTextSubmit, setOptions, currentLevel} = useGameState();
+    const {handleTextSubmit, setOptions, currentLevel, inputFocusKey} = useGameState();
     const [textInput, setTextInput] = useState('');
     const [shakeTimer, setShakeTimer] = useState(false);
     const [placeholderVisible, setPlaceholderVisible] = useState(true);
@@ -11,7 +11,7 @@ const TextInput = () => {
 
     useEffect(() => {
         inputRef.current?.focus();
-    }, [currentLevel?.key]);
+    }, [currentLevel?.key, inputFocusKey]);
 
     const handleInputChange = (e) => {
         if (placeholderVisible && e.target.value.length > 0) {

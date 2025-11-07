@@ -199,6 +199,7 @@ export const GameStateProvider = ({ children }) => {
   const [selectedTile, setSelectedTile] = useState(defaultState.selectedTile);
   const [screenSize, setScreenSize] = useState('desktop');
   const [startMenuOpen, setStartMenuOpen] = useState(true);
+  const [inputFocusKey, setInputFocusKey] = useState(0);
 
   // Update screen size based on breakpoints.
   const updateScreenSize = useCallback(() => {
@@ -344,6 +345,7 @@ export const GameStateProvider = ({ children }) => {
       shuffleLevel: effectiveShuffleLevel,
     });
     reset(updatedFilters, updatedOptions);
+    setInputFocusKey(prev => prev + 1);
   };
 
   const goToNextLevel = () => {
@@ -472,7 +474,8 @@ const getRemainingPlayableTiles = (tiles = []) =>
     handleTextSubmit,
     startMenuOpen,
     setStartMenuOpen,
-    handleCharacterSelect
+    handleCharacterSelect,
+    inputFocusKey,
   };
 
   return (
