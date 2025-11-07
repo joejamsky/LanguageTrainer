@@ -20,7 +20,7 @@ const TopGrid = () => {
       <div className={`grid dropgrid ${true ? 'vertical' : 'horizontal'}`}>
 
       {characters &&
-        characters.masterTopCharacters.map((character, index) => {
+        characters.topCharacters.map((character, index) => {
           if (!isWithinRowLevel(character.id)) {
             return null;
           }

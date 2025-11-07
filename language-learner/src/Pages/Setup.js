@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import "../Styles/Setup.scss";
 import { useGameState } from "../Contexts/GameStateContext";
@@ -7,22 +7,16 @@ import {
   ROW_MODIFIERS,
   SCRIPT_NODES,
   SHUFFLE_NODES,
-  SCRIPT_TO_LEVEL,
   LEVEL_TO_SCRIPT,
 } from "../Data/skillTreeConfig";
-
-const getScriptLevelFromFilters = (characterTypes) => {
-  if (characterTypes.hiragana && characterTypes.katakana) return SCRIPT_TO_LEVEL.both;
-  if (characterTypes.katakana) return SCRIPT_TO_LEVEL.katakana;
-  return SCRIPT_TO_LEVEL.hiragana;
-};
-
-const getShuffleLevel = (sorting) => {
-  if (typeof sorting.shuffleLevel === "number") return sorting.shuffleLevel;
-  if (sorting.rowShuffle && sorting.columnShuffle) return 2;
-  if (sorting.rowShuffle) return 1;
-  return 0;
-};
+import {
+  DEFAULT_LEVEL,
+  readStoredLevel,
+  persistStoredLevel,
+  getScriptLevelFromFilters,
+  getShuffleLevelFromSorting,
+  getShuffleNodeByValue,
+} from "../Misc/levelUtils";
 
 const clampRowLevelIndex = (rowLevel) => {
   const idx = Math.max(0, Math.min(rowLevel - 1, ROW_TIERS.length - 1));
@@ -33,7 +27,8 @@ const Setup = () => {
   const { filters, setFilters, options, setOptions } = useGameState();
   const rowLevel = options.rowLevel || 1;
   const scriptLevel = getScriptLevelFromFilters(filters.characterTypes);
-  const shuffleLevel = getShuffleLevel(options.sorting);
+  const shuffleLevel = getShuffleLevelFromSorting(options.sorting);
+  const [lastLevel, setLastLevel] = useState(() => readStoredLevel());
 
   const rowSummary = useMemo(() => {
     return ROW_TIERS.filter((tier) => tier.value <= rowLevel)
@@ -116,6 +111,29 @@ const Setup = () => {
     }
   };
 
+  const handleAutoMode = () => {
+    const targetRow = lastLevel.rowLevel || DEFAULT_LEVEL.rowLevel;
+    const targetScriptKey =
+      LEVEL_TO_SCRIPT[lastLevel.scriptLevel] || LEVEL_TO_SCRIPT[DEFAULT_LEVEL.scriptLevel];
+    const targetShuffleNode =
+      getShuffleNodeByValue(lastLevel.shuffleLevel) ||
+      getShuffleNodeByValue(DEFAULT_LEVEL.shuffleLevel);
+
+    handleRowSelect(targetRow);
+    handleScriptSelect(targetScriptKey);
+    handleShuffleSelect(targetShuffleNode);
+  };
+
+  const handleStart = () => {
+    const nextLevel = {
+      rowLevel,
+      scriptLevel,
+      shuffleLevel,
+    };
+    setLastLevel(nextLevel);
+    persistStoredLevel(nextLevel);
+  };
+
   return (
     <main className="setup">
       <div className="setup-content">
@@ -130,6 +148,21 @@ const Setup = () => {
             Rows: {rowSummary || ROW_TIERS[0].caption} | Script:{" "}
             {activeScriptNode ? activeScriptNode.title : activeScriptKey} | Shuffle: {activeShuffleNode.title}
           </p>
+        </div>
+
+        <div className="auto-mode-card">
+          <div className="auto-mode-copy">
+            <span className="auto-mode-label">Auto Mode</span>
+            <p className="auto-mode-description">
+              Resume last session at{" "}
+              <strong>
+                Level {lastLevel.rowLevel}-{lastLevel.scriptLevel}-{lastLevel.shuffleLevel}
+              </strong>
+            </p>
+          </div>
+          <button type="button" className="auto-mode-button" onClick={handleAutoMode}>
+            Load Level
+          </button>
         </div>
 
         <div className="slider-board">
@@ -224,7 +257,7 @@ const Setup = () => {
         </div>
 
         <div className="setup-actions">
-          <Link to="/game" className="setup-start">
+          <Link to="/game" className="setup-start" onClick={handleStart}>
             Continue
           </Link>
           <Link to="/stats" className="setup-secondary">

@@ -1,0 +1,131 @@
+.level-complete-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(4, 4, 4, 0.82);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    z-index: 20;
+}
+
+.level-complete-card {
+    width: min(420px, 100%);
+    background: #111214;
+    border-radius: 24px;
+    padding: 32px 28px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+    text-align: center;
+}
+
+.level-complete-eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 12px;
+    margin: 0 0 8px;
+}
+
+.level-complete-card h2 {
+    margin: 0;
+    font-size: 28px;
+}
+
+.level-complete-subtitle {
+    margin: 8px 0 24px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.level-complete-times {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+}
+
+.time-panel {
+    flex: 1;
+    min-width: 140px;
+    padding: 16px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.time-label {
+    display: block;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.55);
+    margin-bottom: 6px;
+}
+
+.time-value {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.time-pill {
+    display: inline-flex;
+    margin-top: 8px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(188, 0, 45, 0.2);
+    color: #ff8fa8;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+}
+
+.level-complete-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.level-complete-primary,
+.level-complete-secondary {
+    flex: 1;
+    border-radius: 999px;
+    padding: 12px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.level-complete-primary {
+    background: linear-gradient(135deg, #bc002d 0%, #ff416c 100%);
+    color: #fff;
+}
+
+.level-complete-secondary {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    color: #fff;
+}
+
+.level-complete-primary:hover,
+.level-complete-primary:focus-visible,
+.level-complete-secondary:hover,
+.level-complete-secondary:focus-visible {
+    transform: translateY(-2px);
+}
+
+@media (max-width: 480px) {
+    .level-complete-card {
+        padding: 28px 20px;
+    }
+
+    .level-complete-times {
+        flex-direction: column;
+    }
+
+    .level-complete-actions {
+        flex-direction: column;
+    }
+}

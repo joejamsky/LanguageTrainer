@@ -3,8 +3,11 @@ import "../Styles/Timer.scss";
 import { useGameState } from "../Contexts/GameStateContext.js";
 
 function Timer() {
-  const { reset, game, stats, setStats } = useGameState();
+  const { reset, game, stats, setStats, currentLevel } = useGameState();
   const [timeElapsed, setTimeElapsed] = useState(0);
+  const levelKey = currentLevel?.key;
+  const bestTimesByLevel = stats.bestTimesByLevel || {};
+  const bestTimeForLevel = levelKey ? bestTimesByLevel[levelKey] || 0 : 0;
 
   const handleResetClick = () => {
     reset();
@@ -24,16 +27,39 @@ function Timer() {
   }, [game.start, game.gameover]);
 
   useEffect(() => {
-    if (game.gameover && timeElapsed > 0) {
-      setStats((prevStats) => ({
-        recentTime: timeElapsed,
-        bestTime:
-          timeElapsed < prevStats.bestTime || prevStats.bestTime === 0
-            ? timeElapsed
-            : prevStats.bestTime,
-      }));
+    if (!game.start) {
+      setTimeElapsed(0);
     }
-  }, [game.gameover, timeElapsed, stats.bestTime, setStats]);
+  }, [game.start]);
+
+  useEffect(() => {
+    if (game.gameover && timeElapsed > 0) {
+      setStats((prevStats) => {
+        const previousBestForLevel = levelKey
+          ? prevStats.bestTimesByLevel?.[levelKey] || 0
+          : 0;
+        const improved = previousBestForLevel === 0 || timeElapsed < previousBestForLevel;
+        const existingBestTimes = prevStats.bestTimesByLevel || {};
+        const nextBestTimes = levelKey
+          ? {
+              ...existingBestTimes,
+              [levelKey]: improved ? timeElapsed : previousBestForLevel,
+            }
+          : existingBestTimes;
+        const nextOverallBest =
+          prevStats.bestTime === 0 || timeElapsed < prevStats.bestTime
+            ? timeElapsed
+            : prevStats.bestTime;
+
+        return {
+          ...prevStats,
+          recentTime: timeElapsed,
+          bestTime: nextOverallBest,
+          bestTimesByLevel: nextBestTimes,
+        };
+      });
+    }
+  }, [game.gameover, timeElapsed, setStats, levelKey]);
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
@@ -55,7 +81,9 @@ function Timer() {
       <div className="best-time-container">
         <span className="best-time-copy">Best</span>
         <div className="best-time-divider"></div>
-        <span className="best-time">{formatTime(stats.bestTime)}</span>
+        <span className="best-time">
+          {formatTime(bestTimeForLevel || stats.bestTime || 0)}
+        </span>
       </div>
     </div>
   );

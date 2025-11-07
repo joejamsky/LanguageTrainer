@@ -39,6 +39,7 @@ export const defaultState = {
   stats: {
     recentTime: 0,
     bestTime: 0,
+    bestTimesByLevel: {},
   },
   selectedTile: {
     id: null,

@@ -68,6 +68,57 @@
     color: rgba(255, 255, 255, 0.72);
 }
 
+.auto-mode-card {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 20px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.auto-mode-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    gap: 4px;
+}
+
+.auto-mode-label {
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.auto-mode-description {
+    margin: 0;
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.auto-mode-button {
+    border: none;
+    border-radius: 999px;
+    padding: 10px 22px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, #bc002d 0%, #ff416c 100%);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.auto-mode-button:hover,
+.auto-mode-button:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(188, 0, 45, 0.3);
+}
+
 .slider-board {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -328,6 +379,15 @@
     }
 
     .setup-secondary {
+        width: 100%;
+    }
+
+    .auto-mode-card {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .auto-mode-button {
         width: 100%;
     }
 }

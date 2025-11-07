@@ -7,6 +7,7 @@ import Timer from "../Components/Timer.jsx";
 import Menu from "../Components/Menu.jsx";
 // import StartMenu from "../Components/StartMenu.jsx";
 import MobileHint from "../Components/MobileHint.jsx";
+import LevelCompleteModal from "../Components/LevelCompleteModal.jsx";
 import { useGameState } from "../Contexts/GameStateContext.js";
 
 function Main() {
@@ -30,6 +31,7 @@ function Main() {
                             <div className="UI-divider"></div>
                         </div>
                         <BotGrid/>
+                        <LevelCompleteModal />
                     </>
                 {/* )} */}
                 

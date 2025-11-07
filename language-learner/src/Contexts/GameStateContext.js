@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useCallback, useEffect } from 'react';
+import React, { createContext, useState, useContext, useCallback, useEffect, useMemo } from 'react';
 import {
   defaultState,
   breakpoints,
@@ -7,6 +7,18 @@ import {
 import { getSoundSorted, shuffleByShapeGroup } from '../Misc/ShuffleSort'
 import japanese_characters_standard_bot from '../Data/japanese_characters_standard_bot.json'; 
 import japanese_characters_standard_top from '../Data/japanese_characters_standard_top.json';
+import {
+  DEFAULT_LEVEL,
+  persistStoredLevel,
+  getScriptLevelFromFilters,
+  getShuffleLevelFromSorting,
+  getShuffleNodeByValue,
+  buildLevelKey,
+  getNextLevel,
+  levelToScriptKey,
+  loadLevelStats,
+  persistLevelStats,
+} from '../Misc/levelUtils';
 
 /* =============================
    HELPER FUNCTIONS (Local)
@@ -75,6 +87,21 @@ const persistSettingsToStorage = (filters, options) => {
   }
 };
 
+const getInitialStats = () => {
+  const stored = loadLevelStats();
+  if (!stored) {
+    return {
+      ...defaultState.stats,
+      bestTimesByLevel: {},
+    };
+  }
+  return {
+    ...defaultState.stats,
+    ...stored,
+    bestTimesByLevel: stored.bestTimesByLevel || {},
+  };
+};
+
 const getRowIndexFromId = (identifier) => {
   if (!identifier) return null;
   const numericPortion = parseInt(identifier, 10);
@@ -117,6 +144,23 @@ const updateMissedStats = (currentTileId) => {
 };
 
 // Initialize characters from defaults and stored stats.
+const cloneTopCharacters = () =>
+  japanese_characters_standard_top.map(tile => ({
+    ...tile,
+    completed: false,
+    scripts: tile.scripts
+      ? Object.fromEntries(
+          Object.entries(tile.scripts).map(([key, script]) => [
+            key,
+            {
+              ...script,
+              filled: false,
+            },
+          ])
+        )
+      : tile.scripts,
+  }));
+
 const getInitialCharacters = (filters = defaultState.filters, options = defaultState.options) => {
   const stats = JSON.parse(localStorage.getItem('tileStats')) || {};
   const defaultBot = japanese_characters_standard_bot.map(tile => ({
@@ -125,10 +169,11 @@ const getInitialCharacters = (filters = defaultState.filters, options = defaultS
     filled: false,
     render: false,
   }));
+  const masterTopCharacters = cloneTopCharacters();
   return {
-    masterTopCharacters: japanese_characters_standard_top,
+    masterTopCharacters,
     masterBotCharacters: defaultBot,
-    topCharacters: japanese_characters_standard_top,
+    topCharacters: cloneTopCharacters(),
     botCharacters: defaultBot.filter(item => handleCharRenderToggles(item, filters, options?.rowLevel)),
   };
 };
@@ -149,7 +194,7 @@ export const GameStateProvider = ({ children }) => {
   const [options, setOptions] = useState(initialOptions);
   const [characters, setCharacters] = useState(() => getInitialCharacters(initialFilters, initialOptions));
   const [game, setGame] = useState(defaultState.game);
-  const [stats, setStats] = useState(defaultState.stats);
+  const [stats, setStats] = useState(getInitialStats);
   const [selectedTile, setSelectedTile] = useState(defaultState.selectedTile);
   const [screenSize, setScreenSize] = useState('desktop');
   const [startMenuOpen, setStartMenuOpen] = useState(true);
@@ -173,10 +218,28 @@ export const GameStateProvider = ({ children }) => {
     persistSettingsToStorage(filters, options);
   }, [filters, options]);
 
+  useEffect(() => {
+    persistLevelStats(stats);
+  }, [stats]);
+
   // Destructure sorting and game mode options for clarity.
   const { rowShuffle, columnShuffle } = options.sorting;
   const { rowLevel = defaultState.options.rowLevel } = options;
   const { current, methods } = options.gameMode;
+  const derivedScriptLevel = getScriptLevelFromFilters(filters.characterTypes);
+  const derivedShuffleLevel = getShuffleLevelFromSorting(options.sorting);
+
+  const currentLevel = useMemo(() => {
+    const baseLevel = {
+      rowLevel,
+      scriptLevel: derivedScriptLevel,
+      shuffleLevel: derivedShuffleLevel,
+    };
+    return {
+      ...baseLevel,
+      key: buildLevelKey(baseLevel),
+    };
+  }, [rowLevel, derivedScriptLevel, derivedShuffleLevel]);
 
   // Re-sort botCharacters when filters, shuffling, or game mode change.
   useEffect(() => {
@@ -205,23 +268,60 @@ export const GameStateProvider = ({ children }) => {
       return {
         ...prevChars,
         botCharacters: updatedBotCharacters,
-        topCharacters: japanese_characters_standard_top,
+        topCharacters: cloneTopCharacters(),
       };
     });
   }, [filters, rowShuffle, columnShuffle, current, methods, rowLevel]);
 
   // Reset game and characters to initial state.
-  const reset = () => {
+  const reset = (overrideFilters, overrideOptions) => {
+    const sourceFilters = overrideFilters || filters;
+    const sourceOptions = overrideOptions || options;
     setGame(defaultState.game);
-    setCharacters(getInitialCharacters(filters, options));
+    setSelectedTile(defaultState.selectedTile);
+    setCharacters(getInitialCharacters(sourceFilters, sourceOptions));
   };
 
   const saveCharactersToLocalStorage = (state) => {
     localStorage.setItem('characters', JSON.stringify(state));
   };
 
-  const getRemainingPlayableTiles = (tiles = []) =>
-    tiles.filter(tile => !tile.placeholder).length;
+  const applyLevelConfiguration = (targetLevel = DEFAULT_LEVEL) => {
+    const scriptKey = levelToScriptKey(targetLevel.scriptLevel);
+    const updatedFilters = {
+      ...filters,
+      characterTypes: {
+        ...filters.characterTypes,
+        hiragana: scriptKey === 'hiragana' || scriptKey === 'both',
+        katakana: scriptKey === 'katakana' || scriptKey === 'both',
+      },
+    };
+
+    const shuffleNode = getShuffleNodeByValue(targetLevel.shuffleLevel);
+    const updatedOptions = {
+      ...options,
+      rowLevel: targetLevel.rowLevel,
+      sorting: {
+        ...options.sorting,
+        rowShuffle: shuffleNode.rowShuffle,
+        columnShuffle: shuffleNode.columnShuffle,
+        shuffleLevel: shuffleNode.value,
+      },
+    };
+
+    setFilters(updatedFilters);
+    setOptions(updatedOptions);
+    persistStoredLevel(targetLevel);
+    reset(updatedFilters, updatedOptions);
+  };
+
+  const goToNextLevel = () => {
+    const nextLevel = getNextLevel(currentLevel || DEFAULT_LEVEL);
+    applyLevelConfiguration(nextLevel);
+  };
+
+const getRemainingPlayableTiles = (tiles = []) =>
+  tiles.filter(tile => !tile.placeholder).length;
 
   const completeTileAtIndex = (tileIndex) => {
     let didComplete = false;
@@ -331,6 +431,9 @@ export const GameStateProvider = ({ children }) => {
     stats,
     setStats,
     reset,
+    currentLevel,
+    goToNextLevel,
+    applyLevelConfiguration,
     screenSize,
     selectedTile,
     setSelectedTile,
