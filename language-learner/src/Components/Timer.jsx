@@ -8,6 +8,9 @@ function Timer() {
   const levelKey = currentLevel?.key;
   const bestTimesByLevel = stats.bestTimesByLevel || {};
   const bestTimeForLevel = levelKey ? bestTimesByLevel[levelKey] || 0 : 0;
+  const currentLevelLabel = currentLevel
+    ? `${currentLevel.rowLevel}-${currentLevel.scriptLevel}-${currentLevel.shuffleLevel}`
+    : "--";
 
   const handleResetClick = () => {
     reset();
@@ -73,9 +76,16 @@ function Timer() {
 
   return (
     <div className="timer-container">
+      <div className="current-level-container">
+        <span className="current-level-copy">Level</span>
+        <div className="best-time-divider"></div>
+        <span className="current-level-value">{currentLevelLabel}</span>
+      </div>
+
       <button onClick={handleResetClick} className="reset-button">
         <span className="time">{formatTime(timeElapsed)}</span>
-        {/* <span className="reset">&#10227;</span> */}
+        <div className="best-time-divider"></div>
+        <span className="reset">&#10227;</span>
       </button>
 
       <div className="best-time-container">

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "../Styles/LevelCompleteModal.scss";
 import { useGameState } from "../Contexts/GameStateContext";
 
@@ -13,6 +13,18 @@ const formatTime = (seconds = 0) => {
 
 const LevelCompleteModal = () => {
   const { game, stats, currentLevel, goToNextLevel, reset } = useGameState();
+
+  useEffect(() => {
+    if (!game.gameover) return;
+    const handleKeyDown = (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        goToNextLevel();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [game.gameover, goToNextLevel]);
 
   if (!game.gameover || !currentLevel) {
     return null;

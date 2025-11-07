@@ -73,11 +73,18 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-wrap: wrap;
     gap: 16px;
     padding: 18px 20px;
     border-radius: 18px;
     background: rgba(255, 255, 255, 0.035);
     border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.auto-mode-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
 .auto-mode-copy {
@@ -117,6 +124,18 @@
 .auto-mode-button:focus-visible {
     transform: translateY(-2px);
     box-shadow: 0 12px 28px rgba(188, 0, 45, 0.3);
+}
+
+.auto-mode-reset {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    color: rgba(255, 255, 255, 0.85);
+    box-shadow: none;
+}
+
+.auto-mode-reset:hover,
+.auto-mode-reset:focus-visible {
+    box-shadow: 0 10px 22px rgba(255, 255, 255, 0.12);
 }
 
 .slider-board {

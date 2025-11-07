@@ -1,13 +1,22 @@
-import React, {useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import "../Styles/TextInput.scss";
 import { useGameState } from "../Contexts/GameStateContext.js";
 
 const TextInput = () => {
-    const {handleTextSubmit, setOptions} = useGameState();
+    const {handleTextSubmit, setOptions, currentLevel} = useGameState();
     const [textInput, setTextInput] = useState('');
     const [shakeTimer, setShakeTimer] = useState(false);
+    const [placeholderVisible, setPlaceholderVisible] = useState(true);
+    const inputRef = useRef(null);
+
+    useEffect(() => {
+        inputRef.current?.focus();
+    }, [currentLevel?.key]);
 
     const handleInputChange = (e) => {
+        if (placeholderVisible && e.target.value.length > 0) {
+            setPlaceholderVisible(false);
+        }
         setTextInput(e.target.value); // Update state with new input value
     };
 
@@ -21,6 +30,7 @@ const TextInput = () => {
             }, 500); 
         }
         setTextInput('')
+        setPlaceholderVisible(false);
     };
 
     const handleKeyPress = (event) => {
@@ -59,8 +69,9 @@ const TextInput = () => {
                     onKeyDown={handleKeyPress} // Add listener to the input
                     onKeyUp={handleKeyUp}
                     onChange={handleInputChange} // Handle input changes
-                    placeholder=""
+                    placeholder={placeholderVisible ? "Enter romaji" : ""}
                     className="input-field"
+                    ref={inputRef}
                 />
             </form>
         </div>

@@ -124,6 +124,17 @@ const Setup = () => {
     handleShuffleSelect(targetShuffleNode);
   };
 
+  const handleResetLevels = () => {
+    const resetLevel = { ...DEFAULT_LEVEL };
+    const defaultScriptKey = LEVEL_TO_SCRIPT[resetLevel.scriptLevel];
+    const defaultShuffleNode = getShuffleNodeByValue(resetLevel.shuffleLevel);
+    handleRowSelect(resetLevel.rowLevel);
+    handleScriptSelect(defaultScriptKey);
+    handleShuffleSelect(defaultShuffleNode);
+    setLastLevel(resetLevel);
+    persistStoredLevel(resetLevel);
+  };
+
   const handleStart = () => {
     const nextLevel = {
       rowLevel,
@@ -160,9 +171,14 @@ const Setup = () => {
               </strong>
             </p>
           </div>
-          <button type="button" className="auto-mode-button" onClick={handleAutoMode}>
-            Load Level
-          </button>
+          <div className="auto-mode-actions">
+            <button type="button" className="auto-mode-button" onClick={handleAutoMode}>
+              Load Level
+            </button>
+            <button type="button" className="auto-mode-button auto-mode-reset" onClick={handleResetLevels}>
+              Reset
+            </button>
+          </div>
         </div>
 
         <div className="slider-board">

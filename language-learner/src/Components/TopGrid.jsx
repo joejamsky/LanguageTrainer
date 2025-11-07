@@ -6,6 +6,7 @@ import { useGameState } from "../Contexts/GameStateContext.js";
 const TopGrid = () => {
   const { characters, filters, options } = useGameState();
   const rowLevel = options.rowLevel || 1;
+  const vowelHeaders = ["a", "i", "u", "e", "o"];
 
   const isWithinRowLevel = (identifier) => {
     if (!identifier) return true;
@@ -16,7 +17,13 @@ const TopGrid = () => {
 
   return (
     <div className="top-grid-container">
-
+      <div className="top-grid-legend">
+        {vowelHeaders.map((letter) => (
+          <span key={letter} className="top-grid-legend-item">
+            {letter.toUpperCase()}
+          </span>
+        ))}
+      </div>
       <div className={`grid dropgrid ${true ? 'vertical' : 'horizontal'}`}>
 
       {characters &&

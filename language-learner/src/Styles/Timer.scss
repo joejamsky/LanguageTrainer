@@ -7,7 +7,7 @@
         transform: translate(-50%, 0);
 
         font-weight: 900;
-        line-height: 0px;
+        line-height: 22px;
         
         // max-height: 35px;
         // width: 60px;
@@ -25,8 +25,8 @@
         justify-content: center;
         align-items: center;
 
-        padding: 16px 4px;
-        // gap: 1px;
+        padding: 4px;
+        gap: 0px;
         transition: all 0.1s;
 
         &:hover{
@@ -42,7 +42,7 @@
     }
 
     .time{
-        font-size: 18px;
+        font-size: 16px;
         height: 50%;
         display: flex;
         flex-direction: column;
@@ -56,38 +56,46 @@
         flex-direction: column;
         justify-content: center;
         font-size: 20px;
-        border-top: 1px solid white;
-        line-height: 20px;
+        line-height: 15px;
     }
 
 
-    .best-time-container {
+    .best-time-container,
+    .current-level-container {
         position: absolute;
         left: 50%;
         top: 10px;
-        // top: 50%;
-        // transform: translate(calc(-50% + 70px), -50%);
         transform: translate(calc(-50% + 70px), 0);
         font-size: 12px;
         display: flex;
         flex-direction: column;
+        text-align: center;
+    }
 
-        .best-time-copy{
+    .best-time-container {
+        transform: translate(calc(-50% + 70px), 0);
+    }
+
+    .current-level-container {
+        transform: translate(calc(-50% - 70px), 0);
+    }
+
+    .best-time-copy,
+    .current-level-copy{
             margin: 0;
             padding: 0;
             line-height: 12px;
             text-align: center;
-        }
+    }
 
-        .best-time-divider{
+    .best-time-divider{
             width: 100%;
             height: 1px;
             background-color: white;
-        }
+    }
 
-        .best-time{
+    .best-time,
+    .current-level-value{
             line-height: 12px;
-        }
-
     }
 }
