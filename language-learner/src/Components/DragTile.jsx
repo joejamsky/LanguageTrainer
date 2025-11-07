@@ -1,10 +1,17 @@
 import React, { useRef } from "react";
 import "../Styles/DragTile.scss";
 import { useGameState } from "../Contexts/GameStateContext";
+import { dictionaryKanaToRomaji } from "../Misc/Utils";
 
 const DragTile = ({ characterObj, index }) => {
   const dragRef = useRef(null);
   const { game, setGame, selectedTile, setSelectedTile, screenSize, options } = useGameState();
+  const isTableView = screenSize === "tablet";
+  const shouldShowRomaji =
+    isTableView && (characterObj.type === "hiragana" || characterObj.type === "katakana");
+  const displayCharacter = shouldShowRomaji
+    ? dictionaryKanaToRomaji[characterObj.character] || characterObj.character
+    : characterObj.character;
 
   const onTouchEnd = () => {
     setSelectedTile({
@@ -53,7 +60,7 @@ const DragTile = ({ characterObj, index }) => {
     >
       <div className="char-container">
         <div className={`char-content char-${characterObj.type}`}>
-          {characterObj.character}
+          {displayCharacter}
         </div>
       </div>
     </div>

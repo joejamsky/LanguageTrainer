@@ -216,39 +216,71 @@ export const GameStateProvider = ({ children }) => {
     setCharacters(getInitialCharacters(filters, options));
   };
 
-  const getCurrentRow = (chars) => {
-    const index = chars.findIndex(char => !char.completed);
-    return Math.floor(index / 5);
-  };
-
-  const handleDrop = (targetId, targetIndex) => {
-    if (selectedTile.id === targetId) {
-      const tempTopChars = [...characters.topCharacters];
-      tempTopChars[targetIndex].filled = true;
-
-      const currentRow = getCurrentRow(characters.botCharacters);
-      const startIdx = currentRow * 5;
-      const endIdx = startIdx + 5;
-      const tempBotChars = [...characters.botCharacters];
-      tempBotChars[selectedTile.index].filled = true;
-      const row = tempBotChars.slice(startIdx, endIdx);
-      const allFilled = row.every(char => char.filled);
-
-      if (allFilled) row.forEach(char => char.render = false);
-      if (allFilled && (currentRow + 1) === (tempBotChars.length / 5)) {
-        setGame(prevGame => ({ ...prevGame, gameover: true }));
-      }
-      setCharacters(prevChars => ({
-        ...prevChars,
-        topCharacters: tempTopChars,
-        botCharacters: tempBotChars
-      }));
-    }
-  };
-
   const saveCharactersToLocalStorage = (state) => {
     localStorage.setItem('characters', JSON.stringify(state));
   };
+
+  const getRemainingPlayableTiles = (tiles = []) =>
+    tiles.filter(tile => !tile.placeholder).length;
+
+  const completeTileAtIndex = (tileIndex) => {
+    let didComplete = false;
+
+    setCharacters(prevChars => {
+      const tempBotChars = [...prevChars.botCharacters];
+      const tempTopChars = [...prevChars.topCharacters];
+      const currentTile = tempBotChars[tileIndex];
+
+      if (!currentTile) {
+        return prevChars;
+      }
+
+      const topTile = tempTopChars.find(tile => tile.id === currentTile.parentId);
+      if (topTile?.scripts) {
+        Object.values(topTile.scripts).forEach(script => {
+          if (script.id === currentTile.id) {
+            script.filled = true;
+          }
+        });
+      }
+
+      tempBotChars.splice(tileIndex, 1);
+      while (tempBotChars[0]?.placeholder) {
+        tempBotChars.shift();
+      }
+
+      const remainingTiles = getRemainingPlayableTiles(tempBotChars);
+      const updatedState = {
+        ...prevChars,
+        topCharacters: tempTopChars,
+        botCharacters: tempBotChars,
+      };
+
+      saveCharactersToLocalStorage(updatedState);
+      didComplete = true;
+
+      if (remainingTiles === 0) {
+        setGame(prevGame => (prevGame.gameover ? prevGame : { ...prevGame, gameover: true }));
+      }
+
+      return updatedState;
+    });
+
+    return didComplete;
+  };
+
+  const handleDrop = (targetId, _targetIndex) => {
+    if (selectedTile.index === null || selectedTile.index === undefined) return;
+    const draggedTile = characters.botCharacters[selectedTile.index];
+    if (!draggedTile || draggedTile.parentId !== targetId) {
+      return;
+    }
+    const completed = completeTileAtIndex(selectedTile.index);
+    if (completed) {
+      setSelectedTile(defaultState.selectedTile);
+    }
+  };
+
 
   const updateMissedTile = (currentTile, characters) => {
     return {
@@ -261,7 +293,6 @@ export const GameStateProvider = ({ children }) => {
 
   const handleTextSubmit = (submittedChar) => {
     const tempBotChars = [...characters.botCharacters];
-    const tempTopChars = [...characters.topCharacters];
     const currentTile = tempBotChars[0];
 
     if (!game.start) {
@@ -278,28 +309,7 @@ export const GameStateProvider = ({ children }) => {
       updateMissedStats(currentTile.id);
       return -1;
     }
-    const topTile = tempTopChars.find(tile => tile.id === currentTile.parentId);
-    if (topTile?.scripts) {
-      Object.values(topTile.scripts).forEach(script => {
-        if (script.id === currentTile.id) {
-          script.filled = true;
-        }
-      });
-    }
-    tempBotChars.shift();
-    while (tempBotChars[0]?.placeholder) {
-      tempBotChars.shift();
-    }
-    if (tempBotChars.length === 0) {
-      setGame(prevGame => ({ ...prevGame, gameover: true }));
-    }
-    const newState = {
-      ...characters,
-      topCharacters: tempTopChars,
-      botCharacters: tempBotChars,
-    };
-    setCharacters(newState);
-    saveCharactersToLocalStorage(newState);
+    completeTileAtIndex(0);
   };
 
   const handleCharacterSelect = (type) => {
