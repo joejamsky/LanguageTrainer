@@ -18,6 +18,7 @@ import {
   levelToScriptKey,
   loadLevelStats,
   persistLevelStats,
+  clampShuffleLevelForRow,
 } from '../Misc/levelUtils';
 
 /* =============================
@@ -233,7 +234,7 @@ export const GameStateProvider = ({ children }) => {
     const baseLevel = {
       rowLevel,
       scriptLevel: derivedScriptLevel,
-      shuffleLevel: derivedShuffleLevel,
+      shuffleLevel: clampShuffleLevelForRow(rowLevel, derivedShuffleLevel),
     };
     return {
       ...baseLevel,
@@ -241,22 +242,48 @@ export const GameStateProvider = ({ children }) => {
     };
   }, [rowLevel, derivedScriptLevel, derivedShuffleLevel]);
 
+  useEffect(() => {
+    setOptions(prevOptions => {
+      const clampedShuffleLevel = clampShuffleLevelForRow(rowLevel, prevOptions.sorting.shuffleLevel);
+      const shouldDisableColumns = rowLevel <= 1;
+      const needsUpdate =
+        prevOptions.sorting.shuffleLevel !== clampedShuffleLevel ||
+        (shouldDisableColumns && prevOptions.sorting.columnShuffle);
+
+      if (!needsUpdate) {
+        return prevOptions;
+      }
+
+      const shuffleNode = getShuffleNodeByValue(clampedShuffleLevel);
+      return {
+        ...prevOptions,
+        sorting: {
+          ...prevOptions.sorting,
+          rowShuffle: shuffleNode.rowShuffle,
+          columnShuffle: shouldDisableColumns ? false : shuffleNode.columnShuffle,
+          shuffleLevel: shuffleNode.value,
+        },
+      };
+    });
+  }, [rowLevel, setOptions]);
+
   // Re-sort botCharacters when filters, shuffling, or game mode change.
   useEffect(() => {
     setCharacters(prevChars => {
       const filteredBot = prevChars.masterBotCharacters.filter(item =>
         handleCharRenderToggles(item, filters, rowLevel)
       );
+      const effectiveColumnShuffle = rowLevel > 1 ? columnShuffle : false;
       let updatedBotCharacters;
       switch (methods[current]) {
         case 'sound':
-          updatedBotCharacters = getSoundSorted(filteredBot, rowShuffle, columnShuffle);
+          updatedBotCharacters = getSoundSorted(filteredBot, rowShuffle, effectiveColumnShuffle);
           break;
         case 'h-shape':
-          updatedBotCharacters = shuffleByShapeGroup(filteredBot, 'hiragana', rowShuffle, columnShuffle);
+          updatedBotCharacters = shuffleByShapeGroup(filteredBot, 'hiragana', rowShuffle, effectiveColumnShuffle);
           break;
         case 'k-shape':
-          updatedBotCharacters = shuffleByShapeGroup(filteredBot, 'katakana', rowShuffle, columnShuffle);
+          updatedBotCharacters = shuffleByShapeGroup(filteredBot, 'katakana', rowShuffle, effectiveColumnShuffle);
           break;
         case 'missed':
           updatedBotCharacters = filteredBot.filter(tile => !tile.placeholder)
@@ -297,21 +324,25 @@ export const GameStateProvider = ({ children }) => {
       },
     };
 
-    const shuffleNode = getShuffleNodeByValue(targetLevel.shuffleLevel);
+    const effectiveShuffleLevel = clampShuffleLevelForRow(targetLevel.rowLevel, targetLevel.shuffleLevel);
+    const shuffleNode = getShuffleNodeByValue(effectiveShuffleLevel);
     const updatedOptions = {
       ...options,
       rowLevel: targetLevel.rowLevel,
       sorting: {
         ...options.sorting,
         rowShuffle: shuffleNode.rowShuffle,
-        columnShuffle: shuffleNode.columnShuffle,
+        columnShuffle: targetLevel.rowLevel > 1 ? shuffleNode.columnShuffle : false,
         shuffleLevel: shuffleNode.value,
       },
     };
 
     setFilters(updatedFilters);
     setOptions(updatedOptions);
-    persistStoredLevel(targetLevel);
+    persistStoredLevel({
+      ...targetLevel,
+      shuffleLevel: effectiveShuffleLevel,
+    });
     reset(updatedFilters, updatedOptions);
   };
 

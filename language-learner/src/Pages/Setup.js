@@ -16,6 +16,8 @@ import {
   getScriptLevelFromFilters,
   getShuffleLevelFromSorting,
   getShuffleNodeByValue,
+  clampShuffleLevelForRow,
+  getMaxShuffleLevelForRow,
 } from "../Misc/levelUtils";
 
 const clampRowLevelIndex = (rowLevel) => {
@@ -27,7 +29,7 @@ const Setup = () => {
   const { filters, setFilters, options, setOptions } = useGameState();
   const rowLevel = options.rowLevel || 1;
   const scriptLevel = getScriptLevelFromFilters(filters.characterTypes);
-  const shuffleLevel = getShuffleLevelFromSorting(options.sorting);
+  const shuffleLevel = clampShuffleLevelForRow(rowLevel, getShuffleLevelFromSorting(options.sorting));
   const [lastLevel, setLastLevel] = useState(() => readStoredLevel());
 
   const rowSummary = useMemo(() => {
@@ -105,7 +107,8 @@ const Setup = () => {
 
   const handleShuffleSliderChange = (event) => {
     const value = Number(event.target.value);
-    const node = SHUFFLE_NODES.find((option) => option.value === value);
+    const clampedValue = clampShuffleLevelForRow(rowLevel, value);
+    const node = SHUFFLE_NODES.find((option) => option.value === clampedValue);
     if (node) {
       handleShuffleSelect(node);
     }
@@ -116,7 +119,7 @@ const Setup = () => {
     const targetScriptKey =
       LEVEL_TO_SCRIPT[lastLevel.scriptLevel] || LEVEL_TO_SCRIPT[DEFAULT_LEVEL.scriptLevel];
     const targetShuffleNode =
-      getShuffleNodeByValue(lastLevel.shuffleLevel) ||
+      getShuffleNodeByValue(clampShuffleLevelForRow(targetRow, lastLevel.shuffleLevel)) ||
       getShuffleNodeByValue(DEFAULT_LEVEL.shuffleLevel);
 
     handleRowSelect(targetRow);
@@ -139,7 +142,7 @@ const Setup = () => {
     const nextLevel = {
       rowLevel,
       scriptLevel,
-      shuffleLevel,
+      shuffleLevel: clampShuffleLevelForRow(rowLevel, shuffleLevel),
     };
     setLastLevel(nextLevel);
     persistStoredLevel(nextLevel);
@@ -259,7 +262,7 @@ const Setup = () => {
               <input
                 type="range"
                 min="0"
-                max={SHUFFLE_NODES.length - 1}
+                max={getMaxShuffleLevelForRow(rowLevel)}
                 step="1"
                 value={shuffleLevel}
                 onChange={handleShuffleSliderChange}
