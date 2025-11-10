@@ -1,3 +1,5 @@
+@use './variables' as vars;
+
 .home {
     min-height: 100vh;
     display: flex;
@@ -51,7 +53,7 @@
     box-shadow: 0 8px 16px rgba(188, 0, 45, 0.3);
 }
 
-@media (max-width: 480px) {
+@media (max-width: vars.$breakpoint-mobile) {
     .home {
         padding: 30px 16px;
     }

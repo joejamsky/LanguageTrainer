@@ -40,6 +40,11 @@ export const defaultState = {
     recentTime: 0,
     bestTime: 0,
     bestTimesByLevel: {},
+    kanaStreak: 0,
+    bestKanaStreak: 0,
+    dailyStreak: 0,
+    lastActiveDate: null,
+    dailyAttempts: {},
   },
   selectedTile: {
     id: null,
@@ -55,7 +60,7 @@ export const breakpoints = {
 }
 
 export const checkUniqueArrayIDs = (data) => {
-  console.log('data',data)
+  // console.log('data',data)
   const idTracker = new Set();
   const duplicates = data.filter(item => {
     if (idTracker.has(item.id)) {

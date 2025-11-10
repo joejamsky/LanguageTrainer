@@ -1,3 +1,5 @@
+@use './variables' as vars;
+
 .level-complete-backdrop {
     position: fixed;
     inset: 0;
@@ -116,7 +118,7 @@
     transform: translateY(-2px);
 }
 
-@media (max-width: 480px) {
+@media (max-width: vars.$breakpoint-mobile) {
     .level-complete-card {
         padding: 28px 20px;
     }

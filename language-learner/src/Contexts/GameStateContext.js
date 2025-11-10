@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useCallback, useEffect, useMemo } from 'react';
+import React, { createContext, useState, useContext, useCallback, useEffect, useMemo, useRef } from 'react';
 import {
   defaultState,
   breakpoints,
@@ -20,6 +20,12 @@ import {
   persistLevelStats,
   clampShuffleLevelForRow,
 } from '../Misc/levelUtils';
+import {
+  loadTilePerformance,
+  persistTilePerformance,
+  applyMissToTilePerformance,
+  applyAttemptToTilePerformance,
+} from '../Misc/statUtils';
 
 /* =============================
    HELPER FUNCTIONS (Local)
@@ -36,6 +42,32 @@ const matchInput = (scriptObj, userInput) => {
 
 const SETTINGS_STORAGE_KEY = 'languageTrainerSettings';
 const isBrowser = typeof window !== 'undefined';
+const MS_PER_DAY = 24 * 60 * 60 * 1000;
+
+const getDateKey = (date = new Date()) => {
+  if (!date) return null;
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+const parseDateKey = (key) => {
+  if (!key) return null;
+  const [year, month, day] = key.split('-').map(Number);
+  if ([year, month, day].some((value) => Number.isNaN(value))) {
+    return null;
+  }
+  return new Date(year, (month || 1) - 1, day || 1);
+};
+
+const isPreviousCalendarDay = (previousKey, currentKey) => {
+  const previousDate = parseDateKey(previousKey);
+  const currentDate = parseDateKey(currentKey);
+  if (!previousDate || !currentDate) return false;
+  const diff = currentDate - previousDate;
+  return Math.round(diff / MS_PER_DAY) === 1;
+};
 
 const mergeDeep = (target, source) => {
   const output = Array.isArray(target) ? [...target] : { ...target };
@@ -90,16 +122,23 @@ const persistSettingsToStorage = (filters, options) => {
 
 const getInitialStats = () => {
   const stored = loadLevelStats();
-  if (!stored) {
-    return {
-      ...defaultState.stats,
-      bestTimesByLevel: {},
-    };
-  }
-  return {
+  const baseStats = {
     ...defaultState.stats,
+    bestTimesByLevel: stored?.bestTimesByLevel || {},
+  };
+  if (!stored) {
+    return baseStats;
+  }
+  const normalizedKanaStreak =
+    stored.kanaStreak ?? stored.currentStreak ?? baseStats.kanaStreak;
+  const normalizedBestKanaStreak =
+    stored.bestKanaStreak ?? stored.bestStreak ?? baseStats.bestKanaStreak;
+
+  return {
+    ...baseStats,
     ...stored,
-    bestTimesByLevel: stored.bestTimesByLevel || {},
+    kanaStreak: normalizedKanaStreak,
+    bestKanaStreak: normalizedBestKanaStreak,
   };
 };
 
@@ -137,13 +176,6 @@ const handleCharRenderToggles = (item, filters, rowLevel) => {
   }
 };
 
-// Update missed count in localStorage stats.
-const updateMissedStats = (currentTileId) => {
-  const stats = JSON.parse(localStorage.getItem('tileStats')) || {};
-  stats[currentTileId] = (stats[currentTileId] || 0) + 1;
-  localStorage.setItem('tileStats', JSON.stringify(stats));
-};
-
 // Initialize characters from defaults and stored stats.
 const cloneTopCharacters = () =>
   japanese_characters_standard_top.map(tile => ({
@@ -162,11 +194,18 @@ const cloneTopCharacters = () =>
       : tile.scripts,
   }));
 
-const getInitialCharacters = (filters = defaultState.filters, options = defaultState.options) => {
-  const stats = JSON.parse(localStorage.getItem('tileStats')) || {};
+const getInitialCharacters = (
+  filters = defaultState.filters,
+  options = defaultState.options,
+  storedTileStats = {}
+) => {
+  const stats = storedTileStats || {};
   const defaultBot = japanese_characters_standard_bot.map(tile => ({
     ...tile,
-    missed: stats[tile.id] || tile.missed,
+    missed: stats[tile.id]?.misses ?? tile.missed,
+    accuracy: stats[tile.id]?.accuracy ?? 1,
+    averageTimeSeconds: stats[tile.id]?.averageTimeSeconds ?? null,
+    memoryScore: stats[tile.id]?.memoryScore ?? 1,
     filled: false,
     render: false,
   }));
@@ -191,15 +230,51 @@ export const GameStateProvider = ({ children }) => {
   const initialFilters = mergeDeep(defaultState.filters, storedSettings?.filters);
   const initialOptions = mergeDeep(defaultState.options, storedSettings?.options);
 
+  const initialTileStats = useMemo(() => loadTilePerformance(), []);
   const [filters, setFilters] = useState(initialFilters);
   const [options, setOptions] = useState(initialOptions);
-  const [characters, setCharacters] = useState(() => getInitialCharacters(initialFilters, initialOptions));
+  const [tileStats, setTileStats] = useState(initialTileStats);
+  const [characters, setCharacters] = useState(() =>
+    getInitialCharacters(initialFilters, initialOptions, initialTileStats)
+  );
   const [game, setGame] = useState(defaultState.game);
   const [stats, setStats] = useState(getInitialStats);
   const [selectedTile, setSelectedTile] = useState(defaultState.selectedTile);
   const [screenSize, setScreenSize] = useState('desktop');
   const [startMenuOpen, setStartMenuOpen] = useState(true);
   const [inputFocusKey, setInputFocusKey] = useState(0);
+  const [activeAttempt, setActiveAttempt] = useState({
+    tileId: null,
+    startedAt: null,
+    misses: 0,
+  });
+  const previousGameover = useRef(false);
+
+  const registerDailyCompletion = useCallback(() => {
+    setStats(prevStats => {
+      const todayKey = getDateKey();
+      const attemptsByDay = {
+        ...(prevStats.dailyAttempts || {}),
+      };
+      attemptsByDay[todayKey] = (attemptsByDay[todayKey] || 0) + 1;
+
+      let nextDailyStreak = prevStats.dailyStreak || 0;
+      if (prevStats.lastActiveDate === todayKey) {
+        nextDailyStreak = nextDailyStreak || 1;
+      } else if (isPreviousCalendarDay(prevStats.lastActiveDate, todayKey)) {
+        nextDailyStreak += 1;
+      } else {
+        nextDailyStreak = 1;
+      }
+
+      return {
+        ...prevStats,
+        dailyAttempts: attemptsByDay,
+        lastActiveDate: todayKey,
+        dailyStreak: nextDailyStreak,
+      };
+    });
+  }, []);
 
   // Update screen size based on breakpoints.
   const updateScreenSize = useCallback(() => {
@@ -223,6 +298,17 @@ export const GameStateProvider = ({ children }) => {
   useEffect(() => {
     persistLevelStats(stats);
   }, [stats]);
+
+  useEffect(() => {
+    persistTilePerformance(tileStats);
+  }, [tileStats]);
+
+  useEffect(() => {
+    if (!previousGameover.current && game.gameover) {
+      registerDailyCompletion();
+    }
+    previousGameover.current = game.gameover;
+  }, [game.gameover, registerDailyCompletion]);
 
   // Destructure sorting and game mode options for clarity.
   const { rowShuffle, columnShuffle } = options.sorting;
@@ -301,13 +387,34 @@ export const GameStateProvider = ({ children }) => {
     });
   }, [filters, rowShuffle, columnShuffle, current, methods, rowLevel]);
 
+  useEffect(() => {
+    const nextPlayableTile = (characters.botCharacters || []).find(tile => !tile.placeholder);
+    const nextTileId = nextPlayableTile?.id ?? null;
+    setActiveAttempt(prev => {
+      if (prev.tileId === nextTileId) return prev;
+      if (!nextTileId) {
+        return { tileId: null, startedAt: null, misses: 0 };
+      }
+      return {
+        tileId: nextTileId,
+        startedAt: Date.now(),
+        misses: 0,
+      };
+    });
+  }, [characters.botCharacters]);
+
   // Reset game and characters to initial state.
   const reset = (overrideFilters, overrideOptions) => {
     const sourceFilters = overrideFilters || filters;
     const sourceOptions = overrideOptions || options;
     setGame(defaultState.game);
     setSelectedTile(defaultState.selectedTile);
-    setCharacters(getInitialCharacters(sourceFilters, sourceOptions));
+    setCharacters(getInitialCharacters(sourceFilters, sourceOptions, tileStats));
+    setActiveAttempt({
+      tileId: null,
+      startedAt: null,
+      misses: 0,
+    });
   };
 
   const saveCharactersToLocalStorage = (state) => {
@@ -432,16 +539,62 @@ const getRemainingPlayableTiles = (tiles = []) =>
       setGame(prevGame => ({ ...prevGame, start: true }));
     }
     if (tempBotChars.length === 0) {
-      console.log("No more tiles to match.");
+      // console.log("No more tiles to match.");
       return;
     }
     if (!matchInput(currentTile, submittedChar)) {
       const newState = updateMissedTile(currentTile, characters);
       setCharacters(newState);
       saveCharactersToLocalStorage(newState);
-      updateMissedStats(currentTile.id);
+      setTileStats(prev => applyMissToTilePerformance(prev, currentTile.id));
+      setStats(prevStats => {
+        if ((prevStats.kanaStreak || 0) === 0) {
+          return prevStats;
+        }
+        return {
+          ...prevStats,
+          kanaStreak: 0,
+        };
+      });
+      setActiveAttempt(prev => {
+        if (prev.tileId !== currentTile.id) return prev;
+        return {
+          ...prev,
+          misses: prev.misses + 1,
+        };
+      });
       return -1;
     }
+    const missesBeforeSuccess = activeAttempt.tileId === currentTile.id ? activeAttempt.misses : 0;
+    const durationSeconds =
+      activeAttempt.tileId === currentTile.id && activeAttempt.startedAt
+        ? (Date.now() - activeAttempt.startedAt) / 1000
+        : null;
+
+    setTileStats(prev =>
+      applyAttemptToTilePerformance(prev, currentTile.id, {
+        durationSeconds,
+        missesBeforeSuccess,
+      })
+    );
+
+    if (missesBeforeSuccess === 0) {
+      setStats(prevStats => {
+        const nextCurrent = (prevStats.kanaStreak || 0) + 1;
+        const nextBest = Math.max(prevStats.bestKanaStreak || 0, nextCurrent);
+        return {
+          ...prevStats,
+          kanaStreak: nextCurrent,
+          bestKanaStreak: nextBest,
+        };
+      });
+    }
+
+    setActiveAttempt({
+      tileId: null,
+      startedAt: null,
+      misses: 0,
+    });
     completeTileAtIndex(0);
   };
 
@@ -476,6 +629,7 @@ const getRemainingPlayableTiles = (tiles = []) =>
     setStartMenuOpen,
     handleCharacterSelect,
     inputFocusKey,
+    tileStats,
   };
 
   return (

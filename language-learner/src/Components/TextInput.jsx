@@ -38,7 +38,7 @@ const TextInput = () => {
     
         if (event.shiftKey && (isMac ? event.metaKey : event.ctrlKey)) {
             event.preventDefault();
-            console.log('Shift + Command (Mac) or Shift + Ctrl (Windows) pressed!');
+            // console.log('Shift + Command (Mac) or Shift + Ctrl (Windows) pressed!');
             // Add your custom logic here
 
             setOptions((prevOptions) => ({

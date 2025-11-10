@@ -1,3 +1,5 @@
+@use './variables' as vars;
+
 .setup {
     min-height: 100vh;
     display: flex;
@@ -378,7 +380,7 @@
     color: #ffffff;
 }
 
-@media (max-width: 640px) {
+@media (max-width: vars.$breakpoint-tablet) {
     .setup {
         padding: 28px 16px;
     }
