@@ -7,6 +7,7 @@ import {
 import { getSoundSorted, shuffleByShapeGroup } from '../Misc/ShuffleSort'
 import japanese_characters_standard_bot from '../Data/japanese_characters_standard_bot.json'; 
 import japanese_characters_standard_top from '../Data/japanese_characters_standard_top.json';
+import { ROW_TIERS } from '../Data/skillTreeConfig';
 import {
   DEFAULT_LEVEL,
   persistStoredLevel,
@@ -19,6 +20,9 @@ import {
   loadLevelStats,
   persistLevelStats,
   clampShuffleLevelForRow,
+  PROGRESSION_MODES,
+  normalizeLevel,
+  getShapeGroupCount,
 } from '../Misc/levelUtils';
 import {
   loadTilePerformance,
@@ -96,6 +100,53 @@ const mergeDeep = (target, source) => {
   return output;
 };
 
+const TOTAL_ROWS = ROW_TIERS.length;
+const TOTAL_SHAPE_GROUPS = getShapeGroupCount();
+
+const clampRowRange = (range = defaultState.options.rowRange) => {
+  const start = Number.isFinite(range?.start) ? range.start : 1;
+  const end = Number.isFinite(range?.end) ? range.end : start;
+  const safeStart = Math.min(Math.max(1, Math.floor(start)), TOTAL_ROWS);
+  const safeEnd = Math.min(Math.max(1, Math.floor(end)), TOTAL_ROWS);
+  return safeStart <= safeEnd
+    ? { start: safeStart, end: safeEnd }
+    : { start: safeEnd, end: safeStart };
+};
+
+const getRowCountFromRange = (range) => {
+  if (!range) return 0;
+  return Math.max(1, range.end - range.start + 1);
+};
+
+const resolveStudyMode = (options) => options?.studyMode || defaultState.options.studyMode;
+
+const resolveShapeGroup = (options) => {
+  const group = Number.isFinite(options?.shapeGroup) ? options.shapeGroup : defaultState.options.shapeGroup;
+  return Math.max(1, Math.min(group, TOTAL_SHAPE_GROUPS));
+};
+
+const resolveAccuracyThreshold = (options) => {
+  const threshold = Number.isFinite(options?.accuracyThreshold)
+    ? options.accuracyThreshold
+    : defaultState.options.accuracyThreshold;
+  return Math.min(Math.max(threshold, 0), 1);
+};
+
+const normalizeOptionsState = (options = defaultState.options) => {
+  const normalizedRange = clampRowRange(options.rowRange || {
+    start: 1,
+    end: options.rowLevel || 1,
+  });
+  return {
+    ...options,
+    rowRange: normalizedRange,
+    rowLevel: normalizedRange.end,
+    shapeGroup: resolveShapeGroup(options),
+    accuracyThreshold: resolveAccuracyThreshold(options),
+    studyMode: resolveStudyMode(options),
+  };
+};
+
 const loadSettingsFromStorage = () => {
   if (!isBrowser) return null;
   try {
@@ -149,31 +200,47 @@ const getRowIndexFromId = (identifier) => {
   return Math.floor(numericPortion / 5);
 };
 
-const isWithinRowLevel = (item, rowLevel) => {
-  if (!rowLevel || rowLevel < 1) return false;
+const isWithinRowRange = (item, rowRange) => {
+  if (!rowRange) return false;
   const sourceId = item.parentId || item.id;
   const rowIndex = getRowIndexFromId(sourceId);
   if (rowIndex === null) return false;
-  return rowIndex < rowLevel;
+  const rowNumber = rowIndex + 1;
+  return rowNumber >= rowRange.start && rowNumber <= rowRange.end;
 };
 
-const handleCharRenderToggles = (item, filters, rowLevel) => {
-  const effectiveRowLevel = rowLevel || defaultState.options.rowLevel;
+const handleCharRenderToggles = (item, filters, options) => {
+  const rowRange = clampRowRange(options?.rowRange || defaultState.options.rowRange);
+  const studyMode = resolveStudyMode(options);
+  const shapeGroup = resolveShapeGroup(options) - 1;
+  const accuracyThreshold = resolveAccuracyThreshold(options);
   let baseEnabled = false;
   if (item.type === "hiragana") baseEnabled = filters.characterTypes.hiragana;
   else if (item.type === "katakana") baseEnabled = filters.characterTypes.katakana;
   else if (item.type === "romaji") baseEnabled = filters.characterTypes.romaji;
 
   if (!baseEnabled) return false;
-  if (!isWithinRowLevel(item, effectiveRowLevel)) return false;
 
-  if (item.modifierGroup === "dakuten") {
-    return baseEnabled && filters.modifierGroup.dakuten;
-  } else if (item.modifierGroup === "handakuten") {
-    return baseEnabled && filters.modifierGroup.handakuten;
-  } else {
-    return baseEnabled;
+  if (item.modifierGroup === "dakuten" && !filters.modifierGroup.dakuten) {
+    return false;
   }
+  if (item.modifierGroup === "handakuten" && !filters.modifierGroup.handakuten) {
+    return false;
+  }
+
+  if (studyMode === PROGRESSION_MODES.SHAPES) {
+    if (typeof item.shapeGroup !== "number") return false;
+    return item.shapeGroup === shapeGroup;
+  }
+
+  if (studyMode === PROGRESSION_MODES.ADAPTIVE) {
+    const effectiveAccuracy = Number.isFinite(item.accuracy) ? item.accuracy : 1;
+    return effectiveAccuracy <= accuracyThreshold;
+  }
+
+  if (!isWithinRowRange(item, rowRange)) return false;
+
+  return baseEnabled;
 };
 
 // Initialize characters from defaults and stored stats.
@@ -214,7 +281,7 @@ const getInitialCharacters = (
     masterTopCharacters,
     masterBotCharacters: defaultBot,
     topCharacters: cloneTopCharacters(),
-    botCharacters: defaultBot.filter(item => handleCharRenderToggles(item, filters, options?.rowLevel)),
+    botCharacters: defaultBot.filter(item => handleCharRenderToggles(item, filters, options)),
   };
 };
 
@@ -228,7 +295,8 @@ const GameStateContext = createContext();
 export const GameStateProvider = ({ children }) => {
   const storedSettings = loadSettingsFromStorage();
   const initialFilters = mergeDeep(defaultState.filters, storedSettings?.filters);
-  const initialOptions = mergeDeep(defaultState.options, storedSettings?.options);
+  const mergedOptions = mergeDeep(defaultState.options, storedSettings?.options);
+  const initialOptions = normalizeOptionsState(mergedOptions);
 
   const initialTileStats = useMemo(() => loadTilePerformance(), []);
   const [filters, setFilters] = useState(initialFilters);
@@ -312,30 +380,49 @@ export const GameStateProvider = ({ children }) => {
 
   // Destructure sorting and game mode options for clarity.
   const { rowShuffle, columnShuffle } = options.sorting;
-  const { rowLevel = defaultState.options.rowLevel } = options;
+  const rowRange = useMemo(() => clampRowRange(options.rowRange), [options.rowRange]);
+  // const rowLevel = rowRange.end;
+  const rowCount = getRowCountFromRange(rowRange);
+  const studyMode = resolveStudyMode(options);
+  const shapeGroup = resolveShapeGroup(options);
+  const adaptiveThreshold = resolveAccuracyThreshold(options);
   const { current, methods } = options.gameMode;
   const derivedScriptLevel = getScriptLevelFromFilters(filters.characterTypes);
   const derivedShuffleLevel = getShuffleLevelFromSorting(options.sorting);
+  const effectiveShuffleLevel = studyMode === PROGRESSION_MODES.ADAPTIVE
+    ? 0
+    : clampShuffleLevelForRow(rowCount, derivedShuffleLevel);
 
   const currentLevel = useMemo(() => {
     const baseLevel = {
-      rowLevel,
+      mode: studyMode,
+      rowStart: rowRange.start,
+      rowEnd: rowRange.end,
       scriptLevel: derivedScriptLevel,
-      shuffleLevel: clampShuffleLevelForRow(rowLevel, derivedShuffleLevel),
+      shuffleLevel: effectiveShuffleLevel,
+      shapeGroup,
+      accuracyThreshold: adaptiveThreshold,
     };
     return {
       ...baseLevel,
       key: buildLevelKey(baseLevel),
     };
-  }, [rowLevel, derivedScriptLevel, derivedShuffleLevel]);
+  }, [studyMode, rowRange, derivedScriptLevel, effectiveShuffleLevel, shapeGroup, adaptiveThreshold]);
 
   useEffect(() => {
     setOptions(prevOptions => {
-      const clampedShuffleLevel = clampShuffleLevelForRow(rowLevel, prevOptions.sorting.shuffleLevel);
-      const shouldDisableColumns = rowLevel <= 1;
+      const prevRange = clampRowRange(prevOptions.rowRange);
+      const prevRowCount = getRowCountFromRange(prevRange);
+      const prevMode = resolveStudyMode(prevOptions);
+      const forceOrdered = prevMode === PROGRESSION_MODES.ADAPTIVE;
+      const clampedShuffleLevel = forceOrdered
+        ? 0
+        : clampShuffleLevelForRow(prevRowCount, prevOptions.sorting.shuffleLevel);
+      const shouldDisableColumns = forceOrdered || prevRowCount <= 1;
       const needsUpdate =
         prevOptions.sorting.shuffleLevel !== clampedShuffleLevel ||
-        (shouldDisableColumns && prevOptions.sorting.columnShuffle);
+        (shouldDisableColumns && prevOptions.sorting.columnShuffle) ||
+        (forceOrdered && prevOptions.sorting.rowShuffle);
 
       if (!needsUpdate) {
         return prevOptions;
@@ -346,31 +433,35 @@ export const GameStateProvider = ({ children }) => {
         ...prevOptions,
         sorting: {
           ...prevOptions.sorting,
-          rowShuffle: shuffleNode.rowShuffle,
+          rowShuffle: forceOrdered ? false : shuffleNode.rowShuffle,
           columnShuffle: shouldDisableColumns ? false : shuffleNode.columnShuffle,
-          shuffleLevel: shuffleNode.value,
+          shuffleLevel: forceOrdered ? 0 : shuffleNode.value,
         },
       };
     });
-  }, [rowLevel, setOptions]);
+  }, [options.rowRange, options.studyMode, setOptions]);
 
   // Re-sort botCharacters when filters, shuffling, or game mode change.
   useEffect(() => {
     setCharacters(prevChars => {
       const filteredBot = prevChars.masterBotCharacters.filter(item =>
-        handleCharRenderToggles(item, filters, rowLevel)
+        handleCharRenderToggles(item, filters, options)
       );
-      const effectiveColumnShuffle = rowLevel > 1 ? columnShuffle : false;
+      const rowRange = clampRowRange(options.rowRange);
+      const rowCount = getRowCountFromRange(rowRange);
+      const shouldDisableShuffle = resolveStudyMode(options) === PROGRESSION_MODES.ADAPTIVE;
+      const effectiveColumnShuffle = !shouldDisableShuffle && rowCount > 1 ? columnShuffle : false;
+      const effectiveRowShuffle = shouldDisableShuffle ? false : rowShuffle;
       let updatedBotCharacters;
       switch (methods[current]) {
         case 'sound':
-          updatedBotCharacters = getSoundSorted(filteredBot, rowShuffle, effectiveColumnShuffle);
+          updatedBotCharacters = getSoundSorted(filteredBot, effectiveRowShuffle, effectiveColumnShuffle);
           break;
         case 'h-shape':
-          updatedBotCharacters = shuffleByShapeGroup(filteredBot, 'hiragana', rowShuffle, effectiveColumnShuffle);
+          updatedBotCharacters = shuffleByShapeGroup(filteredBot, 'hiragana', effectiveRowShuffle, effectiveColumnShuffle);
           break;
         case 'k-shape':
-          updatedBotCharacters = shuffleByShapeGroup(filteredBot, 'katakana', rowShuffle, effectiveColumnShuffle);
+          updatedBotCharacters = shuffleByShapeGroup(filteredBot, 'katakana', effectiveRowShuffle, effectiveColumnShuffle);
           break;
         case 'missed':
           updatedBotCharacters = filteredBot.filter(tile => !tile.placeholder)
@@ -385,7 +476,18 @@ export const GameStateProvider = ({ children }) => {
         topCharacters: cloneTopCharacters(),
       };
     });
-  }, [filters, rowShuffle, columnShuffle, current, methods, rowLevel]);
+  }, [
+    filters,
+    rowShuffle,
+    columnShuffle,
+    current,
+    methods,
+    options,
+    options.rowRange,
+    options.studyMode,
+    options.shapeGroup,
+    options.accuracyThreshold,
+  ]);
 
   useEffect(() => {
     const nextPlayableTile = (characters.botCharacters || []).find(tile => !tile.placeholder);
@@ -422,7 +524,8 @@ export const GameStateProvider = ({ children }) => {
   };
 
   const applyLevelConfiguration = (targetLevel = DEFAULT_LEVEL) => {
-    const scriptKey = levelToScriptKey(targetLevel.scriptLevel);
+    const normalizedLevel = normalizeLevel(targetLevel);
+    const scriptKey = levelToScriptKey(normalizedLevel.scriptLevel);
     const updatedFilters = {
       ...filters,
       characterTypes: {
@@ -431,24 +534,34 @@ export const GameStateProvider = ({ children }) => {
         katakana: scriptKey === 'katakana' || scriptKey === 'both',
       },
     };
-
-    const effectiveShuffleLevel = clampShuffleLevelForRow(targetLevel.rowLevel, targetLevel.shuffleLevel);
+    const rowRange = clampRowRange({ start: normalizedLevel.rowStart, end: normalizedLevel.rowEnd });
+    const rowCount = getRowCountFromRange(rowRange);
+    const enforceOrdered = normalizedLevel.mode === PROGRESSION_MODES.ADAPTIVE;
+    const effectiveShuffleLevel = enforceOrdered
+      ? 0
+      : clampShuffleLevelForRow(rowCount, normalizedLevel.shuffleLevel);
     const shuffleNode = getShuffleNodeByValue(effectiveShuffleLevel);
     const updatedOptions = {
       ...options,
-      rowLevel: targetLevel.rowLevel,
+      studyMode: normalizedLevel.mode,
+      rowLevel: rowRange.end,
+      rowRange,
+      shapeGroup: normalizedLevel.shapeGroup,
+      accuracyThreshold: normalizedLevel.accuracyThreshold,
       sorting: {
         ...options.sorting,
-        rowShuffle: shuffleNode.rowShuffle,
-        columnShuffle: targetLevel.rowLevel > 1 ? shuffleNode.columnShuffle : false,
-        shuffleLevel: shuffleNode.value,
+        rowShuffle: enforceOrdered ? false : shuffleNode.rowShuffle,
+        columnShuffle: enforceOrdered || rowCount <= 1 ? false : shuffleNode.columnShuffle,
+        shuffleLevel: enforceOrdered ? 0 : shuffleNode.value,
       },
     };
 
     setFilters(updatedFilters);
     setOptions(updatedOptions);
     persistStoredLevel({
-      ...targetLevel,
+      ...normalizedLevel,
+      rowStart: rowRange.start,
+      rowEnd: rowRange.end,
       shuffleLevel: effectiveShuffleLevel,
     });
     reset(updatedFilters, updatedOptions);

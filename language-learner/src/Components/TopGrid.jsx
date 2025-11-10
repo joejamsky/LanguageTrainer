@@ -2,17 +2,28 @@ import React from "react";
 import "../Styles/TopGrid.scss";
 import DropTile from "./DropTile";
 import { useGameState } from "../Contexts/GameStateContext.js";
+import { PROGRESSION_MODES } from "../Misc/levelUtils";
 
 const TopGrid = () => {
   const { characters, filters, options } = useGameState();
-  const rowLevel = options.rowLevel || 1;
+  const rowRange = options.rowRange || { start: 1, end: options.rowLevel || 1 };
+  const studyMode = options.studyMode || PROGRESSION_MODES.LINEAR;
   const vowelHeaders = ["a", "i", "u", "e", "o"];
 
-  const isWithinRowLevel = (identifier) => {
+  const isWithinRowRange = (identifier) => {
     if (!identifier) return true;
     const numericPortion = parseInt(identifier, 10);
     if (Number.isNaN(numericPortion)) return true;
-    return Math.floor(numericPortion / 5) < rowLevel;
+    const rowNumber = Math.floor(numericPortion / 5) + 1;
+    return rowNumber >= (rowRange?.start || 1) && rowNumber <= (rowRange?.end || 1);
+  };
+
+  const shouldRenderTile = (character) => {
+    if (!character) return false;
+    if (studyMode === PROGRESSION_MODES.SHAPES || studyMode === PROGRESSION_MODES.ADAPTIVE) {
+      return true;
+    }
+    return isWithinRowRange(character.id);
   };
 
   return (
@@ -28,7 +39,7 @@ const TopGrid = () => {
 
       {characters &&
         characters.topCharacters.map((character, index) => {
-          if (!isWithinRowLevel(character.id)) {
+          if (!shouldRenderTile(character)) {
             return null;
           }
           if (

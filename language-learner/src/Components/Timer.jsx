@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../Styles/Timer.scss";
 import { useGameState } from "../Contexts/GameStateContext.js";
+import { describeLevel } from "../Misc/levelUtils";
 
 function Timer() {
   const { reset, game, stats, setStats, currentLevel } = useGameState();
@@ -8,9 +9,8 @@ function Timer() {
   const levelKey = currentLevel?.key;
   const bestTimesByLevel = stats.bestTimesByLevel || {};
   const bestTimeForLevel = levelKey ? bestTimesByLevel[levelKey] || 0 : 0;
-  const currentLevelLabel = currentLevel
-    ? `${currentLevel.rowLevel}-${currentLevel.scriptLevel}-${currentLevel.shuffleLevel}`
-    : "--";
+  const currentLevelDescriptor = currentLevel ? describeLevel(currentLevel) : null;
+  const currentLevelLabel = currentLevelDescriptor?.summary || "--";
 
   const handleResetClick = () => {
     reset();

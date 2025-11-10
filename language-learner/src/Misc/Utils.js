@@ -1,5 +1,7 @@
 // Utils.js
 
+import { PROGRESSION_MODES, DEFAULT_LEVEL } from "./levelUtils";
+
 export const defaultState = {
   characters: {
     masterTopCharacters: [],
@@ -20,6 +22,13 @@ export const defaultState = {
   },
   options: {
     rowLevel: 1,
+    rowRange: {
+      start: 1,
+      end: 1,
+    },
+    studyMode: PROGRESSION_MODES.LINEAR,
+    shapeGroup: 1,
+    accuracyThreshold: DEFAULT_LEVEL.accuracyThreshold,
     gameMode: {
       current: 0,
       methods: ['sound', 'h-shape', 'k-shape', 'missed']

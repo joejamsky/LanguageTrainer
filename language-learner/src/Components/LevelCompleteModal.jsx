@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import "../Styles/LevelCompleteModal.scss";
 import { useGameState } from "../Contexts/GameStateContext";
+import { describeLevel } from "../Misc/levelUtils";
 
 const formatTime = (seconds = 0) => {
   if (!Number.isFinite(seconds)) return "--:--";
@@ -30,6 +31,8 @@ const LevelCompleteModal = () => {
     return null;
   }
 
+  const currentLevelDescriptor = describeLevel(currentLevel);
+
   const bestTimes = stats.bestTimesByLevel || {};
   const levelKey = currentLevel.key;
   const bestForLevel = bestTimes[levelKey] || 0;
@@ -47,9 +50,7 @@ const LevelCompleteModal = () => {
       <div className="level-complete-card">
         <p className="level-complete-eyebrow">Level Complete</p>
         <h2>Congratulations!</h2>
-        <p className="level-complete-subtitle">
-          Level {currentLevel.rowLevel}-{currentLevel.scriptLevel}-{currentLevel.shuffleLevel} cleared.
-        </p>
+        <p className="level-complete-subtitle">{currentLevelDescriptor.summary} cleared.</p>
 
         <div className="level-complete-times">
           <div className="time-panel">

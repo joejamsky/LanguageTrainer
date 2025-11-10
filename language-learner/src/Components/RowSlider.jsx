@@ -4,8 +4,12 @@ function RowSlider({ options, setOptions }) {
 
     const onChange = (num) => {
         setOptions({
-            ...options, // Spread the existing options to maintain other properties
-            rowLevel: num // Update base row level
+            ...options,
+            rowLevel: num,
+            rowRange: {
+                start: options.rowRange?.start || 1,
+                end: num,
+            },
         });
     };
 
