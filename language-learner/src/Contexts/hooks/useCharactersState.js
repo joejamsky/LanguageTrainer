@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { defaultState } from "../../Misc/Utils";
 import { getSoundSorted, shuffleByShapeGroup } from "../../Misc/ShuffleSort";
 import { PROGRESSION_MODES } from "../../Misc/levelUtils";
@@ -18,6 +18,7 @@ import {
   handleCharRenderToggles,
   matchInput,
   updateMissedTile,
+  stripLeadingPlaceholders,
 } from "../utils/characterUtils";
 import { isBrowser } from "../utils/storageUtils";
 
@@ -69,15 +70,30 @@ export const useCharactersState = ({
   const { rowShuffle, columnShuffle } = options.sorting;
   const { current, methods } = options.gameMode;
 
+  const filteringOptions = useMemo(
+    () => ({
+      rowRange: options.rowRange,
+      studyMode: options.studyMode,
+      shapeGroup: options.shapeGroup,
+      accuracyThreshold: options.accuracyThreshold,
+    }),
+    [
+      options.rowRange,
+      options.studyMode,
+      options.shapeGroup,
+      options.accuracyThreshold,
+    ]
+  );
+
   useEffect(() => {
     setCharacters((prevChars) => {
       if (!prevChars) return prevChars;
       const filteredBot = prevChars.masterBotCharacters.filter((item) =>
-        handleCharRenderToggles(item, filters, options)
+        handleCharRenderToggles(item, filters, filteringOptions)
       );
-      const rowRange = clampRowRange(options.rowRange);
+      const rowRange = clampRowRange(filteringOptions.rowRange);
       const rowCount = getRowCountFromRange(rowRange);
-      const studyMode = resolveStudyMode(options);
+      const studyMode = resolveStudyMode(filteringOptions);
       const shouldDisableShuffle = studyMode === PROGRESSION_MODES.ADAPTIVE;
       const effectiveColumnShuffle =
         !shouldDisableShuffle && rowCount > 1 ? columnShuffle : false;
@@ -117,18 +133,16 @@ export const useCharactersState = ({
           updatedBotCharacters = filteredBot;
       }
 
+      const sanitizedBotCharacters = stripLeadingPlaceholders(updatedBotCharacters);
       return {
         ...prevChars,
-        botCharacters: updatedBotCharacters,
+        botCharacters: sanitizedBotCharacters,
         topCharacters: cloneTopCharacters(),
       };
     });
   }, [
     filters,
-    options.rowRange,
-    options.studyMode,
-    options.shapeGroup,
-    options.accuracyThreshold,
+    filteringOptions,
     rowShuffle,
     columnShuffle,
     current,

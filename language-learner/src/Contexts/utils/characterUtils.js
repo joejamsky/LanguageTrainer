@@ -100,13 +100,14 @@ export const getInitialCharacters = (
     render: false,
   }));
   const masterTopCharacters = cloneTopCharacters();
+  const botCharacters = stripLeadingPlaceholders(
+    defaultBot.filter((item) => handleCharRenderToggles(item, filters, options))
+  );
   return {
     masterTopCharacters,
     masterBotCharacters: defaultBot,
     topCharacters: cloneTopCharacters(),
-    botCharacters: defaultBot.filter((item) =>
-      handleCharRenderToggles(item, filters, options)
-    ),
+    botCharacters,
   };
 };
 
@@ -119,3 +120,14 @@ export const updateMissedTile = (currentTile, characters) => ({
     tile.id === currentTile.id ? { ...tile, missed: tile.missed + 1 } : tile
   ),
 });
+
+export const stripLeadingPlaceholders = (tiles = []) => {
+  if (!Array.isArray(tiles) || tiles.length === 0) {
+    return [];
+  }
+  const firstPlayableIndex = tiles.findIndex((tile) => !tile?.placeholder);
+  if (firstPlayableIndex <= 0) {
+    return firstPlayableIndex === 0 ? tiles : [];
+  }
+  return tiles.slice(firstPlayableIndex);
+};

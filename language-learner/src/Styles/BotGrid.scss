@@ -20,4 +20,6 @@
 #draggrid {
     overflow: hidden;
     padding: 3px;
+    width: 100%;
+    grid-template-columns: repeat(5, minmax(48px, 120px));
 }
