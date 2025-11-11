@@ -7,7 +7,7 @@ import {
 
 export const PROGRESSION_MODES = {
   LINEAR: "linear",
-  WINDOW: "window",
+  RANGE: "range",
   SHAPES: "shapes",
   ADAPTIVE: "adaptive",
 };
@@ -21,9 +21,17 @@ const SCRIPT_SEQUENCE = Object.keys(LEVEL_TO_SCRIPT)
   .sort((a, b) => a - b);
 const MODE_SEQUENCE = [
   PROGRESSION_MODES.LINEAR,
-  PROGRESSION_MODES.WINDOW,
+  PROGRESSION_MODES.RANGE,
   PROGRESSION_MODES.SHAPES,
   PROGRESSION_MODES.ADAPTIVE,
+];
+
+const STORAGE_KEYS_TO_CLEAR = [
+  "languageTrainerLastLevel",
+  "languageTrainerStats",
+  "tileStats",
+  "languageTrainerSettings",
+  "characters",
 ];
 
 const SCRIPT_LABELS = {
@@ -168,6 +176,17 @@ export const persistLevelStats = (stats) => {
   }
 };
 
+export const clearStoredData = () => {
+  if (!isBrowser) return;
+  STORAGE_KEYS_TO_CLEAR.forEach((key) => {
+    try {
+      localStorage.removeItem(key);
+    } catch (error) {
+      console.warn(`Failed to clear stored data for key "${key}":`, error);
+    }
+  });
+};
+
 export const getScriptLevelFromFilters = (characterTypes = {}) => {
   if (characterTypes.hiragana && characterTypes.katakana) return SCRIPT_TO_LEVEL.both;
   if (characterTypes.katakana) return SCRIPT_TO_LEVEL.katakana;
@@ -203,7 +222,7 @@ export const buildLevelKey = (level = DEFAULT_LEVEL) => {
 
 const getInitialLevelForMode = (mode) => {
   switch (mode) {
-    case PROGRESSION_MODES.WINDOW:
+    case PROGRESSION_MODES.RANGE:
       return {
         ...DEFAULT_LEVEL,
         mode,
@@ -286,10 +305,10 @@ const advanceLinear = (level) => {
     };
   }
 
-  return getInitialLevelForMode(PROGRESSION_MODES.WINDOW);
+  return getInitialLevelForMode(PROGRESSION_MODES.RANGE);
 };
 
-const advanceWindow = (level) => {
+const advanceRange = (level) => {
   const rowCount = Math.max(1, level.rowEnd - level.rowStart + 1);
   const windowSize = WINDOW_SIZES.find((size) => size === rowCount) || WINDOW_SIZES[0] || 2;
   const advanced = advanceScriptShuffle(level, { rowStart: level.rowStart, rowEnd: level.rowEnd });
@@ -377,8 +396,8 @@ export const getNextLevel = (level = DEFAULT_LEVEL) => {
   switch (normalized.mode) {
     case PROGRESSION_MODES.LINEAR:
       return normalizeLevelShape(advanceLinear(normalized));
-    case PROGRESSION_MODES.WINDOW:
-      return normalizeLevelShape(advanceWindow(normalized));
+    case PROGRESSION_MODES.RANGE:
+      return normalizeLevelShape(advanceRange(normalized));
     case PROGRESSION_MODES.SHAPES:
       return normalizeLevelShape(advanceShapes(normalized));
     case PROGRESSION_MODES.ADAPTIVE:

@@ -24,6 +24,7 @@ import {
   getWindowSizes,
   getShapeGroupCount,
   getAccuracyThresholds,
+  clearStoredData,
 } from "../Misc/levelUtils";
 
 const TOTAL_ROWS = ROW_TIERS.length;
@@ -38,8 +39,8 @@ const MODE_OPTIONS = [
     caption: "One row at a time",
   },
   {
-    key: PROGRESSION_MODES.WINDOW,
-    title: "Window",
+    key: PROGRESSION_MODES.RANGE,
+    title: "Range",
     caption: "Sliding multi-row focus",
   },
   {
@@ -70,6 +71,7 @@ const toPercent = (value) => `${Math.round((value || 0) * 100)}%`;
 const Setup = () => {
   const { filters, setFilters, options, setOptions } = useGameState();
   const [lastLevel, setLastLevel] = useState(() => readStoredLevel());
+  const [storageResetMessage, setStorageResetMessage] = useState("");
 
   const baseRowRange = options.rowRange || { start: options.rowLevel || 1, end: options.rowLevel || 1 };
   const rowRange = useMemo(
@@ -140,7 +142,7 @@ const Setup = () => {
       if (mode === PROGRESSION_MODES.LINEAR) {
         const pivot = clampRowValue(rowRange.start);
         nextRange = clampRange(pivot, pivot);
-      } else if (mode === PROGRESSION_MODES.WINDOW) {
+      } else if (mode === PROGRESSION_MODES.RANGE) {
         const initialSize = WINDOW_SIZES[0] || 2;
         nextRange = clampRange(1, initialSize);
       } else {
@@ -311,6 +313,12 @@ const Setup = () => {
     persistStoredLevel(normalized);
   };
 
+  const handleClearStoredData = () => {
+    clearStoredData();
+    applyGuidedLevel(DEFAULT_LEVEL);
+    setStorageResetMessage("Saved data cleared. Everything is back to defaults.");
+  };
+
   const renderGroupingControls = () => {
     switch (studyMode) {
       case PROGRESSION_MODES.LINEAR: {
@@ -332,7 +340,7 @@ const Setup = () => {
           </div>
         );
       }
-      case PROGRESSION_MODES.WINDOW: {
+      case PROGRESSION_MODES.RANGE: {
         const sliderDisabled = maxWindowStart <= 1;
         return (
           <>
@@ -361,7 +369,7 @@ const Setup = () => {
                 >
                   <span className="mode-chip-title">{size} rows</span>
                   <span className="mode-chip-caption">
-                    {size === TOTAL_ROWS ? "Full set" : `Window of ${size}`}
+                    {size === TOTAL_ROWS ? "Full set" : `Range of ${size}`}
                   </span>
                 </button>
               ))}
@@ -439,7 +447,19 @@ const Setup = () => {
             >
               Reset Course
             </button>
+            <button
+              type="button"
+              className="auto-mode-button auto-mode-reset"
+              onClick={handleClearStoredData}
+            >
+              Clear Saved Data
+            </button>
           </div>
+          {storageResetMessage && (
+            <div className="auto-mode-copy">
+              <p className="auto-mode-description">{storageResetMessage}</p>
+            </div>
+          )}
         </div>
 
         <div className="auto-mode-card">
@@ -449,9 +469,9 @@ const Setup = () => {
           </div>
 
           <div className="level-summary">
-            <span className="level-badge">{customDescriptor.mode}</span>
+            <span className="level-badge">Mode | Grouping | Kana | Shuffle</span>
             <p className="level-details">
-              {customDescriptor.grouping} | {customDescriptor.kana} | {customDescriptor.shuffle}
+              {customDescriptor.mode} | {customDescriptor.grouping} | {customDescriptor.kana} | {customDescriptor.shuffle}
             </p>
           </div>
 
