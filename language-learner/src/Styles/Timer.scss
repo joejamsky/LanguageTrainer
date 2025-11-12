@@ -1,3 +1,5 @@
+@use './variables' as vars;
+
 .timer-container{
     .reset-button{
         position: absolute;
@@ -65,7 +67,6 @@
         position: absolute;
         left: 50%;
         top: 10px;
-        transform: translate(calc(-50% + 70px), 0);
         font-size: 12px;
         display: flex;
         flex-direction: column;
@@ -77,7 +78,7 @@
     }
 
     .current-level-container {
-        transform: translate(calc(-50% - 70px), 0);
+        transform: translate(calc(-50% - 130px), 0);
     }
 
     .best-time-copy,
@@ -94,8 +95,21 @@
             background-color: white;
     }
 
-    .best-time,
-    .current-level-value{
+    .best-time{
             line-height: 12px;
+    }
+
+    .current-level-grid{
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        column-gap: 8px;
+        row-gap: 1px;
+        margin-top: 4px;
+        text-align: center;
+    }
+
+    .current-level-cell{
+        font-size: 12px;
+        line-height: 1;
     }
 }

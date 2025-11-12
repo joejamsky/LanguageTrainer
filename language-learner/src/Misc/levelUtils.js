@@ -35,12 +35,12 @@ const STORAGE_KEYS_TO_CLEAR = [
 ];
 
 const SCRIPT_LABELS = {
-  hiragana: "Hiragana",
-  katakana: "Katakana",
-  both: "Both",
+  hiragana: "あ",
+  katakana: "ア",
+  both: "あ + ア",
 };
 
-const capitalize = (value = "") => value.charAt(0).toUpperCase() + value.slice(1);
+// const capitalize = (value = "") => value.charAt(0).toUpperCase() + value.slice(1);
 
 export const DEFAULT_LEVEL = {
   mode: PROGRESSION_MODES.LINEAR,
@@ -90,7 +90,7 @@ const getShuffleSequenceForRowRange = (rowStart, rowEnd) => {
   if (count <= 1) {
     return [0, 1].filter((level) => level <= defaultMaxShuffleLevel);
   }
-  return [0, 2].filter((level) => level <= defaultMaxShuffleLevel);
+  return [0, 1, 2].filter((level) => level <= defaultMaxShuffleLevel);
 };
 
 const normalizeModeValue = (mode) => {
@@ -419,27 +419,49 @@ export const getModeSequence = () => [...MODE_SEQUENCE];
 
 export const normalizeLevel = normalizeLevelShape;
 
-const getShuffleTitle = (value) => {
-  const node = SHUFFLE_NODES.find((option) => option.value === value);
-  return node ? node.title : "Ordered";
+const formatGroupingLabel = (normalized) => {
+  if (normalized.mode === PROGRESSION_MODES.LINEAR) {
+    return `${normalized.rowStart}`;
+  }
+  if (normalized.mode === PROGRESSION_MODES.RANGE) {
+    return normalized.rowStart === normalized.rowEnd
+      ? `${normalized.rowStart}`
+      : `${normalized.rowStart}-${normalized.rowEnd}`;
+  }
+  if (normalized.mode === PROGRESSION_MODES.SHAPES) {
+    return `${normalized.shapeGroup}`;
+  }
+  if (normalized.mode === PROGRESSION_MODES.ADAPTIVE) {
+    return `${Math.round(normalized.accuracyThreshold * 100)}%`;
+  }
+  return `${normalized.rowStart}-${normalized.rowEnd}`;
+};
+
+const getShuffleGlyph = (normalized) => {
+  if (normalized.mode === PROGRESSION_MODES.ADAPTIVE) {
+    return "—";
+  }
+  const node = SHUFFLE_NODES.find((option) => option.value === normalized.shuffleLevel);
+  if (!node) {
+    return "—";
+  }
+  const glyphs = [];
+  if (node.rowShuffle) glyphs.push("↔");
+  if (node.columnShuffle) glyphs.push("↕");
+  if (!glyphs.length) {
+    return "—";
+  }
+  return glyphs.join(" ");
 };
 
 export const describeLevel = (level = DEFAULT_LEVEL) => {
   const normalized = normalizeLevelShape(level);
-  const modeLabel = capitalize(normalized.mode);
+  const modeLabel = normalized.mode.charAt(0).toUpperCase();
   const scriptKey = LEVEL_TO_SCRIPT[normalized.scriptLevel] || "hiragana";
-  const kanaLabel = SCRIPT_LABELS[scriptKey] || capitalize(scriptKey);
-  let groupingLabel = `Rows ${normalized.rowStart}-${normalized.rowEnd}`;
-  if (normalized.mode === PROGRESSION_MODES.LINEAR) {
-    groupingLabel = `Row ${normalized.rowStart}`;
-  } else if (normalized.mode === PROGRESSION_MODES.SHAPES) {
-    groupingLabel = `Group ${normalized.shapeGroup}`;
-  } else if (normalized.mode === PROGRESSION_MODES.ADAPTIVE) {
-    groupingLabel = `${Math.round(normalized.accuracyThreshold * 100)}% Accuracy`;
-  }
-  const shuffleLabel = normalized.mode === PROGRESSION_MODES.ADAPTIVE
-    ? "Ordered"
-    : getShuffleTitle(normalized.shuffleLevel);
+  const kanaLabel = SCRIPT_LABELS[scriptKey] || scriptKey.charAt(0).toUpperCase();
+  const groupingLabel = formatGroupingLabel(normalized);
+  const shuffleLabel = getShuffleGlyph(normalized);
+
   return {
     mode: modeLabel,
     grouping: groupingLabel,

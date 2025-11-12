@@ -169,7 +169,7 @@
 
 .slider-board {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(4, minmax(120px, 1fr));
     gap: 24px;
     width: 100%;
 }
@@ -189,7 +189,7 @@
 .mode-grid,
 .window-size-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
     gap: 12px;
 }
 
@@ -318,7 +318,8 @@
 .modifier-switch {
     position: relative;
     display: inline-flex;
-    align-items: center;
+    flex-direction: column;
+    width: 100%;
     gap: 12px;
     padding: 12px 16px;
     border-radius: 14px;

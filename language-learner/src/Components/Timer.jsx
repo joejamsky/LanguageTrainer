@@ -10,7 +10,13 @@ function Timer() {
   const bestTimesByLevel = stats.bestTimesByLevel || {};
   const bestTimeForLevel = levelKey ? bestTimesByLevel[levelKey] || 0 : 0;
   const currentLevelDescriptor = currentLevel ? describeLevel(currentLevel) : null;
-  const currentLevelLabel = currentLevelDescriptor?.summary || "--";
+  const levelGridHeaders = ["Mode", "Group", "Kana", "Shuff"];
+  const levelGridValues = [
+    currentLevelDescriptor?.mode || "--",
+    currentLevelDescriptor?.grouping || "--",
+    currentLevelDescriptor?.kana || "--",
+    currentLevelDescriptor?.shuffle || "--",
+  ];
 
   const handleResetClick = () => {
     reset();
@@ -79,7 +85,21 @@ function Timer() {
       <div className="current-level-container">
         <span className="current-level-copy">Level</span>
         <div className="best-time-divider"></div>
-        <span className="current-level-value">{currentLevelLabel}</span>
+        <div className="current-level-grid">
+          {levelGridHeaders.map((label) => (
+            <span key={`header-${label}`} className="current-level-cell current-level-cell--header">
+              {label}
+            </span>
+          ))}
+          {levelGridValues.map((value, index) => (
+            <span
+              key={`value-${levelGridHeaders[index]}`}
+              className="current-level-cell current-level-cell--value"
+            >
+              {value}
+            </span>
+          ))}
+        </div>
       </div>
 
       <button onClick={handleResetClick} className="reset-button">
