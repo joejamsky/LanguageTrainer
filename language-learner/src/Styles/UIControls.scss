@@ -1,4 +1,4 @@
-@use './variables' as vars;
+@use './Variables' as vars;
 
 .ui{
     display: flex;
@@ -83,4 +83,3 @@ button{
 .icon-prefix {
     margin-right: 2px;
 }
-

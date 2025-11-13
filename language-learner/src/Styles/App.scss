@@ -1,4 +1,4 @@
-@use './variables' as vars;
+@use './Variables' as vars;
 
 html, body, #root {
     margin: 0;
@@ -128,4 +128,3 @@ button {
     display: none !important;
 }
 // Util }
-
