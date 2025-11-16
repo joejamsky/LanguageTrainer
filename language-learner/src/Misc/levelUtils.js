@@ -220,7 +220,7 @@ export const buildLevelKey = (level = DEFAULT_LEVEL) => {
   ].join("-");
 };
 
-const getInitialLevelForMode = (mode) => {
+const getInitialLevelForMode = (mode, scriptLevelOverride = SCRIPT_SEQUENCE[0]) => {
   switch (mode) {
     case PROGRESSION_MODES.RANGE:
       return {
@@ -228,7 +228,7 @@ const getInitialLevelForMode = (mode) => {
         mode,
         rowStart: 1,
         rowEnd: Math.min(WINDOW_SIZES[0] || 2, TOTAL_ROWS),
-        scriptLevel: SCRIPT_SEQUENCE[0],
+        scriptLevel: scriptLevelOverride,
         shuffleLevel: 0,
       };
     case PROGRESSION_MODES.SHAPES:
@@ -237,7 +237,7 @@ const getInitialLevelForMode = (mode) => {
         mode,
         rowStart: 1,
         rowEnd: TOTAL_ROWS,
-        scriptLevel: SCRIPT_SEQUENCE[0],
+        scriptLevel: scriptLevelOverride,
         shuffleLevel: 0,
         shapeGroup: 1,
       };
@@ -247,13 +247,20 @@ const getInitialLevelForMode = (mode) => {
         mode,
         rowStart: 1,
         rowEnd: TOTAL_ROWS,
-        scriptLevel: SCRIPT_SEQUENCE[0],
+        scriptLevel: scriptLevelOverride,
         shuffleLevel: 0,
         accuracyThreshold: ACCURACY_THRESHOLDS[0],
       };
     case PROGRESSION_MODES.LINEAR:
     default:
-      return { ...DEFAULT_LEVEL };
+      return {
+        ...DEFAULT_LEVEL,
+        mode: PROGRESSION_MODES.LINEAR,
+        rowStart: 1,
+        rowEnd: 1,
+        scriptLevel: scriptLevelOverride,
+        shuffleLevel: 0,
+      };
   }
 };
 
@@ -264,7 +271,6 @@ const getInitialLevelForMode = (mode) => {
 // };
 
 const advanceScriptShuffle = (level, { rowStart, rowEnd }) => {
-  const scriptIndex = Math.max(0, SCRIPT_SEQUENCE.indexOf(level.scriptLevel));
   const shuffleSequence = getShuffleSequenceForRowRange(rowStart, rowEnd);
   const shuffleIndex = Math.max(0, shuffleSequence.indexOf(level.shuffleLevel));
 
@@ -275,37 +281,32 @@ const advanceScriptShuffle = (level, { rowStart, rowEnd }) => {
     };
   }
 
-  if (scriptIndex < SCRIPT_SEQUENCE.length - 1) {
-    return {
-      ...level,
-      scriptLevel: SCRIPT_SEQUENCE[scriptIndex + 1],
-      shuffleLevel: shuffleSequence[0],
-    };
-  }
-
   return null;
 };
 
 const advanceLinear = (level) => {
-  const baseRange = { rowStart: level.rowStart, rowEnd: level.rowEnd };
-  const advanced = advanceScriptShuffle(level, baseRange);
-  if (advanced) {
-    return advanced;
+  const shuffleSequence = getShuffleSequenceForRowRange(level.rowStart, level.rowEnd);
+  const shuffleIndex = Math.max(0, shuffleSequence.indexOf(level.shuffleLevel));
+
+  if (shuffleIndex < shuffleSequence.length - 1) {
+    return {
+      ...level,
+      shuffleLevel: shuffleSequence[shuffleIndex + 1],
+    };
   }
 
   if (level.rowEnd < TOTAL_ROWS) {
     const nextRow = clampRowRange(level.rowStart + 1, level.rowEnd + 1);
-    const shuffleSequence = getShuffleSequenceForRowRange(nextRow.start, nextRow.end);
+    const nextShuffleSequence = getShuffleSequenceForRowRange(nextRow.start, nextRow.end);
     return {
       ...level,
       rowStart: nextRow.start,
       rowEnd: nextRow.end,
-      scriptLevel: SCRIPT_SEQUENCE[0],
-      shuffleLevel: shuffleSequence[0],
+      shuffleLevel: nextShuffleSequence[0],
     };
   }
 
-  return getInitialLevelForMode(PROGRESSION_MODES.RANGE);
+  return getInitialLevelForMode(PROGRESSION_MODES.RANGE, level.scriptLevel);
 };
 
 const advanceRange = (level) => {
@@ -325,7 +326,6 @@ const advanceRange = (level) => {
       ...level,
       rowStart: nextStart,
       rowEnd: nextEnd,
-      scriptLevel: SCRIPT_SEQUENCE[0],
       shuffleLevel: shuffleSequence[0],
     };
   }
@@ -339,12 +339,11 @@ const advanceRange = (level) => {
       ...level,
       rowStart: 1,
       rowEnd: nextEnd,
-      scriptLevel: SCRIPT_SEQUENCE[0],
       shuffleLevel: shuffleSequence[0],
     };
   }
 
-  return getInitialLevelForMode(PROGRESSION_MODES.SHAPES);
+  return getInitialLevelForMode(PROGRESSION_MODES.SHAPES, level.scriptLevel);
 };
 
 const advanceShapes = (level) => {
@@ -358,36 +357,30 @@ const advanceShapes = (level) => {
     return {
       ...level,
       shapeGroup: safeGroup + 1,
-      scriptLevel: SCRIPT_SEQUENCE[0],
       shuffleLevel: getShuffleSequenceForRowRange(level.rowStart, level.rowEnd)[0],
     };
   }
 
-  return getInitialLevelForMode(PROGRESSION_MODES.ADAPTIVE);
+  return getInitialLevelForMode(PROGRESSION_MODES.ADAPTIVE, level.scriptLevel);
 };
 
 const advanceAdaptive = (level) => {
   const scriptIndex = Math.max(0, SCRIPT_SEQUENCE.indexOf(level.scriptLevel));
   const thresholdIndex = Math.max(0, ACCURACY_THRESHOLDS.indexOf(level.accuracyThreshold));
 
-  if (scriptIndex < SCRIPT_SEQUENCE.length - 1) {
-    return {
-      ...level,
-      scriptLevel: SCRIPT_SEQUENCE[scriptIndex + 1],
-      shuffleLevel: 0,
-    };
-  }
-
   if (thresholdIndex < ACCURACY_THRESHOLDS.length - 1) {
     return {
       ...level,
-      scriptLevel: SCRIPT_SEQUENCE[0],
       accuracyThreshold: ACCURACY_THRESHOLDS[thresholdIndex + 1],
       shuffleLevel: 0,
     };
   }
 
-  return getInitialLevelForMode(PROGRESSION_MODES.LINEAR);
+  const nextScript =
+    scriptIndex < SCRIPT_SEQUENCE.length - 1
+      ? SCRIPT_SEQUENCE[scriptIndex + 1]
+      : SCRIPT_SEQUENCE[0];
+  return getInitialLevelForMode(PROGRESSION_MODES.LINEAR, nextScript);
 };
 
 export const getNextLevel = (level = DEFAULT_LEVEL) => {

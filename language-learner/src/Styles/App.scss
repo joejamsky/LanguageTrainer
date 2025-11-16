@@ -28,7 +28,7 @@ hr{
     height: 100%;
 
     .gutter-container {
-        padding: 20px;
+        padding: 70px 20px 20px;
         max-width: 80%;
         display: flex;
         flex-direction: column;
@@ -50,7 +50,7 @@ hr{
     .App{
         .gutter-container {
             max-width: none;
-            padding: 10px;
+            padding: 60px 10px 10px;
             gap: 10px;
         }
     }

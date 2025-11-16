@@ -12,10 +12,8 @@ import {
 import {
   DEFAULT_LEVEL,
   readStoredLevel,
-  persistStoredLevel,
   getScriptLevelFromFilters,
   getShuffleLevelFromSorting,
-  getShuffleNodeByValue,
   clampShuffleLevelForRow,
   getMaxShuffleLevelForRow,
   describeLevel,
@@ -25,7 +23,10 @@ import {
   getShapeGroupCount,
   getAccuracyThresholds,
   clearStoredData,
+  levelToScriptKey,
+  scriptKeyToLevel,
 } from "../Misc/levelUtils";
+import PageNav from "../Components/PageNav";
 
 const TOTAL_ROWS = ROW_TIERS.length;
 const WINDOW_SIZES = getWindowSizes();
@@ -69,9 +70,16 @@ const clampRange = (start, end) => {
 const toPercent = (value) => `${Math.round((value || 0) * 100)}%`;
 
 const Setup = () => {
-  const { filters, setFilters, options, setOptions } = useGameState();
+  const {
+    filters,
+    setFilters,
+    options,
+    setOptions,
+    applyLevelConfiguration,
+    setSessionType,
+  } = useGameState();
   const [lastLevel, setLastLevel] = useState(() => readStoredLevel());
-  const [storageResetMessage, setStorageResetMessage] = useState("");
+  const [storageMessage, setStorageMessage] = useState("");
 
   const baseRowRange = options.rowRange || { start: options.rowLevel || 1, end: options.rowLevel || 1 };
   const rowRange = useMemo(
@@ -102,6 +110,19 @@ const Setup = () => {
     }
     return SHUFFLE_NODES.find((node) => node.value === shuffleLevel) || SHUFFLE_NODES[0];
   }, [shuffleLevel, studyMode]);
+  const shuffleLegend = useMemo(() => {
+    const maxShuffle = getMaxShuffleLevelForRow(rowCount);
+    return SHUFFLE_NODES.filter((node) => node.value <= maxShuffle).map((node) => ({
+      value: node.value,
+      glyph:
+        node.rowShuffle && node.columnShuffle
+          ? "↔ ↕"
+          : node.rowShuffle
+            ? "↔"
+            : "—",
+      title: node.title,
+    }));
+  }, [rowCount]);
 
   const guidedCourseLevel = useMemo(() => normalizeLevel(lastLevel), [lastLevel]);
   const guidedCourseDescriptor = useMemo(
@@ -242,14 +263,6 @@ const Setup = () => {
     }));
   };
 
-  const handleScriptSliderChange = (event) => {
-    const value = Number(event.target.value);
-    const nextKey = LEVEL_TO_SCRIPT[value];
-    if (nextKey) {
-      handleScriptSelect(nextKey);
-    }
-  };
-
   const handleShuffleSliderChange = (event) => {
     if (studyMode === PROGRESSION_MODES.ADAPTIVE) return;
     const value = Number(event.target.value);
@@ -260,63 +273,41 @@ const Setup = () => {
     }
   };
 
-  const applyGuidedLevel = (level = DEFAULT_LEVEL) => {
-    const normalized = normalizeLevel(level);
-    const targetScriptKey =
-      LEVEL_TO_SCRIPT[normalized.scriptLevel] || LEVEL_TO_SCRIPT[DEFAULT_LEVEL.scriptLevel];
-
-    setFilters((prev) => ({
-      ...prev,
-      characterTypes: {
-        ...prev.characterTypes,
-        hiragana: targetScriptKey === "hiragana" || targetScriptKey === "both",
-        katakana: targetScriptKey === "katakana" || targetScriptKey === "both",
-      },
-    }));
-
-    setOptions((prev) => {
-      const range = clampRange(normalized.rowStart, normalized.rowEnd);
-      const count = Math.max(1, range.end - range.start + 1);
-      const forceOrdered = normalized.mode === PROGRESSION_MODES.ADAPTIVE;
-      const clampedShuffleValue = forceOrdered
-        ? 0
-        : clampShuffleLevelForRow(count, normalized.shuffleLevel);
-      const shuffleNode = getShuffleNodeByValue(clampedShuffleValue) || SHUFFLE_NODES[0];
-
-      return {
-        ...prev,
-        studyMode: normalized.mode,
-        rowRange: range,
-        rowLevel: range.end,
-        shapeGroup: normalized.shapeGroup,
-        accuracyThreshold: normalized.accuracyThreshold,
-        sorting: {
-          ...prev.sorting,
-          rowShuffle: forceOrdered ? false : shuffleNode.rowShuffle,
-          columnShuffle: forceOrdered || count <= 1 ? false : shuffleNode.columnShuffle,
-          shuffleLevel: forceOrdered ? 0 : shuffleNode.value,
-        },
-      };
-    });
-
-    setLastLevel(normalized);
-    return normalized;
-  };
-
-  const handleResetLevels = () => {
-    const normalized = applyGuidedLevel(DEFAULT_LEVEL);
-    persistStoredLevel(normalized);
-  };
-
   const handleGuidedStart = () => {
-    const normalized = applyGuidedLevel(lastLevel);
-    persistStoredLevel(normalized);
+    const desiredScriptKey = activeScriptKey || "hiragana";
+    const storedScriptKey = levelToScriptKey(lastLevel.scriptLevel);
+    const resumeFromStored = storedScriptKey === desiredScriptKey;
+    const baseLevel = resumeFromStored
+      ? lastLevel
+      : {
+          ...DEFAULT_LEVEL,
+          scriptLevel: scriptKeyToLevel(desiredScriptKey),
+        };
+    const normalized = normalizeLevel(baseLevel);
+    applyLevelConfiguration(normalized);
+    setLastLevel(normalized);
+    setSessionType("guided");
+    setStorageMessage("");
   };
 
-  const handleClearStoredData = () => {
+  const handleFreePlayStart = () => {
+    setSessionType("freePlay");
+    setStorageMessage("");
+  };
+
+  const handleResetCourse = () => {
+    const normalized = normalizeLevel(DEFAULT_LEVEL);
+    applyLevelConfiguration(normalized);
+    setLastLevel(normalized);
+    setStorageMessage("Guided course reset to Row 1 Hiragana.");
+  };
+
+  const handleClearSavedData = () => {
     clearStoredData();
-    applyGuidedLevel(DEFAULT_LEVEL);
-    setStorageResetMessage("Saved data cleared. Everything is back to defaults.");
+    const normalized = normalizeLevel(DEFAULT_LEVEL);
+    applyLevelConfiguration(normalized);
+    setLastLevel(normalized);
+    setStorageMessage("Saved data cleared.");
   };
 
   const renderGroupingControls = () => {
@@ -418,55 +409,37 @@ const Setup = () => {
 
   return (
     <main className="setup">
-      <div className="setup-content">
-        <h1 className="setup-title">Choose Your Path</h1>
-
-        <div className="auto-mode-card">
-          <h4>Guided Course</h4>
-          <div className="auto-mode-copy">
-            <p>
-              Master kana step by step on a structured journey. Each stage introduces new characters
-              while reinforcing what you’ve already learned, steadily building recognition, speed,
-              and confidence.
-            </p>
-          </div>
-          <div className="auto-mode-copy">
-            <p className="auto-mode-description">
-              Current checkpoint: <strong>{guidedCourseDescriptor.summary}</strong>
-            </p>
-          </div>
-
-          <div className="auto-mode-actions">
-            <Link to="/game" className="auto-mode-button" onClick={handleGuidedStart}>
-              Start Guided
-            </Link>
-            <button
-              type="button"
-              className="auto-mode-button auto-mode-reset"
-              onClick={handleResetLevels}
-            >
-              Reset Course
-            </button>
-            <button
-              type="button"
-              className="auto-mode-button auto-mode-reset"
-              onClick={handleClearStoredData}
-            >
-              Clear Saved Data
-            </button>
-          </div>
-          {storageResetMessage && (
-            <div className="auto-mode-copy">
-              <p className="auto-mode-description">{storageResetMessage}</p>
-            </div>
-          )}
+      <PageNav />
+      <header className="setup-header">
+        <div className="setup-headings">
+          <h1 className="setup-title">Choose Your Path</h1>
+          <p className="setup-subtitle">
+            Build a free play run or follow the guided flow. Adjust path, mode, grouping, modifiers, and shuffle from a single board.
+          </p>
         </div>
+      </header>
 
-        <div className="auto-mode-card">
-          <h4>Custom Course</h4>
-          <div className="auto-mode-copy">
-            <p>Dial in a specific mode, grouping, kana mix, and shuffle profile to fit your goals.</p>
-          </div>
+      <section className="guided-panel">
+        <div className="guided-copy">
+          <h4>Guided Course</h4>
+          <p>
+            Master kana step by step on a structured journey. Each stage introduces new characters
+            while reinforcing what you’ve already learned.
+          </p>
+          <p className="guided-checkpoint">
+            Current checkpoint: <strong>{guidedCourseDescriptor.summary}</strong>
+          </p>
+        </div>
+        <div className="guided-actions">
+          <button type="button" onClick={handleResetCourse}>
+            Reset Course
+          </button>
+          <button type="button" onClick={handleClearSavedData}>
+            Clear Saved Data
+          </button>
+          <Link to="/options">
+            Options
+          </Link>
 
           <div className="level-summary">
             <span className="level-badge">Mode | Grouping | Kana | Shuffle</span>
@@ -474,88 +447,81 @@ const Setup = () => {
               {customDescriptor.mode} | {customDescriptor.grouping} | {customDescriptor.kana} | {customDescriptor.shuffle}
             </p>
           </div>
+        </div>
+        {storageMessage && <p className="guided-message">{storageMessage}</p>}
+      </section>
 
-          <div className="slider-board">
-            <section className="slider-block">
-              <header className="slider-header">
-                <h2>Mode</h2>
-                <p>Select how the curriculum should progress.</p>
-              </header>
-              <div className="mode-grid">
-                {MODE_OPTIONS.map((mode) => (
-                  <button
-                    key={mode.key}
-                    type="button"
-                    className={`mode-chip ${studyMode === mode.key ? "active" : ""}`}
-                    onClick={() => handleModeSelect(mode.key)}
-                  >
-                    <span className="mode-chip-title">{mode.title}</span>
-                    <span className="mode-chip-caption">{mode.caption}</span>
-                  </button>
-                ))}
+      <div className="control-stack">
+          <div className="control-group">
+            <div className="control-label">Path</div>
+            <div className="mode-grid path-grid">
+              {SCRIPT_NODES.map((node) => (
+                <button
+                  key={node.id}
+                  type="button"
+                  className={`mode-chip ${activeScriptKey === node.value ? "active" : ""}`}
+                  onClick={() => handleScriptSelect(node.value)}
+                >
+                  <span className="mode-chip-title">{node.title}</span>
+                  <span className="mode-chip-caption">{node.caption}</span>
+                </button>
+              ))}
+            </div>
+            {activeScriptNode?.caption && (
+              <p className="control-caption">{activeScriptNode.caption}</p>
+            )}
+          </div>
+
+          <div className="control-group">
+            <div className="control-label">Mode</div>
+            <div className="mode-grid">
+              {MODE_OPTIONS.map((mode) => (
+                <button
+                  key={mode.key}
+                  type="button"
+                  className={`mode-chip ${studyMode === mode.key ? "active" : ""}`}
+                  onClick={() => handleModeSelect(mode.key)}
+                >
+                  <span className="mode-chip-title">{mode.title}</span>
+                  <span className="mode-chip-caption">{mode.caption}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="control-group">
+            <div className="control-label">Rows / Grouping</div>
+            {renderGroupingControls()}
+          </div>
+
+          <div className="control-group">
+            <div className="control-label">Modifiers</div>
+            <div className="modifier-switches">
+              <div className="modifier-switch-group">
+                {ROW_MODIFIERS.map((modifier) => {
+                  const active = modifierActiveKeys.includes(modifier.key);
+                  return (
+                    <label key={modifier.id} className={`modifier-switch ${active ? "active" : ""}`}>
+                      <input
+                        type="checkbox"
+                        checked={active}
+                        onChange={() => handleModifierToggle(modifier.key)}
+                      />
+                      <span className="modifier-switch-track" aria-hidden="true"></span>
+                      <span className="modifier-switch-meta">
+                        <span className="modifier-switch-title">{modifier.title}</span>
+                        <span className="modifier-switch-caption">{modifier.caption}</span>
+                      </span>
+                    </label>
+                  );
+                })}
               </div>
-            </section>
+            </div>
+          </div>
 
-            <section className="slider-block">
-              <header className="slider-header">
-                <h2>Rows / Grouping</h2>
-                <p>Control which slices of kana appear in this run.</p>
-              </header>
-              {renderGroupingControls()}
-
-              <div className="modifier-switches">
-                <span className="modifier-switches-title">Include modifiers</span>
-                <div className="modifier-switch-group">
-                  {ROW_MODIFIERS.map((modifier) => {
-                    const active = modifierActiveKeys.includes(modifier.key);
-                    return (
-                      <label
-                        key={modifier.id}
-                        className={`modifier-switch ${active ? "active" : ""}`}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={active}
-                          onChange={() => handleModifierToggle(modifier.key)}
-                        />
-                        <span className="modifier-switch-track" aria-hidden="true"></span>
-                        <span className="modifier-switch-meta">
-                          <span className="modifier-switch-title">{modifier.title}</span>
-                          <span className="modifier-switch-caption">{modifier.caption}</span>
-                        </span>
-                      </label>
-                    );
-                  })}
-                </div>
-              </div>
-            </section>
-
-            <section className="slider-block">
-              <header className="slider-header">
-                <h2>Kana Mode</h2>
-                <p>Slide to choose hiragana, katakana, or both.</p>
-              </header>
-              <div className="slider-control">
-                <input
-                  type="range"
-                  min="1"
-                  max={SCRIPT_NODES.length}
-                  step="1"
-                  value={scriptLevel}
-                  onChange={handleScriptSliderChange}
-                />
-                <div className="slider-value">
-                  <span className="slider-title">{activeScriptNode?.title}</span>
-                  <span className="slider-caption">{activeScriptNode?.caption}</span>
-                </div>
-              </div>
-            </section>
-
-            <section className="slider-block">
-              <header className="slider-header">
-                <h2>Shuffle</h2>
-                <p>Dial in how tiles should mix.</p>
-              </header>
+          <div className="control-group">
+            <div className="control-label">Shuffle</div>
+            <div className="shuffle-row">
               <div className="slider-control">
                 <input
                   type="range"
@@ -571,21 +537,38 @@ const Setup = () => {
                   <span className="slider-caption">{activeShuffleNode.caption}</span>
                 </div>
               </div>
-              {studyMode === PROGRESSION_MODES.ADAPTIVE && (
-                <p className="shuffle-hint">Adaptive sessions run ordered to preserve accuracy tracking.</p>
-              )}
-            </section>
+              <div className="shuffle-glyphs" aria-hidden="true">
+                {shuffleLegend.map((option) => (
+                  <span
+                    key={option.value}
+                    className={`shuffle-glyph ${option.value === shuffleLevel ? "active" : ""}`}
+                    title={option.title}
+                  >
+                    {option.glyph}
+                  </span>
+                ))}
+              </div>
+            </div>
+            {studyMode === PROGRESSION_MODES.ADAPTIVE && (
+              <p className="shuffle-hint">Adaptive sessions run ordered to preserve accuracy tracking.</p>
+            )}
           </div>
+      </div>
 
-          <div className="setup-actions">
-            <Link to="/game" className="setup-start">
-              Start Custom Course
-            </Link>
-          </div>
-        </div>
-
-        <Link to="/stats" className="setup-secondary">
-          View stats
+      <div className="setup-actions">
+        <Link
+          to="/game"
+          className="setup-start setup-start--ghost"
+          onClick={handleGuidedStart}
+        >
+          Start Guided
+        </Link>
+        <Link
+          to="/game"
+          className="setup-start"
+          onClick={handleFreePlayStart}
+        >
+          Start Free Play
         </Link>
       </div>
     </main>

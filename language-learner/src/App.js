@@ -6,6 +6,7 @@ import { GameStateProvider } from "./Contexts/GameStateContext";
 import Home from "./Pages/Home";
 import Setup from "./Pages/Setup";
 import Stats from "./Pages/Stats";
+import Options from "./Pages/Options";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/setup" element={<Setup />} />
+            <Route path="/options" element={<Options />} />
             <Route path="/stats" element={<Stats />} />
             <Route path="/game" element={<Main />} />
             <Route path="*" element={<Navigate to="/" replace />} />

@@ -5,9 +5,10 @@
     display: flex;
     flex-direction: column;
     gap: 32px;
-    padding: 48px clamp(16px, 6vw, 64px);
+    padding: 80px clamp(16px, 6vw, 64px) 48px;
     background: linear-gradient(160deg, rgba(20, 20, 20, 1) 55%, rgba(30, 30, 30, 1) 100%);
     color: #f7f7f7;
+    position: relative;
 }
 
 .stats-header {

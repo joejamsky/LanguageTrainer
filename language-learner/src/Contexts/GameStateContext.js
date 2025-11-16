@@ -43,6 +43,7 @@ export const GameStateProvider = ({ children }) => {
   const { tileStats, setTileStats } = useTilePerformance();
   const [game, setGame] = useState(defaultState.game);
   const [startMenuOpen, setStartMenuOpen] = useState(true);
+  const [sessionType, setSessionType] = useState("freePlay");
   const previousGameover = useRef(false);
 
   const {
@@ -247,6 +248,8 @@ export const GameStateProvider = ({ children }) => {
     handleCharacterSelect,
     inputFocusKey,
     tileStats,
+    sessionType,
+    setSessionType,
   };
 
   return (

@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
 import "../Styles/Stats.scss";
 import { useGameState } from "../Contexts/GameStateContext";
+import PageNav from "../Components/PageNav";
 
 const Stats = () => {
   const { characters, stats, tileStats } = useGameState();
@@ -108,6 +109,7 @@ const Stats = () => {
 
   return (
     <main className="stats">
+      <PageNav />
       <div className="stats-header">
         <div>
           <h1>Kana Performance</h1>

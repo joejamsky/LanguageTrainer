@@ -5,8 +5,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 40px 20px;
+    padding: 80px 20px 40px;
     background: radial-gradient(circle at top, rgba(255, 255, 255, 0.05) 0%, rgba(23, 23, 23, 1) 60%);
+    position: relative;
 }
 
 .home-content {
@@ -51,6 +52,27 @@
 .home-cta:active {
     transform: translateY(-1px) scale(0.99);
     box-shadow: 0 8px 16px rgba(188, 0, 45, 0.3);
+}
+
+.home-actions {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.home-cta.secondary {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: #fff;
+    box-shadow: none;
+}
+
+.home-cta.secondary:hover,
+.home-cta.secondary:focus-visible {
+    border-color: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 24px rgba(255, 255, 255, 0.15);
 }
 
 @media (max-width: vars.$breakpoint-mobile) {

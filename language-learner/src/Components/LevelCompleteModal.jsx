@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import "../Styles/LevelCompleteModal.scss";
 import { useGameState } from "../Contexts/GameStateContext";
 import { describeLevel } from "../Misc/levelUtils";
@@ -13,19 +14,37 @@ const formatTime = (seconds = 0) => {
 };
 
 const LevelCompleteModal = () => {
-  const { game, stats, currentLevel, goToNextLevel, applyLevelConfiguration } = useGameState();
+  const {
+    game,
+    stats,
+    currentLevel,
+    goToNextLevel,
+    applyLevelConfiguration,
+    sessionType,
+  } = useGameState();
+  const navigate = useNavigate();
+
+  const handleReplay = useCallback(() => {
+    if (currentLevel) {
+      applyLevelConfiguration(currentLevel);
+    }
+  }, [applyLevelConfiguration, currentLevel]);
 
   useEffect(() => {
     if (!game.gameover) return;
     const handleKeyDown = (event) => {
       if (event.key === "Enter") {
         event.preventDefault();
-        goToNextLevel();
+        if (sessionType === "guided") {
+          goToNextLevel();
+        } else {
+          handleReplay();
+        }
       }
     };
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [game.gameover, goToNextLevel]);
+  }, [game.gameover, goToNextLevel, sessionType, handleReplay]);
 
   if (!game.gameover || !currentLevel) {
     return null;
@@ -39,10 +58,10 @@ const LevelCompleteModal = () => {
   const currentTime = stats.recentTime || 0;
   const isNewBest = currentTime > 0 && currentTime === bestForLevel;
 
-  const handleReplay = () => {
-    if (currentLevel) {
-      applyLevelConfiguration(currentLevel);
-    }
+  const isGuidedSession = sessionType === "guided";
+
+  const handleAdjustSettings = () => {
+    navigate("/setup");
   };
 
   return (
@@ -65,12 +84,25 @@ const LevelCompleteModal = () => {
         </div>
 
         <div className="level-complete-actions">
-          <button type="button" className="level-complete-primary" onClick={goToNextLevel}>
-            Next Level
-          </button>
-          <button type="button" className="level-complete-secondary" onClick={handleReplay}>
-            Replay Level
-          </button>
+          {isGuidedSession ? (
+            <>
+              <button type="button" className="level-complete-primary" onClick={goToNextLevel}>
+                Next Level
+              </button>
+              <button type="button" className="level-complete-secondary" onClick={handleReplay}>
+                Replay Level
+              </button>
+            </>
+          ) : (
+            <>
+              <button type="button" className="level-complete-primary" onClick={handleReplay}>
+                Restart Run
+              </button>
+              <button type="button" className="level-complete-secondary" onClick={handleAdjustSettings}>
+                Adjust Settings
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>
