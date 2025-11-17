@@ -30,13 +30,7 @@ export const getSoundSorted = (tiles, rowShuffle, columnShuffle) => {
     for (let col = 0; col < numCols; col++) {
       let colItems = grid.map((row) => row[col]).filter((item) => item !== undefined);
       if (!colItems.length) continue;
-      if (col === 1 || col === 3) {
-        const nonPlaceholders = colItems.filter((item) => !item.placeholder);
-        const placeholders = colItems.filter((item) => item.placeholder);
-        colItems = [...shuffleArray(nonPlaceholders), ...placeholders];
-      } else {
-        colItems = shuffleArray(colItems);
-      }
+      colItems = shuffleArray(colItems);
       let idx = 0;
       for (let row = 0; row < numRows; row++) {
         if (grid[row][col] !== undefined) {
@@ -51,7 +45,7 @@ export const getSoundSorted = (tiles, rowShuffle, columnShuffle) => {
   // For shape-based sorting when no shuffling is required.
 const sortByShapeGroup = (tiles, desiredType) => {
   return tiles
-    .filter(tile => tile.type === desiredType && !tile.placeholder)
+    .filter(tile => tile.type === desiredType)
     .sort((a, b) => a.shapeGroup - b.shapeGroup);
 };
 
@@ -61,8 +55,8 @@ export const shuffleByShapeGroup = (tiles, desiredType, rowShuffle, columnShuffl
     return sortByShapeGroup(tiles, desiredType);
   }
 
-  // Filter out placeholders and ensure we only use tiles of the desired type.
-  const filtered = tiles.filter(tile => tile.type === desiredType && !tile.placeholder);
+  // Filter to ensure we only use tiles of the desired type.
+  const filtered = tiles.filter(tile => tile.type === desiredType);
 
   // Group tiles by their shapeGroup.
   const groups = {};

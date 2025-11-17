@@ -15,9 +15,7 @@ const Stats = () => {
 
   const visibleTiles = useMemo(() => {
     const list = characters?.masterBotCharacters ?? [];
-    return list
-      .filter((tile) => !tile.placeholder)
-      .map((tile) => {
+    return list.map((tile) => {
         const record = tileStats?.[tile.id];
         const attempts = record?.attempts ?? 0;
         const misses =

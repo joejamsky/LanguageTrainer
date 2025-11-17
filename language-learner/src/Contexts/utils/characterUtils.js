@@ -33,6 +33,17 @@ export const isWithinRowRange = (item, rowRange) => {
   return rowNumber >= rowRange.start && rowNumber <= rowRange.end;
 };
 
+export const getGridCoordinatesForTile = (tile) => {
+  if (!tile) return null;
+  const sourceId = tile.parentId || tile.id;
+  const numericPortion = parseInt(sourceId, 10);
+  if (Number.isNaN(numericPortion)) return null;
+  return {
+    column: (numericPortion % 5) + 1,
+    row: Math.floor(numericPortion / 5) + 1,
+  };
+};
+
 export const handleCharRenderToggles = (item, filters, options) => {
   const rowRange = clampRowRange(options?.rowRange || defaultState.options.rowRange);
   const studyMode = resolveStudyMode(options);
@@ -100,8 +111,8 @@ export const getInitialCharacters = (
     render: false,
   }));
   const masterTopCharacters = cloneTopCharacters();
-  const botCharacters = stripLeadingPlaceholders(
-    defaultBot.filter((item) => handleCharRenderToggles(item, filters, options))
+  const botCharacters = defaultBot.filter((item) =>
+    handleCharRenderToggles(item, filters, options)
   );
   return {
     masterTopCharacters,
@@ -111,8 +122,7 @@ export const getInitialCharacters = (
   };
 };
 
-export const getRemainingPlayableTiles = (tiles = []) =>
-  tiles.filter((tile) => !tile.placeholder).length;
+export const getRemainingPlayableTiles = (tiles = []) => tiles.length;
 
 export const updateMissedTile = (currentTile, characters) => ({
   ...characters,
@@ -120,14 +130,3 @@ export const updateMissedTile = (currentTile, characters) => ({
     tile.id === currentTile.id ? { ...tile, missed: tile.missed + 1 } : tile
   ),
 });
-
-export const stripLeadingPlaceholders = (tiles = []) => {
-  if (!Array.isArray(tiles) || tiles.length === 0) {
-    return [];
-  }
-  const firstPlayableIndex = tiles.findIndex((tile) => !tile?.placeholder);
-  if (firstPlayableIndex <= 0) {
-    return firstPlayableIndex === 0 ? tiles : [];
-  }
-  return tiles.slice(firstPlayableIndex);
-};

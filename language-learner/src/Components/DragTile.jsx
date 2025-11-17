@@ -3,7 +3,7 @@ import "../Styles/DragTile.scss";
 import { useGameState } from "../Contexts/GameStateContext";
 import { dictionaryKanaToRomaji } from "../Misc/Utils";
 
-const DragTile = ({ characterObj, index }) => {
+const DragTile = ({ characterObj, index, columnPosition }) => {
   const dragRef = useRef(null);
   const { game, setGame, selectedTile, setSelectedTile, screenSize, options } = useGameState();
   const isDesktop = screenSize === "laptop" || screenSize === "desktop";
@@ -13,6 +13,7 @@ const DragTile = ({ characterObj, index }) => {
   const displayCharacter = shouldShowRomaji
     ? dictionaryKanaToRomaji[characterObj.character] || characterObj.character
     : characterObj.character;
+  const tileStyle = columnPosition ? { gridColumn: columnPosition } : undefined;
 
   const resetSelection = () => {
     setSelectedTile({
@@ -47,10 +48,11 @@ const DragTile = ({ characterObj, index }) => {
       className={`
           bot-grid-item
           ${selectedTile.id === characterObj.id ? "dragging" : ""}
-          ${characterObj.placeholder || characterObj.completed ? "hide" : ""}
+          ${characterObj.completed ? "hide" : ""}
           ${options.hints ? `column-${Number(characterObj.parentId.split('-')[0]) % 5}` : ''}
         `}
-      draggable={isDesktop && !characterObj.placeholder && !characterObj.completed}
+      style={tileStyle}
+      draggable={isDesktop && !characterObj.completed}
       onDragStart={isDesktop ? beginSelection : undefined}
       onDragEnd={isDesktop ? resetSelection : undefined}
       onTouchStart={

@@ -726,13 +726,6 @@
         }
     },
     {
-        "id": "41-b",
-        "placeholder": true,
-        "modifierGroup": "base",
-        "completed": true,
-        "scripts": {}
-    },
-    {
         "id": "42-b",
         "placeholder": false,
         "modifierGroup": "base",
@@ -742,13 +735,6 @@
             "hiragana": {"id": "42-b-h", "character": "ゆ", "filled": false, "render": true, "missed": 0, "shapeGroup": 8},
             "katakana": {"id": "42-b-k", "character": "ユ", "filled": false, "render": true, "missed": 0, "shapeGroup": 5}
         }
-    },
-    {
-        "id": "43-b",
-        "placeholder": true,
-        "modifierGroup": "base",
-        "completed": true,
-        "scripts": {}
     },
    {
         "id": "44-b",
@@ -772,13 +758,6 @@
             "katakana": {"id": "45-b-k", "character": "ワ", "filled": false, "render": true, "missed": 0, "shapeGroup": 0}
         }
     },
-    {
-        "id": "46-b",
-        "placeholder": true,
-        "modifierGroup": "base",
-        "completed": true,
-        "scripts": {}
-    },
    {
         "id": "47-b",
         "placeholder": false,
@@ -789,13 +768,6 @@
             "hiragana": {"id": "47-b-h", "character": "ん", "filled": false, "render": true, "missed": 0, "shapeGroup": 9},
             "katakana": {"id": "47-b-k", "character": "ン", "filled": false, "render": true, "missed": 0, "shapeGroup": 6}
         }
-    },
-    {
-        "id": "48-b",
-        "placeholder": true,
-        "modifierGroup": "base",
-        "completed": true,
-        "scripts": {}
     },
    {
         "id": "49-b",

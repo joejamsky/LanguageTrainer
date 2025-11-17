@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "../Styles/DropTile.scss";
-import { useGameState } from "../Contexts/GameStateContext"; 
+import { useGameState } from "../Contexts/GameStateContext";
+import { getGridCoordinatesForTile } from "../Contexts/utils/characterUtils";
 
 
 const DropTile = ({ characterObj, index }) => {
@@ -8,8 +9,12 @@ const DropTile = ({ characterObj, index }) => {
     const [dragHover, setDragHover] = useState(false);
     const {handleDrop, filters, options, screenSize} = useGameState(); 
 
-    const active = !characterObj.placeholder && !characterObj.completed;
+    const active = !characterObj.completed;
     const isDesktop = screenSize === "laptop" || screenSize === "desktop";
+    const gridPosition = getGridCoordinatesForTile(characterObj);
+    const tileStyle = gridPosition
+        ? { gridColumn: gridPosition.column, gridRow: gridPosition.row }
+        : undefined;
     
     const onDragOver = (e) => {
         e.preventDefault();
@@ -57,7 +62,6 @@ const DropTile = ({ characterObj, index }) => {
                             phonetic-katakana 
                             ${filters.characterTypes.katakana ? 'visible' : 'hidden'}
                             ${characterObj.scripts.katakana.filled ? 'filled' : ''}
-                            ${characterObj.placeholder ? 'hide' : ''}
                             `}>
                         {characterObj.scripts.katakana.character}
                     </div>
@@ -78,18 +82,17 @@ const DropTile = ({ characterObj, index }) => {
             key={`drop-tile-${characterObj.id}`}
             className={`
                 top-grid-item 
-                ${characterObj.placeholder ? 'hide' : ''}
                 ${characterObj.completed ? 'filled' : ''}
                 ${dragHover ? 'drag-proximity-hover' : ''}
             `}
+            style={tileStyle}
             onDrop={active && isDesktop ? completeDrop : undefined} 
             onDragOver={active && isDesktop ? onDragOver : undefined}
             onDragLeave={active && isDesktop ? onDragLeave : undefined}
             onTouchEnd={active ? completeDrop : undefined}
             onClick={active ? completeDrop : undefined}
         >
-            
-            {characterObj.placeholder === false && renderCharacterContainers()}
+            {renderCharacterContainers()}
             
         </div>
     );

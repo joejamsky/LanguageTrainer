@@ -14,6 +14,12 @@
     gap: 4px;
 }
 
+.bot-grid-item.placeholder {
+    background-color: transparent;
+    border: 1px dashed rgba(255, 255, 255, 0.15);
+    pointer-events: none;
+}
+
 .bot-grid-item:first-of-type{
     background-color: white;
     color: rgb(188, 0, 45);

@@ -19,7 +19,6 @@ import {
   handleCharRenderToggles,
   matchInput,
   updateMissedTile,
-  stripLeadingPlaceholders,
 } from "../utils/characterUtils";
 import { isBrowser } from "../utils/storageUtils";
 
@@ -126,18 +125,15 @@ export const useCharactersState = ({
           );
           break;
         case "missed":
-          updatedBotCharacters = filteredBot
-            .filter((tile) => !tile.placeholder)
-            .sort((a, b) => b.missed - a.missed);
+          updatedBotCharacters = filteredBot.sort((a, b) => b.missed - a.missed);
           break;
         default:
           updatedBotCharacters = filteredBot;
       }
 
-      const sanitizedBotCharacters = stripLeadingPlaceholders(updatedBotCharacters);
       return {
         ...prevChars,
-        botCharacters: sanitizedBotCharacters,
+        botCharacters: updatedBotCharacters,
         topCharacters: cloneTopCharacters(),
       };
     });
@@ -151,9 +147,7 @@ export const useCharactersState = ({
   ]);
 
   useEffect(() => {
-    const nextPlayableTile = (characters?.botCharacters || []).find(
-      (tile) => !tile.placeholder
-    );
+    const nextPlayableTile = (characters?.botCharacters || [])[0];
     const nextTileId = nextPlayableTile?.id ?? null;
     setActiveAttempt((prev) => {
       if (prev.tileId === nextTileId) return prev;
@@ -193,9 +187,6 @@ export const useCharactersState = ({
         }
 
         tempBotChars.splice(tileIndex, 1);
-        while (tempBotChars[0]?.placeholder) {
-          tempBotChars.shift();
-        }
 
         const remainingTiles = getRemainingPlayableTiles(tempBotChars);
         const updatedState = {
