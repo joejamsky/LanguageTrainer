@@ -7,9 +7,9 @@ const DragTile = ({ characterObj, index }) => {
   const dragRef = useRef(null);
   const { game, setGame, selectedTile, setSelectedTile, screenSize, options } = useGameState();
   const isDesktop = screenSize === "laptop" || screenSize === "desktop";
-  const isTableView = screenSize === "tablet";
-  const shouldShowRomaji =
-    isTableView && (characterObj.type === "hiragana" || characterObj.type === "katakana");
+  const wantsRomaji = screenSize === "tablet" || screenSize === "mobile";
+  const isKanaTile = characterObj.type === "hiragana" || characterObj.type === "katakana";
+  const shouldShowRomaji = wantsRomaji && isKanaTile;
   const displayCharacter = shouldShowRomaji
     ? dictionaryKanaToRomaji[characterObj.character] || characterObj.character
     : characterObj.character;
