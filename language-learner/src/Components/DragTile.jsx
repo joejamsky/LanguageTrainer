@@ -53,8 +53,22 @@ const DragTile = ({ characterObj, index }) => {
       draggable={isDesktop && !characterObj.placeholder && !characterObj.completed}
       onDragStart={isDesktop ? beginSelection : undefined}
       onDragEnd={isDesktop ? resetSelection : undefined}
-      onTouchStart={!isDesktop ? beginSelection : undefined}
-      onTouchEnd={!isDesktop ? resetSelection : undefined}
+      onTouchStart={
+        !isDesktop
+          ? (event) => {
+              event.preventDefault();
+              beginSelection();
+            }
+          : undefined
+      }
+      onTouchEnd={
+        !isDesktop
+          ? (event) => {
+              event.preventDefault();
+              resetSelection();
+            }
+          : undefined
+      }
       onClick={beginSelection}
     >
       <div className="char-container">
