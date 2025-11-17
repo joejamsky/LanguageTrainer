@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import "../Styles/Setup.scss";
 import { useGameState } from "../Contexts/GameStateContext";
@@ -20,17 +20,16 @@ import {
   normalizeLevel,
   PROGRESSION_MODES,
   getWindowSizes,
-  getShapeGroupCount,
   getAccuracyThresholds,
   clearStoredData,
   levelToScriptKey,
   scriptKeyToLevel,
+  getShapeGroupOptionsForFilters,
 } from "../Misc/levelUtils";
 import PageNav from "../Components/PageNav";
 
 const TOTAL_ROWS = ROW_TIERS.length;
 const WINDOW_SIZES = getWindowSizes();
-const SHAPE_GROUP_COUNT = getShapeGroupCount();
 const ACCURACY_STEPS = getAccuracyThresholds();
 
 const MODE_OPTIONS = [
@@ -88,7 +87,7 @@ const Setup = () => {
   );
   const studyMode = options.studyMode || PROGRESSION_MODES.LINEAR;
   const rowCount = Math.max(1, rowRange.end - rowRange.start + 1);
-  const shapeGroup = Math.min(Math.max(1, options.shapeGroup || 1), SHAPE_GROUP_COUNT);
+  const shapeGroup = options.shapeGroup || 1;
   const accuracyThreshold = Number.isFinite(options.accuracyThreshold)
     ? options.accuracyThreshold
     : DEFAULT_LEVEL.accuracyThreshold;
@@ -110,6 +109,10 @@ const Setup = () => {
     }
     return SHUFFLE_NODES.find((node) => node.value === shuffleLevel) || SHUFFLE_NODES[0];
   }, [shuffleLevel, studyMode]);
+  const availableShapeGroups = useMemo(
+    () => getShapeGroupOptionsForFilters(filters.characterTypes),
+    [filters.characterTypes]
+  );
   const shuffleLegend = useMemo(() => {
     const maxShuffle = getMaxShuffleLevelForRow(rowCount);
     return SHUFFLE_NODES.filter((node) => node.value <= maxShuffle).map((node) => ({
@@ -153,6 +156,16 @@ const Setup = () => {
   const modifierActiveKeys = Object.entries(filters.modifierGroup)
     .filter(([, isOn]) => isOn)
     .map(([key]) => key);
+
+  useEffect(() => {
+    if (!availableShapeGroups.includes(options.shapeGroup)) {
+      const fallbackGroup = availableShapeGroups[0] || 1;
+      setOptions((prev) => ({
+        ...prev,
+        shapeGroup: fallbackGroup,
+      }));
+    }
+  }, [availableShapeGroups, options.shapeGroup, setOptions]);
 
   const handleModeSelect = (mode) => {
     setOptions((prev) => {
@@ -213,7 +226,9 @@ const Setup = () => {
   };
 
   const handleShapeGroupChange = (value) => {
-    const safeGroup = Math.min(Math.max(1, value), SHAPE_GROUP_COUNT);
+    const safeGroup = availableShapeGroups.includes(value)
+      ? value
+      : availableShapeGroups[0] || 1;
     setOptions((prev) => ({
       ...prev,
       shapeGroup: safeGroup,
@@ -240,14 +255,27 @@ const Setup = () => {
   };
 
   const handleScriptSelect = (value) => {
-    setFilters((prev) => ({
-      ...prev,
-      characterTypes: {
+    setFilters((prev) => {
+      const nextTypes = {
         ...prev.characterTypes,
         hiragana: value === "hiragana" || value === "both",
         katakana: value === "katakana" || value === "both",
-      },
-    }));
+      };
+      const nextGroups = getShapeGroupOptionsForFilters(nextTypes);
+      setOptions((prevOptions) => {
+        const safeGroup = nextGroups.includes(prevOptions.shapeGroup)
+          ? prevOptions.shapeGroup
+          : nextGroups[0] || 1;
+        return {
+          ...prevOptions,
+          shapeGroup: safeGroup,
+        };
+      });
+      return {
+        ...prev,
+        characterTypes: nextTypes,
+      };
+    });
   };
 
   const handleShuffleSelect = (node) => {
@@ -374,10 +402,19 @@ const Setup = () => {
             <input
               type="range"
               min="1"
-              max={SHAPE_GROUP_COUNT}
+              max={Math.max(1, availableShapeGroups.length)}
               step="1"
-              value={shapeGroup}
-              onChange={(event) => handleShapeGroupChange(Number(event.target.value))}
+              value={Math.max(0, availableShapeGroups.indexOf(shapeGroup)) + 1}
+              disabled={availableShapeGroups.length <= 1}
+              onChange={(event) => {
+                const maxIndex = Math.max(0, availableShapeGroups.length - 1);
+                const requestedIndex = Math.max(
+                  0,
+                  Math.min(maxIndex, Number(event.target.value) - 1)
+                );
+                const nextGroup = availableShapeGroups[requestedIndex] || availableShapeGroups[0] || 1;
+                handleShapeGroupChange(nextGroup);
+              }}
             />
             <div className="slider-value">
               <span className="slider-title">Group {shapeGroup}</span>

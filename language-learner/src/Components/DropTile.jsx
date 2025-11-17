@@ -6,9 +6,10 @@ import { useGameState } from "../Contexts/GameStateContext";
 const DropTile = ({ characterObj, index }) => {
 
     const [dragHover, setDragHover] = useState(false);
-    const {handleDrop, filters, options} = useGameState(); 
+    const {handleDrop, filters, options, screenSize} = useGameState(); 
 
     const active = !characterObj.placeholder && !characterObj.completed;
+    const isDesktop = screenSize === "laptop" || screenSize === "desktop";
     
     const onDragOver = (e) => {
         e.preventDefault();
@@ -66,10 +67,10 @@ const DropTile = ({ characterObj, index }) => {
     };
     
 
-    const onTouchEnd = (e) => {
-        handleDrop(characterObj.id, index)
+    const completeDrop = () => {
+        handleDrop(characterObj.id, index);
         setDragHover(false);
-    }
+    };
 
 
     return (
@@ -81,11 +82,11 @@ const DropTile = ({ characterObj, index }) => {
                 ${characterObj.completed ? 'filled' : ''}
                 ${dragHover ? 'drag-proximity-hover' : ''}
             `}
-            onDrop={active ? onTouchEnd : undefined} 
-            onDragOver={active ? onDragOver : undefined}
-            onDragLeave={active ? onDragLeave : undefined}
-            onTouchEnd={active ? onTouchEnd : undefined}
-            onClick={active ? onTouchEnd : undefined}
+            onDrop={active && isDesktop ? completeDrop : undefined} 
+            onDragOver={active && isDesktop ? onDragOver : undefined}
+            onDragLeave={active && isDesktop ? onDragLeave : undefined}
+            onTouchEnd={active ? completeDrop : undefined}
+            onClick={active ? completeDrop : undefined}
         >
             
             {characterObj.placeholder === false && renderCharacterContainers()}

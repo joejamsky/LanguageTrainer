@@ -36,7 +36,7 @@ export const isWithinRowRange = (item, rowRange) => {
 export const handleCharRenderToggles = (item, filters, options) => {
   const rowRange = clampRowRange(options?.rowRange || defaultState.options.rowRange);
   const studyMode = resolveStudyMode(options);
-  const shapeGroup = resolveShapeGroup(options) - 1;
+  const shapeGroup = resolveShapeGroup(options, filters) - 1;
   const accuracyThreshold = resolveAccuracyThreshold(options);
   let baseEnabled = false;
   if (item.type === "hiragana") baseEnabled = filters.characterTypes.hiragana;

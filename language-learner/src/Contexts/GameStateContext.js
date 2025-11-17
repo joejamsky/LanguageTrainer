@@ -72,7 +72,7 @@ export const GameStateProvider = ({ children }) => {
   );
   const rowCount = getRowCountFromRange(rowRange);
   const studyMode = resolveStudyMode(options);
-  const shapeGroup = resolveShapeGroup(options);
+  const shapeGroup = resolveShapeGroup(options, filters);
   const adaptiveThreshold = resolveAccuracyThreshold(options);
   const derivedScriptLevel = getScriptLevelFromFilters(filters.characterTypes);
   const derivedShuffleLevel = getShuffleLevelFromSorting(options.sorting);

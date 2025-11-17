@@ -11,14 +11,14 @@ import { useGameState } from "../Contexts/GameStateContext.js";
 
 function Main() {
     // const { game, startMenuOpen } = useGameState();
-    const { game, screenSize } = useGameState()
+    const { screenSize } = useGameState()
     const [hintVisible, setHintVisible] = useState(true);
     const isMobileScreen = screenSize === 'mobile' || screenSize === 'tablet';
   
     return (
         <div className="Main">
             <PageNav />
-            <div className={`gutter-container ${game.gameover ? 'gameover' : 'gameon'}`}>
+            <div className={`gutter-container`}>
 
                 <>
                     <div className="UI-header">
@@ -31,7 +31,7 @@ function Main() {
                     </div>
                     <BotGrid/>
                     <LevelCompleteModal />
-                    {hintVisible && (
+                    {/* {hintVisible && (
                         <div className="gameplay-hint-box">
                             <button
                                 type="button"
@@ -53,7 +53,7 @@ function Main() {
                                 </p>
                             )}
                         </div>
-                    )}
+                    )} */}
                 </>
                 
 

@@ -4,6 +4,7 @@ import {
   LEVEL_TO_SCRIPT,
   SCRIPT_TO_LEVEL,
 } from "../Data/skillTreeConfig";
+import BOT_CHARACTERS from "../Data/japanese_characters_standard_bot.json";
 
 export const PROGRESSION_MODES = {
   LINEAR: "linear",
@@ -14,7 +15,34 @@ export const PROGRESSION_MODES = {
 
 const TOTAL_ROWS = ROW_TIERS.length;
 const WINDOW_SIZES = [2, 4, 6, 8, 10].filter((size) => size <= TOTAL_ROWS);
-const SHAPE_GROUP_COUNT = 10;
+const buildShapeGroupMap = () => {
+  const map = {
+    hiragana: new Set(),
+    katakana: new Set(),
+  };
+  BOT_CHARACTERS.forEach((tile) => {
+    if (typeof tile.shapeGroup !== "number") return;
+    if (tile.type === "hiragana") {
+      map.hiragana.add(tile.shapeGroup + 1);
+    } else if (tile.type === "katakana") {
+      map.katakana.add(tile.shapeGroup + 1);
+    }
+  });
+  const toSortedArray = (set) => {
+    const arr = Array.from(set).sort((a, b) => a - b);
+    return arr.length ? arr : [1];
+  };
+  const hiragana = toSortedArray(map.hiragana);
+  const katakana = toSortedArray(map.katakana);
+  const combined = toSortedArray(new Set([...map.hiragana, ...map.katakana]));
+  return {
+    hiragana,
+    katakana,
+    both: combined,
+  };
+};
+const SHAPE_GROUPS_BY_SCRIPT = buildShapeGroupMap();
+const SHAPE_GROUP_COUNT = Math.max(...SHAPE_GROUPS_BY_SCRIPT.both, 1);
 const ACCURACY_THRESHOLDS = [0.8, 0.85, 0.9, 0.95];
 const SCRIPT_SEQUENCE = Object.keys(LEVEL_TO_SCRIPT)
   .map((key) => Number(key))
@@ -73,9 +101,22 @@ const clampRowRange = (start = 1, end = 1) => {
   return { start: safeStart, end: safeEnd };
 };
 
-const clampShapeGroup = (group = 1) => {
-  const numeric = Number.isFinite(group) ? group : 1;
-  return Math.min(Math.max(1, Math.floor(numeric)), SHAPE_GROUP_COUNT);
+const getShapeGroupListForScriptKey = (scriptKey = "hiragana") => {
+  if (scriptKey === "katakana") return SHAPE_GROUPS_BY_SCRIPT.katakana;
+  if (scriptKey === "both") return SHAPE_GROUPS_BY_SCRIPT.both;
+  return SHAPE_GROUPS_BY_SCRIPT.hiragana;
+};
+
+const clampShapeGroup = (group = 1, scriptKey = "hiragana") => {
+  const available = getShapeGroupListForScriptKey(scriptKey);
+  if (!available.length) return 1;
+  const numeric = Number.isFinite(group) ? Math.max(1, Math.floor(group)) : available[0];
+  return available.includes(numeric) ? numeric : available[0];
+};
+
+const getDefaultShapeGroup = (scriptKey = "hiragana") => {
+  const available = getShapeGroupListForScriptKey(scriptKey);
+  return available[0] || 1;
 };
 
 const clampAccuracyThreshold = (value = ACCURACY_THRESHOLDS[0]) => {
@@ -105,6 +146,7 @@ const normalizeLevelShape = (level = DEFAULT_LEVEL) => {
   const scriptLevel = SCRIPT_SEQUENCE.includes(level.scriptLevel)
     ? level.scriptLevel
     : SCRIPT_SEQUENCE[0];
+  const scriptKey = LEVEL_TO_SCRIPT[scriptLevel] || "hiragana";
   const shuffleSeq = getShuffleSequenceForRowRange(start, end);
   const safeShuffle = shuffleSeq.includes(level.shuffleLevel)
     ? level.shuffleLevel
@@ -115,7 +157,7 @@ const normalizeLevelShape = (level = DEFAULT_LEVEL) => {
     rowEnd: end,
     scriptLevel,
     shuffleLevel: safeShuffle,
-    shapeGroup: clampShapeGroup(level.shapeGroup),
+    shapeGroup: clampShapeGroup(level.shapeGroup, scriptKey),
     accuracyThreshold: clampAccuracyThreshold(level.accuracyThreshold),
   };
 };
@@ -239,7 +281,7 @@ const getInitialLevelForMode = (mode, scriptLevelOverride = SCRIPT_SEQUENCE[0]) 
         rowEnd: TOTAL_ROWS,
         scriptLevel: scriptLevelOverride,
         shuffleLevel: 0,
-        shapeGroup: 1,
+        shapeGroup: getDefaultShapeGroup(LEVEL_TO_SCRIPT[scriptLevelOverride] || "hiragana"),
       };
     case PROGRESSION_MODES.ADAPTIVE:
       return {
@@ -347,16 +389,20 @@ const advanceRange = (level) => {
 };
 
 const advanceShapes = (level) => {
+  const scriptKey = LEVEL_TO_SCRIPT[level.scriptLevel] || "hiragana";
+  const availableGroups = getShapeGroupListForScriptKey(scriptKey);
+  const safeGroup = clampShapeGroup(level.shapeGroup, scriptKey);
   const advanced = advanceScriptShuffle(level, { rowStart: level.rowStart, rowEnd: level.rowEnd });
   if (advanced) {
     return advanced;
   }
 
-  const safeGroup = clampShapeGroup(level.shapeGroup);
-  if (safeGroup < SHAPE_GROUP_COUNT) {
+  const currentIndex = Math.max(0, availableGroups.indexOf(safeGroup));
+  if (currentIndex < availableGroups.length - 1) {
+    const nextGroup = availableGroups[currentIndex + 1];
     return {
       ...level,
-      shapeGroup: safeGroup + 1,
+      shapeGroup: nextGroup,
       shuffleLevel: getShuffleSequenceForRowRange(level.rowStart, level.rowEnd)[0],
     };
   }
@@ -407,6 +453,20 @@ export const getAccuracyThresholds = () => [...ACCURACY_THRESHOLDS];
 export const getWindowSizes = () => [...WINDOW_SIZES];
 
 export const getShapeGroupCount = () => SHAPE_GROUP_COUNT;
+
+export const getShapeGroupOptionsForFilters = (characterTypes = {}) => {
+  const groups = new Set();
+  if (characterTypes.hiragana) {
+    getShapeGroupListForScriptKey("hiragana").forEach((value) => groups.add(value));
+  }
+  if (characterTypes.katakana) {
+    getShapeGroupListForScriptKey("katakana").forEach((value) => groups.add(value));
+  }
+  if (!groups.size) {
+    getShapeGroupListForScriptKey("hiragana").forEach((value) => groups.add(value));
+  }
+  return Array.from(groups).sort((a, b) => a - b);
+};
 
 export const getModeSequence = () => [...MODE_SEQUENCE];
 

@@ -10,6 +10,7 @@ import {
   clampRowRange,
   getRowCountFromRange,
   resolveStudyMode,
+  resolveShapeGroup,
 } from "../utils/optionsUtils";
 import {
   cloneTopCharacters,
@@ -70,19 +71,19 @@ export const useCharactersState = ({
   const { rowShuffle, columnShuffle } = options.sorting;
   const { current, methods } = options.gameMode;
 
+  const resolvedShapeGroup = useMemo(
+    () => resolveShapeGroup({ shapeGroup: options.shapeGroup }, filters),
+    [options.shapeGroup, filters]
+  );
+
   const filteringOptions = useMemo(
     () => ({
       rowRange: options.rowRange,
       studyMode: options.studyMode,
-      shapeGroup: options.shapeGroup,
+      shapeGroup: resolvedShapeGroup,
       accuracyThreshold: options.accuracyThreshold,
     }),
-    [
-      options.rowRange,
-      options.studyMode,
-      options.shapeGroup,
-      options.accuracyThreshold,
-    ]
+    [options.rowRange, options.studyMode, resolvedShapeGroup, options.accuracyThreshold]
   );
 
   useEffect(() => {

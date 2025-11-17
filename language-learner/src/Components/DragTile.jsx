@@ -6,6 +6,7 @@ import { dictionaryKanaToRomaji } from "../Misc/Utils";
 const DragTile = ({ characterObj, index }) => {
   const dragRef = useRef(null);
   const { game, setGame, selectedTile, setSelectedTile, screenSize, options } = useGameState();
+  const isDesktop = screenSize === "laptop" || screenSize === "desktop";
   const isTableView = screenSize === "tablet";
   const shouldShowRomaji =
     isTableView && (characterObj.type === "hiragana" || characterObj.type === "katakana");
@@ -13,19 +14,16 @@ const DragTile = ({ characterObj, index }) => {
     ? dictionaryKanaToRomaji[characterObj.character] || characterObj.character
     : characterObj.character;
 
-  const onTouchEnd = () => {
+  const resetSelection = () => {
     setSelectedTile({
       id: null,
       index: null,
     });
   };
 
-  const onTouchStart = () => {
+  const beginSelection = () => {
     if (selectedTile.id === characterObj.id) {
-      setSelectedTile({
-        id: null,
-        index: null,
-      });
+      resetSelection();
     } else {
       setSelectedTile({
         id: characterObj.id,
@@ -52,11 +50,12 @@ const DragTile = ({ characterObj, index }) => {
           ${characterObj.placeholder || characterObj.completed ? "hide" : ""}
           ${options.hints ? `column-${Number(characterObj.parentId.split('-')[0]) % 5}` : ''}
         `}
-      draggable={!characterObj.placeholder && !characterObj.completed}
-      onDragStart={onTouchStart}
-      onDragEnd={onTouchEnd}
-      onTouchStart={screenSize === "mobile" || screenSize === "tablet" ? onTouchStart : undefined}
-      onClick={onTouchStart}
+      draggable={isDesktop && !characterObj.placeholder && !characterObj.completed}
+      onDragStart={isDesktop ? beginSelection : undefined}
+      onDragEnd={isDesktop ? resetSelection : undefined}
+      onTouchStart={!isDesktop ? beginSelection : undefined}
+      onTouchEnd={!isDesktop ? resetSelection : undefined}
+      onClick={beginSelection}
     >
       <div className="char-container">
         <div className={`char-content char-${characterObj.type}`}>

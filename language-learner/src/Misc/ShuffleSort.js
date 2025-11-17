@@ -12,36 +12,41 @@ const shuffleArray = (arr) => {
 
 // Shuffle each row independently.
 const shuffleRows = (grid) => {
-  return grid.map(row => shuffleArray(row));
+  return grid.map((row) => shuffleArray(row));
 };
 
 // Sound-based sorting using a grid layout with optional row/column shuffling.
 export const getSoundSorted = (tiles, rowShuffle, columnShuffle) => {
-    const numCols = 5;
-    const numRows = Math.floor(tiles.length / numCols);
-    let grid = [];
-    for (let r = 0; r < numRows; r++) {
-      grid.push(tiles.slice(r * numCols, r * numCols + numCols));
-    }
-    if (rowShuffle) grid = shuffleRows(grid);
-    if (columnShuffle) {
-      for (let col = 0; col < numCols; col++) {
-        let colItems = grid.map(row => row[col]);
-        // For specific columns, only shuffle non-placeholders.
-        if (col === 1 || col === 3) {
-          const nonPlaceholders = colItems.filter(item => !item.placeholder);
-          const placeholders = colItems.filter(item => item.placeholder);
-          colItems = [...shuffleArray(nonPlaceholders), ...placeholders];
-        } else {
-          colItems = shuffleArray(colItems);
-        }
-        for (let row = 0; row < numRows; row++) {
-          grid[row][col] = colItems[row];
+  const numCols = 5;
+  if (!tiles.length) return [];
+  const numRows = Math.max(1, Math.ceil(tiles.length / numCols));
+  let grid = [];
+  for (let r = 0; r < numRows; r++) {
+    const slice = tiles.slice(r * numCols, r * numCols + numCols);
+    grid.push(slice);
+  }
+  if (rowShuffle) grid = shuffleRows(grid);
+  if (columnShuffle) {
+    for (let col = 0; col < numCols; col++) {
+      let colItems = grid.map((row) => row[col]).filter((item) => item !== undefined);
+      if (!colItems.length) continue;
+      if (col === 1 || col === 3) {
+        const nonPlaceholders = colItems.filter((item) => !item.placeholder);
+        const placeholders = colItems.filter((item) => item.placeholder);
+        colItems = [...shuffleArray(nonPlaceholders), ...placeholders];
+      } else {
+        colItems = shuffleArray(colItems);
+      }
+      let idx = 0;
+      for (let row = 0; row < numRows; row++) {
+        if (grid[row][col] !== undefined) {
+          grid[row][col] = colItems[idx++];
         }
       }
     }
-    return grid.flat();
-  };
+  }
+  return grid.flat().filter((item) => item !== undefined);
+};
 
   // For shape-based sorting when no shuffling is required.
 const sortByShapeGroup = (tiles, desiredType) => {

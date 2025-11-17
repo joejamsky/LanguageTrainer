@@ -1,5 +1,6 @@
 import { defaultState } from "../../Misc/Utils";
-import { TOTAL_ROWS, TOTAL_SHAPE_GROUPS } from "./constants";
+import { TOTAL_ROWS } from "./constants";
+import { getShapeGroupOptionsForFilters } from "../../Misc/levelUtils";
 
 export const clampRowRange = (range = defaultState.options.rowRange) => {
   const start = Number.isFinite(range?.start) ? range.start : 1;
@@ -19,11 +20,13 @@ export const getRowCountFromRange = (range) => {
 export const resolveStudyMode = (options) =>
   options?.studyMode || defaultState.options.studyMode;
 
-export const resolveShapeGroup = (options) => {
-  const group = Number.isFinite(options?.shapeGroup)
-    ? options.shapeGroup
-    : defaultState.options.shapeGroup;
-  return Math.max(1, Math.min(group, TOTAL_SHAPE_GROUPS));
+export const resolveShapeGroup = (options, filters = defaultState.filters) => {
+  const availableGroups = getShapeGroupOptionsForFilters(filters);
+  const fallback = availableGroups[0] || 1;
+  const numeric = Number.isFinite(options?.shapeGroup)
+    ? Math.max(1, Math.floor(options.shapeGroup))
+    : fallback;
+  return availableGroups.includes(numeric) ? numeric : fallback;
 };
 
 export const resolveAccuracyThreshold = (options) => {
