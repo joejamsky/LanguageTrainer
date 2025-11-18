@@ -7,39 +7,49 @@ import { useGameState } from "../Contexts/GameStateContext.js";
 import { getGridCoordinatesForTile } from "../Contexts/utils/characterUtils";
 
 const BotGrid = () => {
-  const { characters, screenSize } = useGameState();
+  const { characters, screenSize, options } = useGameState();
 
   const rawTiles = characters.botCharacters || [];
+  const columnShuffleEnabled = options?.sorting?.columnShuffle;
 
   const currentRowNumber = (() => {
-    if (!rawTiles.length) return null;
+    if (!rawTiles.length || columnShuffleEnabled) return null;
     const coords = getGridCoordinatesForTile(rawTiles[0]);
     return coords?.row ?? null;
   })();
 
   const visibleFullRow = currentRowNumber
     ? rawTiles
-        .filter((tile) => (getGridCoordinatesForTile(tile)?.row ?? null) === currentRowNumber)
-        .sort((a, b) => {
-          const aCol = getGridCoordinatesForTile(a)?.column ?? 0;
-          const bCol = getGridCoordinatesForTile(b)?.column ?? 0;
-          return aCol - bCol;
-        })
+        .map((tile, rawIndex) => ({
+          tile,
+          rawIndex,
+          coords: getGridCoordinatesForTile(tile),
+        }))
+        .filter(({ coords }) => (coords?.row ?? null) === currentRowNumber)
     : [];
 
-  const paddedTiles = Array.from({ length: 5 }, (_, idx) => visibleFullRow[idx] || null);
+  const queueEntries = columnShuffleEnabled
+    ? rawTiles.slice(0, 5).map((tile, rawIndex) => ({
+        tile,
+        rawIndex,
+      }))
+    : [];
+
+  const activeEntries = columnShuffleEnabled ? queueEntries : visibleFullRow;
+  const paddedTiles = Array.from({ length: 5 }, (_, idx) => activeEntries[idx] || null);
+  const targetTileId = paddedTiles[0]?.tile?.id ?? null;
 
   return (
     <div className="bot-grid-container">
       {(screenSize === 'laptop' || screenSize === 'desktop') && (
         <div>
-          <TextInput />
+          <TextInput targetTileId={targetTileId} />
         </div>
       )}
 
       <div id="draggrid" className={`grid draggrid ${true ? 'vertical' : 'horizontal'}`}>
-        {paddedTiles.map((script, columnIndex) => {
-          if (!script) {
+        {paddedTiles.map((entry, columnIndex) => {
+          if (!entry) {
             return (
               <div
                 key={`bot-grid-placeholder-${columnIndex}`}
@@ -49,12 +59,13 @@ const BotGrid = () => {
               />
             );
           }
+          const { tile, rawIndex } = entry;
           return (
             <DragTile
-              key={`bot-grid-item-${script.id}`}
-              index={columnIndex}
+              key={`bot-grid-item-${tile.id}`}
+              index={rawIndex}
               columnPosition={columnIndex + 1}
-              characterObj={script}
+              characterObj={tile}
             />
           );
         })}

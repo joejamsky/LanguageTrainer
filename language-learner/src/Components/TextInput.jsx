@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import "../Styles/TextInput.scss";
 import { useGameState } from "../Contexts/GameStateContext.js";
 
-const TextInput = () => {
+const TextInput = ({ targetTileId = null }) => {
     const {handleTextSubmit, setOptions, currentLevel, inputFocusKey} = useGameState();
     const [textInput, setTextInput] = useState('');
     const [shakeTimer, setShakeTimer] = useState(false);
@@ -22,7 +22,7 @@ const TextInput = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault(); // Prevent form submission (default behavior)
-        if(handleTextSubmit(textInput) === -1){
+        if(handleTextSubmit(textInput, targetTileId) === -1){
             setShakeTimer(true)
 
             setTimeout(() => {

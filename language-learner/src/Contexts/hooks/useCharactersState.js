@@ -15,6 +15,7 @@ import {
 import {
   cloneTopCharacters,
   getInitialCharacters,
+  getGridCoordinatesForTile,
   getRemainingPlayableTiles,
   handleCharRenderToggles,
   matchInput,
@@ -147,7 +148,22 @@ export const useCharactersState = ({
   ]);
 
   useEffect(() => {
-    const nextPlayableTile = (characters?.botCharacters || [])[0];
+    const botTiles = characters?.botCharacters || [];
+    let nextPlayableTile = botTiles[0] ?? null;
+
+    if (botTiles.length && !columnShuffle) {
+      const firstCoords = getGridCoordinatesForTile(botTiles[0]);
+      const currentRowNumber = firstCoords?.row ?? null;
+      if (currentRowNumber !== null) {
+        const rowTiles = botTiles.filter(
+          (tile) => (getGridCoordinatesForTile(tile)?.row ?? null) === currentRowNumber
+        );
+        if (rowTiles.length) {
+          nextPlayableTile = rowTiles[0];
+        }
+      }
+    }
+
     const nextTileId = nextPlayableTile?.id ?? null;
     setActiveAttempt((prev) => {
       if (prev.tileId === nextTileId) return prev;
@@ -160,7 +176,7 @@ export const useCharactersState = ({
         misses: 0,
       };
     });
-  }, [characters?.botCharacters]);
+  }, [characters?.botCharacters, columnShuffle]);
 
   const completeTileAtIndex = useCallback(
     (tileIndex) => {
@@ -228,16 +244,29 @@ export const useCharactersState = ({
   );
 
   const handleTextSubmit = useCallback(
-    (submittedChar) => {
+    (submittedChar, targetTileId = null) => {
       const tempBotChars = [...characters.botCharacters];
-      const currentTile = tempBotChars[0];
+      if (!tempBotChars.length) {
+        return;
+      }
+
+      let tileIndex = 0;
+      if (targetTileId) {
+        const locatedIndex = tempBotChars.findIndex((tile) => tile?.id === targetTileId);
+        if (locatedIndex !== -1) {
+          tileIndex = locatedIndex;
+        }
+      }
+
+      const currentTile = tempBotChars[tileIndex];
+      if (!currentTile) {
+        return;
+      }
 
       if (!game.start) {
         setGame((prevGame) => ({ ...prevGame, start: true }));
       }
-      if (tempBotChars.length === 0) {
-        return;
-      }
+
       if (!matchInput(currentTile, submittedChar)) {
         const newState = updateMissedTile(currentTile, characters);
         setCharacters(newState);
@@ -292,7 +321,7 @@ export const useCharactersState = ({
         startedAt: null,
         misses: 0,
       });
-      completeTileAtIndex(0);
+      completeTileAtIndex(tileIndex);
     },
     [
       activeAttempt,
