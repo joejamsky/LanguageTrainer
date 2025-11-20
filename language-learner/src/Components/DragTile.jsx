@@ -3,7 +3,7 @@ import "../Styles/DragTile.scss";
 import { useGameState } from "../Contexts/GameStateContext";
 import { dictionaryKanaToRomaji } from "../Misc/Utils";
 
-const DragTile = ({ characterObj, index, columnPosition }) => {
+const DragTile = ({ characterObj, index, columnPosition, extraClassName = '' }) => {
   const dragRef = useRef(null);
   const { game, setGame, selectedTile, setSelectedTile, screenSize, options } = useGameState();
   const isDesktop = screenSize === "laptop" || screenSize === "desktop";
@@ -50,6 +50,7 @@ const DragTile = ({ characterObj, index, columnPosition }) => {
           ${selectedTile.id === characterObj.id ? "dragging" : ""}
           ${characterObj.completed ? "hide" : ""}
           ${options.hints ? `column-${Number(characterObj.parentId.split('-')[0]) % 5}` : ''}
+          ${extraClassName}
         `}
       style={tileStyle}
       draggable={isDesktop && !characterObj.completed}

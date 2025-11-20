@@ -3,6 +3,8 @@
     // justify-content: center;
     align-items: center;
     flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
     position: relative;
     height: 55px;   //Hides grid items below top 5
 }
@@ -18,9 +20,26 @@
 }
 
 #draggrid {
-    // overflow: hidden;
-    padding: 3px;
+    overflow: hidden;
+    padding: 3px 0;
     width: 100%;
-    grid-template-columns: repeat(5, minmax(48px, 120px));
+    margin-left: -10px;
+    display: flex;
+    // grid-template-columns: repeat(5, minmax(48px, 120px));
     position: relative;
+}
+
+.text-input-container{
+    position: relative;
+}
+
+.kana-portal{
+    position: absolute;
+    right: -47px;
+    bottom: -15px;
+    width: 52px;
+    height: 18px;
+    border-radius: 999px;
+    background: radial-gradient(circle, #000 0, transparent 70%);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
 }

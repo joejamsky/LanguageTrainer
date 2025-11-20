@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import "../Styles/TextInput.scss";
 import { useGameState } from "../Contexts/GameStateContext.js";
 
-const TextInput = ({ targetTileId = null }) => {
+const TextInput = ({ targetTileId = null, onCorrectAnswer = null, completionDelayMs = 0 }) => {
     const {handleTextSubmit, setOptions, currentLevel, inputFocusKey} = useGameState();
     const [textInput, setTextInput] = useState('');
     const [shakeTimer, setShakeTimer] = useState(false);
@@ -22,12 +22,21 @@ const TextInput = ({ targetTileId = null }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault(); // Prevent form submission (default behavior)
-        if(handleTextSubmit(textInput, targetTileId) === -1){
+        const submissionResult = handleTextSubmit(textInput, targetTileId, {
+            delayCompletionMs: completionDelayMs
+        });
+        if(submissionResult === -1){
             setShakeTimer(true)
 
             setTimeout(() => {
                 setShakeTimer(false)
             }, 500); 
+        } else if (
+            typeof onCorrectAnswer === 'function' &&
+            submissionResult !== undefined &&
+            submissionResult !== null
+        ) {
+            onCorrectAnswer(submissionResult);
         }
         setTextInput('')
         setPlaceholderVisible(false);
@@ -69,7 +78,7 @@ const TextInput = ({ targetTileId = null }) => {
                 onKeyUp={handleKeyUp}
                 onChange={handleInputChange} // Handle input changes
                 placeholder={placeholderVisible ? "Enter romaji" : ""}
-                className={shakeTimer ? "text-input shake" : "text-input" && "input-field"}
+                className={shakeTimer ? "shake input-field" : "input-field"}
                 ref={inputRef}
             />
         </form>

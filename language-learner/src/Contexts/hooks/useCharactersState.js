@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { defaultState } from "../../Misc/Utils";
 import { getSoundSorted, shuffleByShapeGroup } from "../../Misc/ShuffleSort";
 import { PROGRESSION_MODES } from "../../Misc/levelUtils";
@@ -51,11 +51,32 @@ export const useCharactersState = ({
     startedAt: null,
     misses: 0,
   });
+  const completionTimeoutsRef = useRef({});
+
+  const clearCompletionTimeout = useCallback((tileId) => {
+    if (!tileId) return;
+    const timeoutId = completionTimeoutsRef.current[tileId];
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+      delete completionTimeoutsRef.current[tileId];
+    }
+  }, []);
+
+  const clearAllCompletionTimeouts = useCallback(() => {
+    Object.keys(completionTimeoutsRef.current).forEach((tileId) => {
+      const timeoutId = completionTimeoutsRef.current[tileId];
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    });
+    completionTimeoutsRef.current = {};
+  }, []);
 
   const reset = useCallback(
     (overrideFilters, overrideOptions) => {
       const sourceFilters = overrideFilters || filters;
       const sourceOptions = overrideOptions || options;
+      clearAllCompletionTimeouts();
       setGame(defaultState.game);
       setSelectedTile(defaultState.selectedTile);
       setCharacters(getInitialCharacters(sourceFilters, sourceOptions, tileStats));
@@ -65,7 +86,7 @@ export const useCharactersState = ({
         misses: 0,
       });
     },
-    [filters, options, tileStats, setGame]
+    [clearAllCompletionTimeouts, filters, options, tileStats, setGame]
   );
 
   const { rowShuffle, columnShuffle } = options.sorting;
@@ -179,12 +200,19 @@ export const useCharactersState = ({
   }, [characters?.botCharacters, columnShuffle]);
 
   const completeTileAtIndex = useCallback(
-    (tileIndex) => {
+    (tileTarget) => {
       let didComplete = false;
 
       setCharacters((prevChars) => {
         const tempBotChars = [...prevChars.botCharacters];
         const tempTopChars = [...prevChars.topCharacters];
+        let tileIndex =
+          typeof tileTarget === "number"
+            ? tileTarget
+            : tempBotChars.findIndex((tile) => tile?.id === tileTarget);
+        if (tileIndex < 0) {
+          return prevChars;
+        }
         const currentTile = tempBotChars[tileIndex];
 
         if (!currentTile) {
@@ -203,6 +231,7 @@ export const useCharactersState = ({
         }
 
         tempBotChars.splice(tileIndex, 1);
+        clearCompletionTimeout(currentTile.id);
 
         const remainingTiles = getRemainingPlayableTiles(tempBotChars);
         const updatedState = {
@@ -225,7 +254,7 @@ export const useCharactersState = ({
 
       return didComplete;
     },
-    [setCharacters, setGame]
+    [clearCompletionTimeout, setCharacters, setGame]
   );
 
   const handleDrop = useCallback(
@@ -244,7 +273,8 @@ export const useCharactersState = ({
   );
 
   const handleTextSubmit = useCallback(
-    (submittedChar, targetTileId = null) => {
+    (submittedChar, targetTileId = null, submissionOptions = {}) => {
+      const { delayCompletionMs = 0 } = submissionOptions;
       const tempBotChars = [...characters.botCharacters];
       if (!tempBotChars.length) {
         return;
@@ -321,18 +351,33 @@ export const useCharactersState = ({
         startedAt: null,
         misses: 0,
       });
-      completeTileAtIndex(tileIndex);
+      if (delayCompletionMs > 0) {
+        clearCompletionTimeout(currentTile.id);
+        completionTimeoutsRef.current[currentTile.id] = setTimeout(() => {
+          completeTileAtIndex(currentTile.id);
+        }, delayCompletionMs);
+      } else {
+        completeTileAtIndex(tileIndex);
+      }
+      return currentTile.id;
     },
     [
       activeAttempt,
       characters,
       completeTileAtIndex,
+      clearCompletionTimeout,
       game.start,
       setGame,
       setStats,
       setTileStats,
     ]
   );
+
+  useEffect(() => {
+    return () => {
+      clearAllCompletionTimeouts();
+    };
+  }, [clearAllCompletionTimeouts]);
 
   const bumpInputFocusKey = useCallback(() => {
     setInputFocusKey((prev) => prev + 1);
