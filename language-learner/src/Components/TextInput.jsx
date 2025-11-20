@@ -61,20 +61,18 @@ const TextInput = ({ targetTileId = null }) => {
     
 
     return (
-        <div className={shakeTimer ? "text-input shake" : "text-input"}>
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="text"
-                    value={textInput} 
-                    onKeyDown={handleKeyPress} // Add listener to the input
-                    onKeyUp={handleKeyUp}
-                    onChange={handleInputChange} // Handle input changes
-                    placeholder={placeholderVisible ? "Enter romaji" : ""}
-                    className="input-field"
-                    ref={inputRef}
-                />
-            </form>
-        </div>
+        <form onSubmit={handleSubmit}>
+            <input
+                type="text"
+                value={textInput} 
+                onKeyDown={handleKeyPress} // Add listener to the input
+                onKeyUp={handleKeyUp}
+                onChange={handleInputChange} // Handle input changes
+                placeholder={placeholderVisible ? "Enter romaji" : ""}
+                className={shakeTimer ? "text-input shake" : "text-input" && "input-field"}
+                ref={inputRef}
+            />
+        </form>
     );
 };
 

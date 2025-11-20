@@ -41,11 +41,7 @@ const BotGrid = () => {
 
   return (
     <div className="bot-grid-container">
-      {(screenSize === 'laptop' || screenSize === 'desktop') && (
-        <div>
-          <TextInput targetTileId={targetTileId} />
-        </div>
-      )}
+      {(screenSize === 'laptop' || screenSize === 'desktop') && <TextInput />}
 
       <div id="draggrid" className={`grid draggrid ${true ? 'vertical' : 'horizontal'}`}>
         {paddedTiles.map((entry, columnIndex) => {
