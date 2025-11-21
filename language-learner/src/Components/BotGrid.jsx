@@ -15,7 +15,7 @@ const buildSlotSnapshot = (tiles = []) =>
 const BotGrid = () => {
   const { characters, screenSize, options, registerTileCompletionListener } = useGameState();
 
-  const rawTiles = characters.botCharacters || [];
+  const rawTiles = useMemo(() => characters.botCharacters || [], [characters.botCharacters]);
   const columnShuffleEnabled = options?.sorting?.columnShuffle;
   const tileLookupById = useMemo(() => {
     const map = new Map();

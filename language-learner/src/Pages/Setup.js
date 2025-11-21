@@ -4,69 +4,37 @@ import "../Styles/Setup.scss";
 import { useGameState } from "../Contexts/GameStateContext";
 import {
   ROW_TIERS,
-  ROW_MODIFIERS,
-  SCRIPT_NODES,
-  SHUFFLE_NODES,
-  LEVEL_TO_SCRIPT,
 } from "../Data/skillTreeConfig";
 import {
   DEFAULT_LEVEL,
-  readStoredLevel,
   getScriptLevelFromFilters,
   getShuffleLevelFromSorting,
   clampShuffleLevelForRow,
-  getMaxShuffleLevelForRow,
+  PROGRESSION_MODES,
+  getShapeGroupOptionsForFilters,
   describeLevel,
   normalizeLevel,
-  PROGRESSION_MODES,
-  getWindowSizes,
-  getAccuracyThresholds,
-  clearStoredData,
-  levelToScriptKey,
-  scriptKeyToLevel,
-  getShapeGroupOptionsForFilters,
 } from "../Misc/levelUtils";
 import PageNav from "../Components/PageNav";
+import {
+  PATH_MODIFIER_OPTIONS,
+  ensureCustomSelections,
+  toggleRowSelection,
+  toggleAllRowsSelection,
+  areAllRowsEnabled,
+  toggleShapeSelection,
+  toggleAllShapesSelection,
+  areAllShapesEnabled,
+  clampFrequencyTarget,
+  adjustFrequencyTarget,
+  CUSTOM_SHUFFLE_OPTIONS,
+  getShuffleKeyFromSorting,
+  getSortingForShuffleKey,
+  getDefaultCustomSelections,
+} from "../Misc/customGameMode";
+import { defaultState } from "../Misc/Utils";
 
-const TOTAL_ROWS = ROW_TIERS.length;
-const WINDOW_SIZES = getWindowSizes();
-const ACCURACY_STEPS = getAccuracyThresholds();
-
-const MODE_OPTIONS = [
-  {
-    key: PROGRESSION_MODES.LINEAR,
-    title: "Linear",
-    caption: "One row at a time",
-  },
-  {
-    key: PROGRESSION_MODES.RANGE,
-    title: "Range",
-    caption: "Sliding multi-row focus",
-  },
-  {
-    key: PROGRESSION_MODES.SHAPES,
-    title: "Shapes",
-    caption: "Visual similarity groups",
-  },
-  {
-    key: PROGRESSION_MODES.ADAPTIVE,
-    title: "Adaptive",
-    caption: "Accuracy-based review",
-  },
-];
-
-const clampRowValue = (value = 1) => {
-  const numeric = Number.isFinite(value) ? value : 1;
-  return Math.min(Math.max(1, Math.floor(numeric)), TOTAL_ROWS);
-};
-
-const clampRange = (start, end) => {
-  const safeStart = clampRowValue(start);
-  const safeEnd = clampRowValue(end);
-  return safeStart <= safeEnd ? { start: safeStart, end: safeEnd } : { start: safeEnd, end: safeStart };
-};
-
-const toPercent = (value) => `${Math.round((value || 0) * 100)}%`;
+const ROW_SECTION_KEYS = ["hiragana", "katakana"];
 
 const Setup = () => {
   const {
@@ -74,18 +42,13 @@ const Setup = () => {
     setFilters,
     options,
     setOptions,
-    applyLevelConfiguration,
     setSessionType,
   } = useGameState();
-  const [lastLevel, setLastLevel] = useState(() => readStoredLevel());
-  const [storageMessage, setStorageMessage] = useState("");
-
-  const baseRowRange = options.rowRange || { start: options.rowLevel || 1, end: options.rowLevel || 1 };
-  const rowRange = useMemo(
-    () => clampRange(baseRowRange.start, baseRowRange.end),
-    [baseRowRange.start, baseRowRange.end]
-  );
   const studyMode = options.studyMode || PROGRESSION_MODES.LINEAR;
+  const rowRange = useMemo(
+    () => options.rowRange || { start: options.rowLevel || 1, end: options.rowLevel || 1 },
+    [options.rowRange?.start, options.rowRange?.end, options.rowLevel]
+  );
   const rowCount = Math.max(1, rowRange.end - rowRange.start + 1);
   const shapeGroup = options.shapeGroup || 1;
   const accuracyThreshold = Number.isFinite(options.accuracyThreshold)
@@ -98,39 +61,9 @@ const Setup = () => {
     ? 0
     : clampShuffleLevelForRow(rowCount, shuffleLevelRaw);
 
-  const activeScriptKey = LEVEL_TO_SCRIPT[scriptLevel];
-  const activeScriptNode = useMemo(
-    () => SCRIPT_NODES.find((node) => node.value === activeScriptKey),
-    [activeScriptKey]
-  );
-  const activeShuffleNode = useMemo(() => {
-    if (studyMode === PROGRESSION_MODES.ADAPTIVE) {
-      return SHUFFLE_NODES[0];
-    }
-    return SHUFFLE_NODES.find((node) => node.value === shuffleLevel) || SHUFFLE_NODES[0];
-  }, [shuffleLevel, studyMode]);
   const availableShapeGroups = useMemo(
     () => getShapeGroupOptionsForFilters(filters.characterTypes),
     [filters.characterTypes]
-  );
-  const shuffleLegend = useMemo(() => {
-    const maxShuffle = getMaxShuffleLevelForRow(rowCount);
-    return SHUFFLE_NODES.filter((node) => node.value <= maxShuffle).map((node) => ({
-      value: node.value,
-      glyph:
-        node.rowShuffle && node.columnShuffle
-          ? "↔ ↕"
-          : node.rowShuffle
-            ? "↔"
-            : "—",
-      title: node.title,
-    }));
-  }, [rowCount]);
-
-  const guidedCourseLevel = useMemo(() => normalizeLevel(lastLevel), [lastLevel]);
-  const guidedCourseDescriptor = useMemo(
-    () => describeLevel(guidedCourseLevel),
-    [guidedCourseLevel]
   );
 
   const customLevel = useMemo(
@@ -148,14 +81,136 @@ const Setup = () => {
   );
   const customDescriptor = useMemo(() => describeLevel(customLevel), [customLevel]);
 
-  const windowSize = Math.max(2, rowCount);
-  const maxWindowStart = Math.max(1, TOTAL_ROWS - windowSize + 1);
-  const accuracyIndexRaw = ACCURACY_STEPS.findIndex((value) => value === accuracyThreshold);
-  const accuracyIndex = accuracyIndexRaw === -1 ? 0 : accuracyIndexRaw;
 
-  const modifierActiveKeys = Object.entries(filters.modifierGroup)
-    .filter(([, isOn]) => isOn)
-    .map(([key]) => key);
+  const customSelections = useMemo(
+    () => ensureCustomSelections(options.customSelections),
+    [options.customSelections]
+  );
+  const frequencyTarget =
+    customSelections.frequencyTarget ??
+    clampFrequencyTarget(Math.round((1 - accuracyThreshold) * 100));
+
+  const getCharacterOptionActive = (option) => {
+    if (option.type === "character") {
+      return Boolean(filters.characterTypes[option.key]);
+    }
+    return Boolean(filters.modifierGroup[option.key]);
+  };
+
+  const updateShapeGroupFromTypes = (nextTypes) => {
+    const nextGroups = getShapeGroupOptionsForFilters(nextTypes);
+    setOptions((prevOptions) => {
+      const safeGroup = nextGroups.includes(prevOptions.shapeGroup)
+        ? prevOptions.shapeGroup
+        : nextGroups[0] || 1;
+      return {
+        ...prevOptions,
+        shapeGroup: safeGroup,
+      };
+    });
+  };
+
+  const handleCharacterOptionToggle = (option) => {
+    if (option.type === "character") {
+      setFilters((prev) => {
+        const nextValue = !prev.characterTypes[option.key];
+        const nextCharacterTypes = {
+          ...prev.characterTypes,
+          [option.key]: nextValue,
+        };
+        // ensure at least one script remains active
+        if (!nextCharacterTypes.hiragana && !nextCharacterTypes.katakana) {
+          nextCharacterTypes[option.key] = true;
+        }
+        updateShapeGroupFromTypes(nextCharacterTypes);
+        return {
+          ...prev,
+          characterTypes: nextCharacterTypes,
+        };
+      });
+    } else {
+      setFilters((prev) => ({
+        ...prev,
+        modifierGroup: {
+          ...prev.modifierGroup,
+          [option.key]: !prev.modifierGroup[option.key],
+        },
+      }));
+    }
+  };
+
+  const updateCustomSelections = (updater) => {
+    setOptions((prev) => {
+      const normalized = ensureCustomSelections(prev.customSelections);
+      const nextSelections = updater(normalized);
+      return {
+        ...prev,
+        customSelections: nextSelections,
+      };
+    });
+  };
+
+  const handleRowToggle = (scriptKey, rowValue) => {
+    updateCustomSelections((prevSelections) => ({
+      ...prevSelections,
+      rows: toggleRowSelection(prevSelections.rows, scriptKey, rowValue),
+    }));
+  };
+
+  const handleToggleAllRows = (scriptKey, enable) => {
+    updateCustomSelections((prevSelections) => ({
+      ...prevSelections,
+      rows: toggleAllRowsSelection(prevSelections.rows, scriptKey, enable),
+    }));
+  };
+
+  const handleShapeToggle = (group) => {
+    updateCustomSelections((prevSelections) => ({
+      ...prevSelections,
+      shapes: toggleShapeSelection(prevSelections.shapes, group),
+    }));
+  };
+
+  const handleToggleAllShapes = (enable) => {
+    updateCustomSelections((prevSelections) => ({
+      ...prevSelections,
+      shapes: toggleAllShapesSelection(prevSelections.shapes, enable),
+    }));
+  };
+
+  const handleFrequencyChange = (value) => {
+    const nextValue = clampFrequencyTarget(value);
+    updateCustomSelections((prevSelections) => ({
+      ...prevSelections,
+      frequencyTarget: nextValue,
+    }));
+    setOptions((prev) => ({
+      ...prev,
+      accuracyThreshold: 1 - nextValue / 100,
+    }));
+  };
+
+  const handleFrequencyAdjust = (delta) => {
+    handleFrequencyChange(adjustFrequencyTarget(frequencyTarget, delta));
+  };
+
+  const shuffleKey = getShuffleKeyFromSorting(options.sorting);
+  const [selectionTab, setSelectionTab] = useState("rows");
+
+  const handleShuffleModeChange = (key) => {
+    setOptions((prev) => ({
+      ...prev,
+      sorting: getSortingForShuffleKey(key, prev.sorting),
+    }));
+  };
+
+  const handleResetForm = () => {
+    setFilters(defaultState.filters);
+    setOptions({
+      ...defaultState.options,
+      customSelections: getDefaultCustomSelections(),
+    });
+  };
 
   useEffect(() => {
     if (!availableShapeGroups.includes(options.shapeGroup)) {
@@ -167,445 +222,210 @@ const Setup = () => {
     }
   }, [availableShapeGroups, options.shapeGroup, setOptions]);
 
-  const handleModeSelect = (mode) => {
-    setOptions((prev) => {
-      if (prev.studyMode === mode) {
-        return prev;
-      }
-      let nextRange;
-      if (mode === PROGRESSION_MODES.LINEAR) {
-        const pivot = clampRowValue(rowRange.start);
-        nextRange = clampRange(pivot, pivot);
-      } else if (mode === PROGRESSION_MODES.RANGE) {
-        const initialSize = WINDOW_SIZES[0] || 2;
-        nextRange = clampRange(1, initialSize);
-      } else {
-        nextRange = clampRange(1, TOTAL_ROWS);
-      }
-      return {
-        ...prev,
-        studyMode: mode,
-        rowRange: nextRange,
-        rowLevel: nextRange.end,
-      };
-    });
-  };
-
-  const handleLinearRowChange = (value) => {
-    const safeValue = clampRowValue(value);
-    setOptions((prev) => ({
-      ...prev,
-      rowRange: { start: safeValue, end: safeValue },
-      rowLevel: safeValue,
-    }));
-  };
-
-  const handleWindowStartChange = (value) => {
-    const safeStart = clampRowValue(value);
-    const size = Math.max(2, rowCount);
-    const maxStart = Math.max(1, TOTAL_ROWS - size + 1);
-    const nextStart = Math.min(safeStart, maxStart);
-    const nextEnd = clampRowValue(nextStart + size - 1);
-    setOptions((prev) => ({
-      ...prev,
-      rowRange: { start: nextStart, end: nextEnd },
-      rowLevel: nextEnd,
-    }));
-  };
-
-  const handleWindowSizeChange = (size) => {
-    const safeSize = Math.max(2, Math.min(size, TOTAL_ROWS));
-    const maxStart = Math.max(1, TOTAL_ROWS - safeSize + 1);
-    const nextStart = Math.min(rowRange.start, maxStart);
-    const nextEnd = clampRowValue(nextStart + safeSize - 1);
-    setOptions((prev) => ({
-      ...prev,
-      rowRange: { start: nextStart, end: nextEnd },
-      rowLevel: nextEnd,
-    }));
-  };
-
-  const handleShapeGroupChange = (value) => {
-    const safeGroup = availableShapeGroups.includes(value)
-      ? value
-      : availableShapeGroups[0] || 1;
-    setOptions((prev) => ({
-      ...prev,
-      shapeGroup: safeGroup,
-    }));
-  };
-
-  const handleAccuracyChange = (index) => {
-    const safeIndex = Math.min(Math.max(0, index), ACCURACY_STEPS.length - 1);
-    const nextThreshold = ACCURACY_STEPS[safeIndex];
-    setOptions((prev) => ({
-      ...prev,
-      accuracyThreshold: nextThreshold,
-    }));
-  };
-
-  const handleModifierToggle = (key) => {
-    setFilters((prev) => ({
-      ...prev,
-      modifierGroup: {
-        ...prev.modifierGroup,
-        [key]: !prev.modifierGroup[key],
-      },
-    }));
-  };
-
-  const handleScriptSelect = (value) => {
-    setFilters((prev) => {
-      const nextTypes = {
-        ...prev.characterTypes,
-        hiragana: value === "hiragana" || value === "both",
-        katakana: value === "katakana" || value === "both",
-      };
-      const nextGroups = getShapeGroupOptionsForFilters(nextTypes);
-      setOptions((prevOptions) => {
-        const safeGroup = nextGroups.includes(prevOptions.shapeGroup)
-          ? prevOptions.shapeGroup
-          : nextGroups[0] || 1;
-        return {
-          ...prevOptions,
-          shapeGroup: safeGroup,
-        };
-      });
-      return {
-        ...prev,
-        characterTypes: nextTypes,
-      };
-    });
-  };
-
-  const handleShuffleSelect = (node) => {
-    if (studyMode === PROGRESSION_MODES.ADAPTIVE) return;
-    setOptions((prev) => ({
-      ...prev,
-      sorting: {
-        ...prev.sorting,
-        rowShuffle: node.rowShuffle,
-        columnShuffle: node.columnShuffle,
-        shuffleLevel: node.value,
-      },
-    }));
-  };
-
-  const handleShuffleSliderChange = (event) => {
-    if (studyMode === PROGRESSION_MODES.ADAPTIVE) return;
-    const value = Number(event.target.value);
-    const clampedValue = clampShuffleLevelForRow(rowCount, value);
-    const node = SHUFFLE_NODES.find((option) => option.value === clampedValue);
-    if (node) {
-      handleShuffleSelect(node);
-    }
-  };
-
-  const handleGuidedStart = () => {
-    const desiredScriptKey = activeScriptKey || "hiragana";
-    const storedScriptKey = levelToScriptKey(lastLevel.scriptLevel);
-    const resumeFromStored = storedScriptKey === desiredScriptKey;
-    const baseLevel = resumeFromStored
-      ? lastLevel
-      : {
-          ...DEFAULT_LEVEL,
-          scriptLevel: scriptKeyToLevel(desiredScriptKey),
-        };
-    const normalized = normalizeLevel(baseLevel);
-    applyLevelConfiguration(normalized);
-    setLastLevel(normalized);
-    setSessionType("guided");
-    setStorageMessage("");
-  };
-
   const handleFreePlayStart = () => {
     setSessionType("freePlay");
-    setStorageMessage("");
-  };
-
-  const handleResetCourse = () => {
-    const normalized = normalizeLevel(DEFAULT_LEVEL);
-    applyLevelConfiguration(normalized);
-    setLastLevel(normalized);
-    setStorageMessage("Guided course reset to Row 1 Hiragana.");
-  };
-
-  const handleClearSavedData = () => {
-    clearStoredData();
-    const normalized = normalizeLevel(DEFAULT_LEVEL);
-    applyLevelConfiguration(normalized);
-    setLastLevel(normalized);
-    setStorageMessage("Saved data cleared.");
-  };
-
-  const renderGroupingControls = () => {
-    switch (studyMode) {
-      case PROGRESSION_MODES.LINEAR: {
-        const rowMeta = ROW_TIERS[rowRange.start - 1];
-        return (
-          <div className="slider-control">
-            <input
-              type="range"
-              min="1"
-              max={TOTAL_ROWS}
-              step="1"
-              value={rowRange.start}
-              onChange={(event) => handleLinearRowChange(Number(event.target.value))}
-            />
-            <div className="slider-value">
-              <span className="slider-title">Row {rowRange.start}</span>
-              <span className="slider-caption">{rowMeta?.caption}</span>
-            </div>
-          </div>
-        );
-      }
-      case PROGRESSION_MODES.RANGE: {
-        const sliderDisabled = maxWindowStart <= 1;
-        return (
-          <>
-            <div className="slider-control">
-              <input
-                type="range"
-                min="1"
-                max={Math.max(1, maxWindowStart)}
-                step="1"
-                value={Math.min(rowRange.start, maxWindowStart)}
-                disabled={sliderDisabled}
-                onChange={(event) => handleWindowStartChange(Number(event.target.value))}
-              />
-              <div className="slider-value">
-                <span className="slider-title">Rows {rowRange.start}-{rowRange.end}</span>
-                <span className="slider-caption">{windowSize} rows active</span>
-              </div>
-            </div>
-            <div className="window-size-grid">
-              {WINDOW_SIZES.map((size) => (
-                <button
-                  key={size}
-                  type="button"
-                  className={`mode-chip ${windowSize === size ? "active" : ""}`}
-                  onClick={() => handleWindowSizeChange(size)}
-                >
-                  <span className="mode-chip-title">{size} rows</span>
-                  <span className="mode-chip-caption">
-                    {size === TOTAL_ROWS ? "Full set" : `Range of ${size}`}
-                  </span>
-                </button>
-              ))}
-            </div>
-          </>
-        );
-      }
-      case PROGRESSION_MODES.SHAPES:
-        return (
-          <div className="slider-control">
-            <input
-              type="range"
-              min="1"
-              max={Math.max(1, availableShapeGroups.length)}
-              step="1"
-              value={Math.max(0, availableShapeGroups.indexOf(shapeGroup)) + 1}
-              disabled={availableShapeGroups.length <= 1}
-              onChange={(event) => {
-                const maxIndex = Math.max(0, availableShapeGroups.length - 1);
-                const requestedIndex = Math.max(
-                  0,
-                  Math.min(maxIndex, Number(event.target.value) - 1)
-                );
-                const nextGroup = availableShapeGroups[requestedIndex] || availableShapeGroups[0] || 1;
-                handleShapeGroupChange(nextGroup);
-              }}
-            />
-            <div className="slider-value">
-              <span className="slider-title">Group {shapeGroup}</span>
-              <span className="slider-caption">Focus by shared strokes</span>
-            </div>
-          </div>
-        );
-      case PROGRESSION_MODES.ADAPTIVE:
-        return (
-          <div className="slider-control">
-            <input
-              type="range"
-              min="0"
-              max={Math.max(0, ACCURACY_STEPS.length - 1)}
-              step="1"
-              value={accuracyIndex}
-              onChange={(event) => handleAccuracyChange(Number(event.target.value))}
-            />
-            <div className="slider-value">
-              <span className="slider-title">Show below {toPercent(accuracyThreshold)}</span>
-              <span className="slider-caption">Targets recent weak spots</span>
-            </div>
-          </div>
-        );
-      default:
-        return null;
-    }
   };
 
   return (
     <main className="setup">
       <PageNav />
       <header className="setup-header">
-        <div className="setup-headings">
-          <h1 className="setup-title">Choose Your Path</h1>
-          <p className="setup-subtitle">
-            Build a free play run or follow the guided flow. Adjust path, mode, grouping, modifiers, and shuffle from a single board.
-          </p>
-        </div>
+        <p className="eyebrow">Step 2 · Custom Setup</p>
+        <h1>Customize Your Session</h1>
+        <p>
+          Choose the exact path, mode, grouping, modifiers, and shuffle to craft your perfect practice run.
+        </p>
       </header>
 
-      <section className="guided-panel">
-        <div className="guided-copy">
-          <h4>Guided Course</h4>
-          <p>
-            Master kana step by step on a structured journey. Each stage introduces new characters
-            while reinforcing what you’ve already learned.
-          </p>
-          <p className="guided-checkpoint">
-            Current checkpoint: <strong>{guidedCourseDescriptor.summary}</strong>
-          </p>
-        </div>
-        <div className="guided-actions">
-          <button type="button" onClick={handleResetCourse}>
-            Reset Course
-          </button>
-          <button type="button" onClick={handleClearSavedData}>
-            Clear Saved Data
-          </button>
-          <Link to="/options">
-            Options
-          </Link>
-
-          <div className="level-summary">
-            <span className="level-badge">Mode | Grouping | Kana | Shuffle</span>
-            <p className="level-details">
-              {customDescriptor.mode} | {customDescriptor.grouping} | {customDescriptor.kana} | {customDescriptor.shuffle}
-            </p>
-          </div>
-        </div>
-        {storageMessage && <p className="guided-message">{storageMessage}</p>}
+      <section className="setup-summary">
+        <span className="setup-badge">Current Plan</span>
+        <p className="setup-summary-main">{customDescriptor.summary}</p>
+        <p className="setup-summary-note">Mode · Grouping · Kana · Shuffle</p>
       </section>
 
-      <div className="control-stack">
-          <div className="control-group">
-            <div className="control-label">Path</div>
-            <div className="mode-grid path-grid">
-              {SCRIPT_NODES.map((node) => (
+      <div className="setup-grid">
+      <section className="control-card selection-card full-width-card">
+        <div className="control-card-header">
+          <h2>Characters & Extras</h2>
+          <p>Mix base scripts with dakuten add-ons.</p>
+        </div>
+          <div className="selection-grid">
+            {PATH_MODIFIER_OPTIONS.map((option) => {
+              const active = getCharacterOptionActive(option);
+              return (
                 <button
-                  key={node.id}
+                  key={option.key}
                   type="button"
-                  className={`mode-chip ${activeScriptKey === node.value ? "active" : ""}`}
-                  onClick={() => handleScriptSelect(node.value)}
+                  className={`selection-chip ${active ? "active" : ""}`}
+                  onClick={() => handleCharacterOptionToggle(option)}
                 >
-                  <span className="mode-chip-title">{node.title}</span>
-                  <span className="mode-chip-caption">{node.caption}</span>
+                  <span className="selection-chip-title">{option.label}</span>
                 </button>
-              ))}
-            </div>
-            {activeScriptNode?.caption && (
-              <p className="control-caption">{activeScriptNode.caption}</p>
-            )}
+              );
+            })}
           </div>
-
-          <div className="control-group">
-            <div className="control-label">Mode</div>
-            <div className="mode-grid">
-              {MODE_OPTIONS.map((mode) => (
-                <button
-                  key={mode.key}
-                  type="button"
-                  className={`mode-chip ${studyMode === mode.key ? "active" : ""}`}
-                  onClick={() => handleModeSelect(mode.key)}
-                >
-                  <span className="mode-chip-title">{mode.title}</span>
-                  <span className="mode-chip-caption">{mode.caption}</span>
-                </button>
-              ))}
-            </div>
+          <div className="selection-actions">
+            <button type="button" onClick={handleResetForm}>
+              Reset
+            </button>
+            <button type="button" className="selection-save" disabled>
+              Save Preset
+            </button>
           </div>
-
-          <div className="control-group">
-            <div className="control-label">Rows / Grouping</div>
-            {renderGroupingControls()}
+        </section>
+        <section className="control-card tab-card">
+          <div className="tab-header">
+            <button
+              type="button"
+              className={`tab-button ${selectionTab === "rows" ? "active" : ""}`}
+              onClick={() => setSelectionTab("rows")}
+            >
+              Row Groups
+            </button>
+            <button
+              type="button"
+              className={`tab-button ${selectionTab === "shapes" ? "active" : ""}`}
+              onClick={() => setSelectionTab("shapes")}
+            >
+              Stroke Groups
+            </button>
+            <button
+              type="button"
+              className={`tab-button ${selectionTab === "frequency" ? "active" : ""}`}
+              onClick={() => setSelectionTab("frequency")}
+            >
+              Frequency
+            </button>
           </div>
-
-          <div className="control-group">
-            <div className="control-label">Modifiers</div>
-            <div className="modifier-switches">
-              <div className="modifier-switch-group">
-                {ROW_MODIFIERS.map((modifier) => {
-                  const active = modifierActiveKeys.includes(modifier.key);
+          <div className="tab-content">
+            {selectionTab === "rows" && (
+              <div className="row-selection-card">
+                {ROW_SECTION_KEYS.map((scriptKey) => {
+                  const label = scriptKey === "hiragana" ? "Hiragana" : "Katakana";
+                  const allActive = areAllRowsEnabled(customSelections.rows, scriptKey);
                   return (
-                    <label key={modifier.id} className={`modifier-switch ${active ? "active" : ""}`}>
-                      <input
-                        type="checkbox"
-                        checked={active}
-                        onChange={() => handleModifierToggle(modifier.key)}
-                      />
-                      <span className="modifier-switch-track" aria-hidden="true"></span>
-                      <span className="modifier-switch-meta">
-                        <span className="modifier-switch-title">{modifier.title}</span>
-                        <span className="modifier-switch-caption">{modifier.caption}</span>
-                      </span>
-                    </label>
+                    <div key={scriptKey} className="row-section">
+                      <div className="row-section-header">
+                        <h3>{label}</h3>
+                        <button
+                          type="button"
+                          className="toggle-all"
+                          onClick={() => handleToggleAllRows(scriptKey, !allActive)}
+                        >
+                          {allActive ? "Clear All" : "Select All"}
+                        </button>
+                      </div>
+                      <div className="row-toggle-grid">
+                        {ROW_TIERS.map((row) => {
+                          const active = customSelections.rows[scriptKey][row.value];
+                          return (
+                            <button
+                              key={`${scriptKey}-${row.id}`}
+                              type="button"
+                              className={`row-toggle ${active ? "active" : ""}`}
+                              onClick={() => handleRowToggle(scriptKey, row.value)}
+                            >
+                              <span className="row-toggle-title">{row.title}</span>
+                              <span className="row-toggle-caption">{row.caption}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
                   );
                 })}
               </div>
-            </div>
-          </div>
+            )}
 
-          <div className="control-group">
-            <div className="control-label">Shuffle</div>
-            <div className="shuffle-row">
-              <div className="slider-control">
-                <input
-                  type="range"
-                  min="0"
-                  max={getMaxShuffleLevelForRow(rowCount)}
-                  step="1"
-                  value={shuffleLevel}
-                  disabled={studyMode === PROGRESSION_MODES.ADAPTIVE}
-                  onChange={handleShuffleSliderChange}
-                />
-                <div className="slider-value">
-                  <span className="slider-title">{activeShuffleNode.title}</span>
-                  <span className="slider-caption">{activeShuffleNode.caption}</span>
+            {selectionTab === "shapes" && (
+              <div className="shape-selection-card">
+                <div className="row-section-header">
+                  <h3>Shapes</h3>
+                  <button
+                    type="button"
+                    className="toggle-all"
+                    onClick={() => handleToggleAllShapes(!areAllShapesEnabled(customSelections.shapes))}
+                  >
+                    {areAllShapesEnabled(customSelections.shapes) ? "Clear All" : "Select All"}
+                  </button>
+                </div>
+                <div className="shape-toggle-grid">
+                  {Object.keys(customSelections.shapes)
+                    .map((group) => Number(group))
+                    .sort((a, b) => a - b)
+                    .map((group) => {
+                      const active = customSelections.shapes[group];
+                      return (
+                        <button
+                          key={`shape-${group}`}
+                          type="button"
+                          className={`shape-toggle ${active ? "active" : ""}`}
+                          onClick={() => handleShapeToggle(Number(group))}
+                        >
+                          Group {group}
+                        </button>
+                      );
+                    })}
                 </div>
               </div>
-              <div className="shuffle-glyphs" aria-hidden="true">
-                {shuffleLegend.map((option) => (
-                  <span
-                    key={option.value}
-                    className={`shuffle-glyph ${option.value === shuffleLevel ? "active" : ""}`}
-                    title={option.title}
-                  >
-                    {option.glyph}
-                  </span>
-                ))}
+            )}
+
+            {selectionTab === "frequency" && (
+              <div className="frequency-selection-card">
+                <div className="control-card-header">
+                  <h2>Frequency Focus</h2>
+                  <p>Prioritize kana most frequently missed.</p>
+                </div>
+                <div className="frequency-controls">
+                  <button type="button" onClick={() => handleFrequencyAdjust(-5)}>-</button>
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={frequencyTarget}
+                    onChange={(event) => handleFrequencyChange(Number(event.target.value))}
+                  />
+                  <button type="button" onClick={() => handleFrequencyAdjust(5)}>+</button>
+                </div>
+                <p className="frequency-display">
+                  Target kana missed more than <strong>{frequencyTarget}%</strong>
+                </p>
               </div>
-            </div>
-            {studyMode === PROGRESSION_MODES.ADAPTIVE && (
-              <p className="shuffle-hint">Adaptive sessions run ordered to preserve accuracy tracking.</p>
             )}
           </div>
+        </section>
+
+        <section className="control-card shuffle-card full-width-card">
+          <div className="control-card-header">
+            <h2>Shuffle</h2>
+            <p>Control ordering and randomization.</p>
+          </div>
+          <div className="shuffle-options">
+            {CUSTOM_SHUFFLE_OPTIONS.map((option) => (
+              <button
+                key={option.key}
+                type="button"
+                className={`shuffle-chip ${shuffleKey === option.key ? "active" : ""}`}
+                onClick={() => handleShuffleModeChange(option.key)}
+              >
+                <span className="shuffle-icon">{option.icon}</span>
+                <span className="shuffle-text">
+                  <span className="shuffle-title">{option.title}</span>
+                  <span className="shuffle-caption">{option.caption}</span>
+                </span>
+              </button>
+            ))}
+          </div>
+        </section>
       </div>
 
       <div className="setup-actions">
         <Link
           to="/game"
-          className="setup-start setup-start--ghost"
-          onClick={handleGuidedStart}
-        >
-          Start Guided
-        </Link>
-        <Link
-          to="/game"
           className="setup-start"
           onClick={handleFreePlayStart}
         >
-          Start Free Play
+          Start Custom Run
         </Link>
       </div>
     </main>

@@ -54,8 +54,11 @@ const MODE_SEQUENCE = [
   PROGRESSION_MODES.ADAPTIVE,
 ];
 
+const LAST_LEVEL_STORAGE_KEY = "languageTrainerLastLevel";
+const LAST_GUIDED_SCRIPT_STORAGE_KEY = "languageTrainerLastGuidedScript";
 const STORAGE_KEYS_TO_CLEAR = [
-  "languageTrainerLastLevel",
+  LAST_LEVEL_STORAGE_KEY,
+  LAST_GUIDED_SCRIPT_STORAGE_KEY,
   "languageTrainerStats",
   "tileStats",
   "languageTrainerSettings",
@@ -80,7 +83,6 @@ export const DEFAULT_LEVEL = {
   accuracyThreshold: ACCURACY_THRESHOLDS[0],
 };
 
-export const LAST_LEVEL_STORAGE_KEY = "languageTrainerLastLevel";
 const LEVEL_STATS_STORAGE_KEY = "languageTrainerStats";
 
 const isBrowser = typeof window !== "undefined";
@@ -126,13 +128,11 @@ const clampAccuracyThreshold = (value = ACCURACY_THRESHOLDS[0]) => {
   return Math.min(Math.max(numeric, min), max);
 };
 
-const getShuffleSequenceForRowRange = (rowStart, rowEnd) => {
-  const count = Math.max(1, rowEnd - rowStart + 1);
-  if (count <= 1) {
-    return [0, 1].filter((level) => level <= defaultMaxShuffleLevel);
-  }
-  return [0, 1, 2].filter((level) => level <= defaultMaxShuffleLevel);
-};
+const SHUFFLE_SEQUENCE = SHUFFLE_NODES.map((node) => node.value).sort(
+  (a, b) => a - b
+);
+
+const getShuffleSequenceForRowRange = () => [...SHUFFLE_SEQUENCE];
 
 const normalizeModeValue = (mode) => {
   if (!mode) return PROGRESSION_MODES.LINEAR;
@@ -171,12 +171,18 @@ const safeParse = (raw, fallback) => {
   }
 };
 
-export const getMaxShuffleLevelForRow = (rowCount) => {
-  if (!rowCount || rowCount <= 1) {
-    return Math.min(1, defaultMaxShuffleLevel);
-  }
-  return defaultMaxShuffleLevel;
-};
+const SCRIPT_STORAGE_KEYS = ["hiragana", "katakana", "both"];
+const buildDefaultLevelForScript = (scriptKey) =>
+  normalizeLevelShape({
+    ...DEFAULT_LEVEL,
+    scriptLevel: SCRIPT_TO_LEVEL[scriptKey] || SCRIPT_SEQUENCE[0],
+  });
+const DEFAULT_LEVELS_BY_SCRIPT = SCRIPT_STORAGE_KEYS.reduce((acc, scriptKey) => {
+  acc[scriptKey] = buildDefaultLevelForScript(scriptKey);
+  return acc;
+}, {});
+
+export const getMaxShuffleLevelForRow = () => defaultMaxShuffleLevel;
 
 export const clampShuffleLevelForRow = (rowCount, shuffleLevel = DEFAULT_LEVEL.shuffleLevel) => {
   const maxLevel = getMaxShuffleLevelForRow(rowCount);
@@ -184,21 +190,67 @@ export const clampShuffleLevelForRow = (rowCount, shuffleLevel = DEFAULT_LEVEL.s
   return Math.max(0, Math.min(normalizedValue, maxLevel));
 };
 
-export const readStoredLevel = () => {
-  if (!isBrowser) return DEFAULT_LEVEL;
+const normalizeStoredLevels = (rawValue) => {
+  const base = { ...DEFAULT_LEVELS_BY_SCRIPT };
+  if (!rawValue || typeof rawValue !== "object") {
+    return base;
+  }
+
+  const hasScriptEntries = SCRIPT_STORAGE_KEYS.some((key) => typeof rawValue[key] === "object");
+  if (hasScriptEntries) {
+    SCRIPT_STORAGE_KEYS.forEach((key) => {
+      if (rawValue[key]) {
+        base[key] = normalizeLevelShape(rawValue[key]);
+      }
+    });
+    return base;
+  }
+
+  if (rawValue.mode) {
+    const normalized = normalizeLevelShape(rawValue);
+    const scriptKey = LEVEL_TO_SCRIPT[normalized.scriptLevel] || "hiragana";
+    return {
+      ...base,
+      [scriptKey]: normalized,
+    };
+  }
+
+  return base;
+};
+
+export const readStoredLevels = () => {
+  if (!isBrowser) return { ...DEFAULT_LEVELS_BY_SCRIPT };
   const raw = localStorage.getItem(LAST_LEVEL_STORAGE_KEY);
-  const parsed = safeParse(raw, DEFAULT_LEVEL);
-  return normalizeLevelShape(parsed);
+  const parsed = safeParse(raw, null);
+  return normalizeStoredLevels(parsed);
+};
+
+export const readStoredLevel = (scriptKey = "hiragana") => {
+  const levels = readStoredLevels();
+  return levels[scriptKey] || levels.hiragana || DEFAULT_LEVEL;
+};
+
+export const readLastGuidedScriptKey = () => {
+  if (!isBrowser) return "hiragana";
+  const stored = localStorage.getItem(LAST_GUIDED_SCRIPT_STORAGE_KEY);
+  if (SCRIPT_STORAGE_KEYS.includes(stored)) {
+    return stored;
+  }
+  return "hiragana";
 };
 
 export const persistStoredLevel = (level = DEFAULT_LEVEL) => {
   if (!isBrowser) return;
   const normalized = normalizeLevelShape(level);
+  const scriptKey = LEVEL_TO_SCRIPT[normalized.scriptLevel] || "hiragana";
+  const current = readStoredLevels();
+  const next = {
+    ...current,
+    [scriptKey]: normalized,
+  };
   try {
-    localStorage.setItem(
-      LAST_LEVEL_STORAGE_KEY,
-      JSON.stringify(normalized)
-    );
+    localStorage.setItem(LAST_LEVEL_STORAGE_KEY, JSON.stringify(next));
+    localStorage.setItem(LAST_GUIDED_SCRIPT_STORAGE_KEY, scriptKey);
   } catch (error) {
     console.warn("Failed to persist level selection:", error);
   }
@@ -237,8 +289,9 @@ export const getScriptLevelFromFilters = (characterTypes = {}) => {
 
 export const getShuffleLevelFromSorting = (sorting = {}) => {
   if (typeof sorting.shuffleLevel === "number") return sorting.shuffleLevel;
-  if (sorting.rowShuffle && sorting.columnShuffle) return 2;
+  if (sorting.rowShuffle && sorting.columnShuffle) return 3;
   if (sorting.rowShuffle) return 1;
+  if (sorting.columnShuffle) return 2;
   return 0;
 };
 
@@ -422,11 +475,7 @@ const advanceAdaptive = (level) => {
     };
   }
 
-  const nextScript =
-    scriptIndex < SCRIPT_SEQUENCE.length - 1
-      ? SCRIPT_SEQUENCE[scriptIndex + 1]
-      : SCRIPT_SEQUENCE[0];
-  return getInitialLevelForMode(PROGRESSION_MODES.LINEAR, nextScript);
+  return getInitialLevelForMode(PROGRESSION_MODES.LINEAR, SCRIPT_SEQUENCE[scriptIndex]);
 };
 
 export const getNextLevel = (level = DEFAULT_LEVEL) => {

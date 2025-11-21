@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import "../Styles/Options.scss";
 import PageNav from "../Components/PageNav";
 import { useGameState } from "../Contexts/GameStateContext";
@@ -50,16 +49,6 @@ const Options = () => {
             <button type="button" onClick={handleClearStorage}>
               Clear Saved Data
             </button>
-          </div>
-
-          <div className="options-item">
-            <div>
-              <h2>View Stats</h2>
-              <p>Review performance across tiles, accuracy, and streaks.</p>
-            </div>
-            <Link to="/stats" className="options-link">
-              View Stats
-            </Link>
           </div>
         </div>
 

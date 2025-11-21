@@ -10,11 +10,14 @@ const Home = () => {
       <div className="home-content">
         <h1 className="home-title">Welcome to Language Learner</h1>
         <div className="home-actions">
-          <Link to="/setup" className="home-cta">
-            Choose Your Path
+          <Link to="/mode" className="home-cta">
+            Start Learning
           </Link>
           <Link to="/options" className="home-cta secondary">
             Options
+          </Link>
+          <Link to="/stats" className="home-cta secondary">
+            Stats
           </Link>
         </div>
       </div>

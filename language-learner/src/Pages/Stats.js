@@ -1,5 +1,4 @@
 import React, { useMemo } from "react";
-import { Link } from "react-router-dom";
 import "../Styles/Stats.scss";
 import { useGameState } from "../Contexts/GameStateContext";
 import PageNav from "../Components/PageNav";
@@ -113,9 +112,6 @@ const Stats = () => {
           <h1>Kana Performance</h1>
           <p>Track misses, accuracy, pacing, and memory trends for every tile.</p>
         </div>
-        <Link to="/setup" className="stats-nav">
-          Back to setup
-        </Link>
       </div>
 
       <section className="stats-summary">

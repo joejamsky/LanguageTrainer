@@ -1,6 +1,7 @@
 // Utils.js
 
 import { PROGRESSION_MODES, DEFAULT_LEVEL } from "./levelUtils";
+import { getDefaultCustomSelections } from "./customGameMode";
 
 export const defaultState = {
   characters: {
@@ -39,7 +40,8 @@ export const defaultState = {
       shuffleLevel: 0,
       rowShuffle: false,
       columnShuffle: false
-    }
+    },
+    customSelections: getDefaultCustomSelections(),
   },
   game: {
     start: false,

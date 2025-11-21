@@ -1,6 +1,7 @@
 import { defaultState } from "../../Misc/Utils";
 import { TOTAL_ROWS } from "./constants";
 import { getShapeGroupOptionsForFilters } from "../../Misc/levelUtils";
+import { ensureCustomSelections } from "../../Misc/customGameMode";
 
 export const clampRowRange = (range = defaultState.options.rowRange) => {
   const start = Number.isFinite(range?.start) ? range.start : 1;
@@ -53,5 +54,6 @@ export const normalizeOptionsState = (options = defaultState.options) => {
     shapeGroup: resolveShapeGroup(options),
     accuracyThreshold: resolveAccuracyThreshold(options),
     studyMode: resolveStudyMode(options),
+    customSelections: ensureCustomSelections(options.customSelections),
   };
 };
