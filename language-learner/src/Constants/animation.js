@@ -1,0 +1,1 @@
+export const TILE_COMPLETION_ANIMATION_MS = 200;

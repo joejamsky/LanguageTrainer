@@ -56,6 +56,7 @@ export const GameStateProvider = ({ children }) => {
     handleTextSubmit,
     inputFocusKey,
     bumpInputFocusKey,
+    registerTileCompletionListener,
   } = useCharactersState({
     filters,
     options,
@@ -247,9 +248,11 @@ export const GameStateProvider = ({ children }) => {
     setStartMenuOpen,
     handleCharacterSelect,
     inputFocusKey,
+    bumpInputFocusKey,
     tileStats,
     sessionType,
     setSessionType,
+    registerTileCompletionListener,
   };
 
   return (

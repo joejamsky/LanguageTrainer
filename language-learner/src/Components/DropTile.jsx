@@ -79,6 +79,7 @@ const DropTile = ({ characterObj, index }) => {
 
     return (
         <div
+            id={`drop-tile-${characterObj.id}`}
             key={`drop-tile-${characterObj.id}`}
             className={`
                 top-grid-item 

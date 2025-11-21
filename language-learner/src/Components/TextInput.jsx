@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import "../Styles/TextInput.scss";
 import { useGameState } from "../Contexts/GameStateContext.js";
 
-const TextInput = ({ targetTileId = null, onCorrectAnswer = null, completionDelayMs = 0 }) => {
+const TextInput = ({ targetTileId = null, completionDelayMs = 0 }) => {
     const {handleTextSubmit, setOptions, currentLevel, inputFocusKey} = useGameState();
     const [textInput, setTextInput] = useState('');
     const [shakeTimer, setShakeTimer] = useState(false);
@@ -31,12 +31,6 @@ const TextInput = ({ targetTileId = null, onCorrectAnswer = null, completionDela
             setTimeout(() => {
                 setShakeTimer(false)
             }, 500); 
-        } else if (
-            typeof onCorrectAnswer === 'function' &&
-            submissionResult !== undefined &&
-            submissionResult !== null
-        ) {
-            onCorrectAnswer(submissionResult);
         }
         setTextInput('')
         setPlaceholderVisible(false);

@@ -3,7 +3,14 @@ import "../Styles/DragTile.scss";
 import { useGameState } from "../Contexts/GameStateContext";
 import { dictionaryKanaToRomaji } from "../Misc/Utils";
 
-const DragTile = ({ characterObj, index, columnPosition, extraClassName = '' }) => {
+const DragTile = ({
+  characterObj,
+  index,
+  columnPosition,
+  extraClassName = '',
+  styleOverrides = null,
+  isActive = false,
+}) => {
   const dragRef = useRef(null);
   const { game, setGame, selectedTile, setSelectedTile, screenSize, options } = useGameState();
   const isDesktop = screenSize === "laptop" || screenSize === "desktop";
@@ -13,7 +20,8 @@ const DragTile = ({ characterObj, index, columnPosition, extraClassName = '' }) 
   const displayCharacter = shouldShowRomaji
     ? dictionaryKanaToRomaji[characterObj.character] || characterObj.character
     : characterObj.character;
-  const tileStyle = columnPosition ? { gridColumn: columnPosition } : undefined;
+  const baseStyle = columnPosition ? { gridColumn: columnPosition } : undefined;
+  const tileStyle = styleOverrides ? { ...baseStyle, ...styleOverrides } : baseStyle;
 
   const resetSelection = () => {
     setSelectedTile({
@@ -74,6 +82,7 @@ const DragTile = ({ characterObj, index, columnPosition, extraClassName = '' }) 
       }
       onClick={beginSelection}
     >
+      <div className={`active-tile-indicator ${isActive ? 'visible' : ''}`} />
       <div className="char-container">
         <div className={`char-content char-${characterObj.type}`}>
           {displayCharacter}

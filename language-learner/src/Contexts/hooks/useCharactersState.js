@@ -22,6 +22,7 @@ import {
   updateMissedTile,
 } from "../utils/characterUtils";
 import { isBrowser } from "../utils/storageUtils";
+import { TILE_COMPLETION_ANIMATION_MS } from "../../Constants/animation";
 
 const saveCharactersToLocalStorage = (state) => {
   if (!isBrowser) return;
@@ -52,6 +53,7 @@ export const useCharactersState = ({
     misses: 0,
   });
   const completionTimeoutsRef = useRef({});
+  const completionListenersRef = useRef(new Set());
 
   const clearCompletionTimeout = useCallback((tileId) => {
     if (!tileId) return;
@@ -60,6 +62,23 @@ export const useCharactersState = ({
       clearTimeout(timeoutId);
       delete completionTimeoutsRef.current[tileId];
     }
+  }, []);
+
+  const registerTileCompletionListener = useCallback((listener) => {
+    if (typeof listener !== "function") {
+      return () => {};
+    }
+    completionListenersRef.current.add(listener);
+    return () => {
+      completionListenersRef.current.delete(listener);
+    };
+  }, []);
+
+  const notifyTileCompletionListeners = useCallback((tileId) => {
+    if (!tileId) return;
+    completionListenersRef.current.forEach((listener) => {
+      listener(tileId);
+    });
   }, []);
 
   const clearAllCompletionTimeouts = useCallback(() => {
@@ -264,12 +283,27 @@ export const useCharactersState = ({
       if (!draggedTile || draggedTile.parentId !== targetId) {
         return;
       }
+      notifyTileCompletionListeners(draggedTile.id);
+      if (TILE_COMPLETION_ANIMATION_MS > 0) {
+        clearCompletionTimeout(draggedTile.id);
+        completionTimeoutsRef.current[draggedTile.id] = setTimeout(() => {
+          completeTileAtIndex(draggedTile.id);
+        }, TILE_COMPLETION_ANIMATION_MS);
+        setSelectedTile(defaultState.selectedTile);
+        return;
+      }
       const completed = completeTileAtIndex(selectedTile.index);
       if (completed) {
         setSelectedTile(defaultState.selectedTile);
       }
     },
-    [characters.botCharacters, completeTileAtIndex, selectedTile.index]
+    [
+      characters.botCharacters,
+      completeTileAtIndex,
+      clearCompletionTimeout,
+      notifyTileCompletionListeners,
+      selectedTile.index,
+    ]
   );
 
   const handleTextSubmit = useCallback(
@@ -351,6 +385,7 @@ export const useCharactersState = ({
         startedAt: null,
         misses: 0,
       });
+      notifyTileCompletionListeners(currentTile.id);
       if (delayCompletionMs > 0) {
         clearCompletionTimeout(currentTile.id);
         completionTimeoutsRef.current[currentTile.id] = setTimeout(() => {
@@ -366,6 +401,7 @@ export const useCharactersState = ({
       characters,
       completeTileAtIndex,
       clearCompletionTimeout,
+      notifyTileCompletionListeners,
       game.start,
       setGame,
       setStats,
@@ -393,5 +429,6 @@ export const useCharactersState = ({
     handleTextSubmit,
     inputFocusKey,
     bumpInputFocusKey,
+    registerTileCompletionListener,
   };
 };
