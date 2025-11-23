@@ -29,7 +29,6 @@ const ModeSelect = () => {
     <main className="mode-select">
       <PageNav />
       <header className="mode-select-header">
-        <p className="eyebrow">Step 2 · Pick a Route</p>
         <h1>How do you want to train?</h1>
         <p className="subtitle">
           Follow the guided sequence to resume your checkpoint or dive into a custom free play run.

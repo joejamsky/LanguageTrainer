@@ -25,7 +25,6 @@ const GuidedSetup = () => {
     <main className="guided-setup">
       <PageNav />
       <header className="guided-header">
-        <p className="eyebrow">Step 2 · Guided Setup</p>
         <h1>Select your script focus</h1>
         <p>
           Guided runs move you through Kana in an optimal spaced path. Each script keeps its own checkpoint—pick the route you want to resume.
