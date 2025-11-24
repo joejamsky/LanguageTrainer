@@ -1,115 +1,67 @@
-@use './Variables' as vars;
+@use "./Variables" as vars;
 
-.timer-container{
-    .reset-button{
-        position: absolute;
-        left: 50%;
-        top: 0px;
-        // top: 50%;
-        transform: translate(-50%, 0);
+.timer-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: #f7f7f7;
+  text-align: center;
+}
 
-        font-weight: 900;
-        line-height: 22px;
-        
-        // max-height: 35px;
-        // width: 60px;
-        border-radius: 10px;
-        background-color: rgb(11, 70, 160);
+.level-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
 
-        -webkit-box-shadow: 0px 4px 0px 0px rgb(8, 46, 104);
-        -moz-box-shadow: 0px 4px 0px 0px rgb(8, 46, 104);
-        box-shadow: 0px 4px 0px 0px rgb(8, 46, 104);
+.level-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
 
-        border: solid 1px rgb(37, 109, 218);
+.level-cell {
+  text-align: center;
+  min-width: 46px;
+}
 
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
+.level-divider {
+  width: clamp(280px, 48vw, 340px);
+  height: 1px;
+  background: rgba(255, 255, 255, 0.72);
+}
 
-        padding: 4px;
-        gap: 0px;
-        transition: all 0.1s;
+.timer-pill {
+  min-width: 96px;
+  padding: 6px 16px;
+  border-radius: 12px;
+  background: #5c5c5c;
+  border: 1px solid #8d8d8d;
+  font-size: 20px;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
 
-        &:hover{
-            background-color: rgb(6, 32, 71);
-        }
+@media only screen and (max-width: vars.$breakpoint-tablet) {
+  .level-row {
+    gap: 12px;
+    font-size: 16px;
+  }
 
-        &:active {
-            margin-top: 2px;
-            -webkit-box-shadow: 0px 2px 0px 0px rgb(27, 79, 190);
-            -moz-box-shadow: 0px 2px 0px 0px rgb(27, 79, 190);
-            box-shadow: 0px 2px 0px 0px rgb(27, 79, 190);
-        }
-    }
+  .level-divider {
+    width: 90vw;
+    max-width: 340px;
+  }
 
-    .time{
-        font-size: 16px;
-        height: 50%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    }
-
-    .reset {
-        height: 40%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        font-size: 20px;
-        line-height: 15px;
-    }
-
-
-    .best-time-container,
-    .current-level-container {
-        position: absolute;
-        left: 50%;
-        top: 10px;
-        font-size: 12px;
-        display: flex;
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .best-time-container {
-        transform: translate(calc(-50% + 70px), 0);
-    }
-
-    .current-level-container {
-        transform: translate(calc(-50% - 130px), 0);
-    }
-
-    .best-time-copy,
-    .current-level-copy{
-            margin: 0;
-            padding: 0;
-            line-height: 12px;
-            text-align: center;
-    }
-
-    .best-time-divider{
-            width: 100%;
-            height: 1px;
-            background-color: white;
-    }
-
-    .best-time{
-            line-height: 12px;
-    }
-
-    .current-level-grid{
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        column-gap: 8px;
-        row-gap: 1px;
-        margin-top: 4px;
-        text-align: center;
-    }
-
-    .current-level-cell{
-        font-size: 12px;
-        line-height: 1;
-    }
+  .timer-pill {
+    font-size: 18px;
+    padding: 6px 12px;
+  }
 }

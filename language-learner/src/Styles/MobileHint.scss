@@ -1,32 +1,33 @@
 .mobile-hint-container {
-    // position: relative;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
 }
 
-.mobile-hint-button{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 38px;
-    height: 38px;
-    background-color: rgb(11, 70, 160);
-    position: absolute;
-    top: 0;
-    left: 0;
-    // transform: translate(0, -50%);
-    border-radius: 50%;
-    font-size: 24px;
-
-    -webkit-box-shadow: 0px 4px 0px 0px rgb(8, 46, 104);
-    -moz-box-shadow: 0px 4px 0px 0px rgb(8, 46, 104);
-    box-shadow: 0px 4px 0px 0px rgb(8, 46, 104);
-
-    border: solid 1px rgb(37, 109, 218);
+.mobile-hint-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 1px solid rgba(150, 150, 150, 0.85);
+  background: transparent;
+  font-size: 24px;
+  color: #f7f7f7;
+  transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-.mobile-hint-button.active{
-    margin-top: 2px;
-    -webkit-box-shadow: 0px 2px 0px 0px rgb(27, 79, 190);
-    -moz-box-shadow: 0px 2px 0px 0px rgb(27, 79, 190);
-    box-shadow: 0px 2px 0px 0px rgb(27, 79, 190);
-    
+.mobile-hint-button:hover,
+.mobile-hint-button:focus-visible {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(200, 200, 200, 0.9);
+  transform: translateY(-1px);
+}
+
+.mobile-hint-button.active {
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.2);
 }

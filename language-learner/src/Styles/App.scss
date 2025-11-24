@@ -28,7 +28,7 @@ hr{
     height: 100%;
 
     .gutter-container {
-        padding: 70px 20px 20px;
+        padding: 40px 20px 20px;
         max-width: 80%;
         display: flex;
         flex-direction: column;
@@ -46,7 +46,7 @@ hr{
     .App{
         .gutter-container {
             max-width: none;
-            padding: 60px 10px 10px;
+            padding: 30px 10px 10px;
             gap: 10px;
         }
     }
@@ -73,9 +73,13 @@ button {
 
 .UI-header {
     width: 100%;
-    height: 5vh;
-    z-index: 10000;
+    min-height: 120px;
+    padding: 18px 24px 8px;
     position: relative;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .UI-divider-container {

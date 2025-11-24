@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "../Styles/GuidedSetup.scss";
-import PageNav from "../Components/PageNav";
+import AppHeader from "../Components/AppHeader";
 import { useGameState } from "../Contexts/GameStateContext";
 import { GUIDED_SCRIPT_OPTIONS } from "../Constants/guidedPaths";
 import { buildGuidedLevelMap, getInitialGuidedSelection } from "../Misc/guidedGameMode";
@@ -23,7 +23,7 @@ const GuidedSetup = () => {
 
   return (
     <main className="guided-setup">
-      <PageNav />
+      <AppHeader />
       <header className="guided-header">
         <h1>Select your script focus</h1>
         <p>

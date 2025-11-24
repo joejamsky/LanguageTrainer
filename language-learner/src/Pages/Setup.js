@@ -12,7 +12,7 @@ import {
   describeLevel,
   normalizeLevel,
 } from "../Misc/levelUtils";
-import PageNav from "../Components/PageNav";
+import AppHeader from "../Components/AppHeader";
 import SelectByRow from "../Components/SelectByRow";
 import SelectByStroke from "../Components/SelectByStroke";
 import SelectByAccuracy from "../Components/SelectByAccuracy";
@@ -314,7 +314,7 @@ const Setup = () => {
 
   return (
     <main className="setup">
-      <PageNav />
+      <AppHeader />
       <header className="setup-header">
         <h1>Customize Your Session</h1>
       </header>

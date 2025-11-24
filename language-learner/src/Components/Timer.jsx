@@ -4,11 +4,9 @@ import { useGameState } from "../Contexts/GameStateContext.js";
 import { describeLevel } from "../Misc/levelUtils";
 
 function Timer() {
-  const { reset, game, stats, setStats, currentLevel } = useGameState();
+  const { game, stats, setStats, currentLevel } = useGameState();
   const [timeElapsed, setTimeElapsed] = useState(0);
   const levelKey = currentLevel?.key;
-  const bestTimesByLevel = stats.bestTimesByLevel || {};
-  const bestTimeForLevel = levelKey ? bestTimesByLevel[levelKey] || 0 : 0;
   const currentLevelDescriptor = currentLevel ? describeLevel(currentLevel) : null;
   const levelGridHeaders = ["Mode", "Group", "Kana", "Shuff"];
   const levelGridValues = [
@@ -17,11 +15,6 @@ function Timer() {
     currentLevelDescriptor?.kana || "--",
     currentLevelDescriptor?.shuffle || "--",
   ];
-
-  const handleResetClick = () => {
-    reset();
-    setTimeElapsed(0);
-  };
 
   useEffect(() => {
     let timer;
@@ -82,39 +75,26 @@ function Timer() {
 
   return (
     <div className="timer-container">
-      <div className="current-level-container">
-        <span className="current-level-copy">Level</span>
-        <div className="best-time-divider"></div>
-        <div className="current-level-grid">
+      <div className="level-info">
+        <div className="level-row level-row--headers">
           {levelGridHeaders.map((label) => (
-            <span key={`header-${label}`} className="current-level-cell current-level-cell--header">
+            <span key={`header-${label}`} className="level-cell">
               {label}
             </span>
           ))}
+        </div>
+        <div className="level-divider"></div>
+        <div className="level-row level-row--values">
           {levelGridValues.map((value, index) => (
-            <span
-              key={`value-${levelGridHeaders[index]}`}
-              className="current-level-cell current-level-cell--value"
-            >
+            <span key={`value-${levelGridHeaders[index]}`} className="level-cell">
               {value}
             </span>
           ))}
         </div>
+        <div className="level-divider"></div>
       </div>
 
-      <button onClick={handleResetClick} className="reset-button">
-        <span className="time">{formatTime(timeElapsed)}</span>
-        <div className="best-time-divider"></div>
-        <span className="reset">&#10227;</span>
-      </button>
-
-      <div className="best-time-container">
-        <span className="best-time-copy">Best</span>
-        <div className="best-time-divider"></div>
-        <span className="best-time">
-          {formatTime(bestTimeForLevel || stats.bestTime || 0)}
-        </span>
-      </div>
+      <div className="timer-pill">{formatTime(timeElapsed)}</div>
     </div>
   );
 }

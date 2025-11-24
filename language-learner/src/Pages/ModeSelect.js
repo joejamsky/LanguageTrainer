@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import "../Styles/ModeSelect.scss";
-import PageNav from "../Components/PageNav";
+import AppHeader from "../Components/AppHeader";
 import { GUIDED_SCRIPT_OPTIONS } from "../Constants/guidedPaths";
 import { describeLevel, readStoredLevels } from "../Misc/levelUtils";
 
@@ -27,7 +27,7 @@ const ModeSelect = () => {
 
   return (
     <main className="mode-select">
-      <PageNav />
+      <AppHeader />
       <header className="mode-select-header">
         <h1>How do you want to train?</h1>
         <p className="subtitle">

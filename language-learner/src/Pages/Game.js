@@ -3,10 +3,8 @@ import "../Styles/Main.scss";
 import "@fortawesome/fontawesome-free/css/all.css";
 import TopGrid from "../Components/TopGrid.jsx";
 import BotGrid from "../Components/BotGrid.jsx";
-import Timer from "../Components/Timer.jsx";
-import MobileHint from "../Components/MobileHint.jsx";
 import LevelCompleteModal from "../Components/LevelCompleteModal.jsx";
-import PageNav from "../Components/PageNav";
+import GameHeader from "../Components/GameHeader.jsx";
 import { useGameState } from "../Contexts/GameStateContext.js";
 
 const Game = () => {
@@ -14,13 +12,9 @@ const Game = () => {
 
   return (
     <div className="Main">
-      <PageNav />
       <div className="gutter-container">
         <>
-          <div className="UI-header">
-            <MobileHint />
-            <Timer />
-          </div>
+          <GameHeader />
           <TopGrid />
           <div className="UI-divider-container m-1">
             <div className="UI-divider"></div>

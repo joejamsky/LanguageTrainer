@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../Styles/Options.scss";
-import PageNav from "../Components/PageNav";
+import AppHeader from "../Components/AppHeader";
 import { useGameState } from "../Contexts/GameStateContext";
 import { DEFAULT_LEVEL, clearStoredData, normalizeLevel } from "../Misc/levelUtils";
 
@@ -23,7 +23,7 @@ const Options = () => {
 
   return (
     <main className="options-page">
-      <PageNav />
+      <AppHeader />
       <div className="options-card">
         <header>
           <h1>Options</h1>

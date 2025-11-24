@@ -27,7 +27,8 @@ const MobileHint = () => {
     return (
         <div className="mobile-hint-container">
           <button 
-              className={`${touched && 'active'} mobile-hint-button`}
+              className={`mobile-hint-button ${touched ? 'active' : ''}`}
+              type="button"
               onTouchStart={handleTouchStart}
               onTouchEnd={handleTouchEnd}
               onMouseDown={handleTouchStart}

@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import "../Styles/Stats.scss";
 import { useGameState } from "../Contexts/GameStateContext";
-import PageNav from "../Components/PageNav";
+import AppHeader from "../Components/AppHeader";
 
 const Stats = () => {
   const { characters, stats, tileStats } = useGameState();
@@ -106,7 +106,7 @@ const Stats = () => {
 
   return (
     <main className="stats">
-      <PageNav />
+      <AppHeader />
       <div className="stats-header">
         <div>
           <h1>Kana Performance</h1>
