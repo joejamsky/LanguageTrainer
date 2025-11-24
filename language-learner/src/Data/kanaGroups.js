@@ -67,29 +67,27 @@ export const getRowsForKana = (key) => ROWS_BY_SECTION[key] || [];
 
 export const getRowNumberForTileId = (tileId) => parseRowFromId(tileId);
 
-const buildRowIndexMap = (rows = []) => {
-  const map = new Map();
-  rows.forEach((row, index) => {
-    map.set(row.value, index + 1);
+const buildDisplayRowIndex = () => {
+  const indexMap = {
+    base: {},
+    dakuten: {},
+    handakuten: {},
+  };
+  let nextRowIndex = 1;
+  baseRows.forEach((row) => {
+    indexMap.base[row.value] = nextRowIndex;
+    nextRowIndex += 1;
+    ["dakuten", "handakuten"].forEach((modifierKey) => {
+      if (rowsByModifier[modifierKey].has(row.value)) {
+        indexMap[modifierKey][row.value] = nextRowIndex;
+        nextRowIndex += 1;
+      }
+    });
   });
-  return map;
+  return indexMap;
 };
 
-const baseRowMap = buildRowIndexMap(ROWS_BY_SECTION.hiragana);
-const dakutenRowMap = buildRowIndexMap(modifierRows.dakuten);
-const handakutenRowMap = buildRowIndexMap(modifierRows.handakuten);
-
-const ROW_INDEX_MAP = {
-  base: baseRowMap,
-  dakuten: dakutenRowMap,
-  handakuten: handakutenRowMap,
-};
-
-const ROW_OFFSET_MAP = {
-  base: 0,
-  dakuten: baseRowMap.size,
-  handakuten: baseRowMap.size + dakutenRowMap.size,
-};
+const ROW_INDEX_MAP = buildDisplayRowIndex();
 
 export const getModifierRowIndex = (modifierKey = "base", rowValue) => {
   if (typeof rowValue !== "number") {
@@ -99,17 +97,7 @@ export const getModifierRowIndex = (modifierKey = "base", rowValue) => {
     ? modifierKey
     : modifierKey.split("-")[1];
   const map = ROW_INDEX_MAP[baseKey] || ROW_INDEX_MAP.base;
-  return map.get(rowValue) ?? null;
-};
-
-export const getModifierRowOffset = (modifierKey = "base") => {
-  if (Object.prototype.hasOwnProperty.call(ROW_OFFSET_MAP, modifierKey)) {
-    return ROW_OFFSET_MAP[modifierKey];
-  }
-  const baseKey = modifierKey.split("-")[1];
-  return Object.prototype.hasOwnProperty.call(ROW_OFFSET_MAP, baseKey)
-    ? ROW_OFFSET_MAP[baseKey]
-    : 0;
+  return map?.[rowValue] ?? null;
 };
 
 const shapeGroupSets = {

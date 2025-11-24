@@ -6,7 +6,6 @@ import { ensureCustomSelections } from "../Misc/customGameMode";
 import {
     getRowNumberForTileId,
     getModifierRowIndex,
-    getModifierRowOffset,
 } from "../Data/kanaGroups";
 
 
@@ -31,14 +30,13 @@ const DropTile = ({ characterObj, index }) => {
         if (!gridPosition || typeof rowNumber !== "number") {
             return gridPosition?.row;
         }
-        const relativeIndex =
+        const calculated =
             getModifierRowIndex(modifierKey, rowNumber) ??
-            getModifierRowIndex("base", rowNumber) ??
-            rowNumber;
-        if (relativeIndex == null) {
+            getModifierRowIndex("base", rowNumber);
+        if (calculated == null) {
             return gridPosition.row;
         }
-        return relativeIndex + getModifierRowOffset(modifierKey);
+        return calculated;
     }, [gridPosition, modifierKey, rowNumber]);
     const tileStyle = gridPosition
         ? { gridColumn: gridPosition.column, gridRow: displayRow ?? gridPosition.row }
