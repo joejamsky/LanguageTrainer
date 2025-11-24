@@ -32,36 +32,25 @@
 }
 
 .level-divider {
-  width: clamp(280px, 48vw, 340px);
+  width: clamp(240px, 48vw, 340px);
   height: 1px;
-  background: rgba(255, 255, 255, 0.72);
+  background: rgb(255, 255, 255);
 }
 
 .timer-pill {
-  min-width: 96px;
-  padding: 6px 16px;
+  min-width: 86px;
+  padding: 4px;
   border-radius: 12px;
-  background: #5c5c5c;
   border: 1px solid #8d8d8d;
-  font-size: 20px;
-  font-weight: 700;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  font-size: 16px;
 }
 
 @media only screen and (max-width: vars.$breakpoint-tablet) {
-  .level-row {
-    gap: 12px;
-    font-size: 16px;
+  .timer-container{
+    gap: 8px;
   }
 
-  .level-divider {
-    width: 90vw;
-    max-width: 340px;
-  }
-
-  .timer-pill {
-    font-size: 18px;
-    padding: 6px 12px;
+  .level-info {
+    gap: 2px;
   }
 }

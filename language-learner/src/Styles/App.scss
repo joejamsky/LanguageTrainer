@@ -63,18 +63,15 @@ hr{
 }      
 
 button {
-    font-size: 15px;
     color: white;
-    background: #5d5d5d;
-    padding: 0 10px;
     cursor: pointer;
     border: none;
 }
 
 .UI-header {
     width: 100%;
-    min-height: 120px;
-    padding: 18px 24px 8px;
+    // min-height: 120px;
+    // padding: 18px 24px 8px;
     position: relative;
     z-index: 10000;
     display: flex;

@@ -6,9 +6,10 @@ import MobileHint from "./MobileHint.jsx";
 const GameHeader = () => {
   return (
     <div className="UI-header">
-      <AppHeader showHome={false} />
+      <AppHeader showHome={false}>
+        <MobileHint />
+      </AppHeader>
       <Timer />
-      <MobileHint />
     </div>
   );
 };
