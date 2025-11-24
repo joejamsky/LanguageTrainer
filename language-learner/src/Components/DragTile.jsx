@@ -72,7 +72,7 @@ const DragTile = ({
             }
           : undefined
       }
-      onClick={beginSelection}
+      onClick={isDesktop ? beginSelection : undefined}
     >
       <div className={`active-tile-indicator ${isActive ? 'visible' : ''}`} />
       <div className="char-container">
