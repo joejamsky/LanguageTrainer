@@ -13,6 +13,9 @@ import {
   normalizeLevel,
 } from "../Misc/levelUtils";
 import PageNav from "../Components/PageNav";
+import SelectByRow from "../Components/SelectByRow";
+import SelectByStroke from "../Components/SelectByStroke";
+import SelectByAccuracy from "../Components/SelectByAccuracy";
 import {
   PATH_MODIFIER_OPTIONS,
   ensureCustomSelections,
@@ -309,60 +312,6 @@ const Setup = () => {
     setSessionType("freePlay");
   };
 
-  const renderRowPanel = (
-    panelKey,
-    title,
-    rows,
-    isEnabled = true,
-    emptyCopy = "Enable this group to make selections.",
-    keyPrefix = panelKey
-  ) => {
-    if (!rows.length) {
-      return null;
-    }
-    if (!isEnabled) {
-      return (
-        <div className="row-panel disabled" key={`${keyPrefix}-${panelKey}`}>
-          <div className="row-panel-header">
-            <h4>{title}</h4>
-          </div>
-          <p className="panel-placeholder">{emptyCopy}</p>
-        </div>
-      );
-    }
-    const allActive = areAllRowsEnabled(customSelections.rows, panelKey);
-    return (
-      <div className="row-panel" key={`${keyPrefix}-${panelKey}`}>
-        <div className="row-panel-header">
-          <h4>{title}</h4>
-          <button
-            type="button"
-            className="toggle-all"
-            onClick={() => handleToggleAllRows(panelKey, !allActive)}
-          >
-            {allActive ? "Clear All" : "Select All"}
-          </button>
-        </div>
-        <div className="row-toggle-grid">
-          {rows.map((row) => {
-            const active = customSelections.rows[panelKey]?.[row.value];
-            return (
-              <button
-                key={`${keyPrefix}-${panelKey}-${row.id}`}
-                type="button"
-                className={`row-toggle ${active ? "active" : ""}`}
-                onClick={() => handleRowToggle(panelKey, row.value)}
-              >
-                <span className="row-toggle-title">{row.title}</span>
-                <span className="row-toggle-caption">{row.caption}</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-    );
-  };
-
   return (
     <main className="setup">
       <PageNav />
@@ -418,177 +367,47 @@ const Setup = () => {
             Toggle kana groups, then fine-tune what should be available in the round.
           </p>
           <div className="grouping-content">
-            {selectionTab === "rows" ? (
-              <div className="script-grid">
-                {scriptKeys.map((scriptKey) => {
-                  const scriptOption = kanaOptionMap[scriptKey];
-                  const scriptActive = getCharacterOptionActive(scriptOption);
-                  const scriptLabel = scriptOption?.label || scriptKey;
-                  const baseRows = getRowsForKana(scriptKey);
-                  const rowKeyMap = modifierOptions.reduce((acc, modifier) => {
-                    acc[modifier.key] = getScriptModifierKey(scriptKey, modifier.key);
-                    return acc;
-                  }, {});
-                  return (
-                    <div key={scriptKey} className="script-panel">
-                      <div className="script-panel-header">
-                        <button
-                          type="button"
-                          className={`script-main-toggle ${scriptActive ? "active" : ""}`}
-                          onClick={() => handleCharacterOptionToggle(scriptOption)}
-                        >
-                          {scriptLabel}
-                        </button>
-                        <div className="script-inline-modifiers">
-                          {modifierOptions.map((modifier) => {
-                            const rowKey = rowKeyMap[modifier.key];
-                            if (!rowKey) return null;
-                          const rows = getRowsForKana(rowKey);
-                          if (!rows.length) return null;
-                          const modifierEnabled =
-                            getCharacterOptionActive(modifier) && scriptActive;
-                          const modifierActive = isAnyRowsSelected(rowKey) && modifierEnabled;
-                            return (
-                              <button
-                                key={`${scriptKey}-${modifier.key}-btn`}
-                                type="button"
-                                className={`script-sub-toggle ${modifierActive ? "active" : ""}`}
-                                onClick={() => handleScriptModifierToggle(scriptKey, modifier.key)}
-                              >
-                                {modifier.label}
-                              </button>
-                            );
-                        })}
-                        </div>
-                      </div>
-                      {renderRowPanel(
-                        scriptKey,
-                        "Rows",
-                        baseRows,
-                        scriptActive,
-                        `Enable ${scriptLabel} to choose rows.`,
-                        scriptKey
-                      )}
-                      <div className="script-modifier-panels">
-                        {modifierOptions.map((modifier) => {
-                          const rowKey = rowKeyMap[modifier.key];
-                          if (!rowKey) return null;
-                          const rows = getRowsForKana(rowKey);
-                          if (!rows.length) return null;
-                          const modifierEnabled =
-                            getCharacterOptionActive(modifier) && scriptActive;
-                          return (
-                            <div key={`${scriptKey}-${modifier.key}-panel`} className="script-modifier-panel">
-                              {renderRowPanel(
-                                rowKey,
-                                modifier.label,
-                                rows,
-                                modifierEnabled,
-                                modifierEnabled
-                                  ? undefined
-                                  : `Enable ${modifier.label} above to select rows.`,
-                                `${scriptKey}-${modifier.key}`
-                              )}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            ) : (
-              selectionTab === "shapes" ? (
-                <div className="shape-selection-card">
-                  {(() => {
-                    const strokeKeys = STROKE_SECTION_KEYS.filter((key) =>
-                      getCharacterOptionActive(kanaOptionMap[key] || { key })
-                    );
-                    if (!strokeKeys.length) {
-                      return (
-                        <p className="empty-state">
-                          Activate Hiragana or Katakana to pick stroke groups.
-                        </p>
-                      );
-                    }
-                    return strokeKeys.map((scriptKey) => {
-                      const groups = getStrokeGroupsForKana(scriptKey);
-                      const allActive = areAllShapesEnabled(customSelections.shapes, scriptKey);
-                      const label = kanaOptionMap[scriptKey]?.label || scriptKey;
-                      return (
-                        <div key={scriptKey} className="row-section">
-                          <div className="row-section-header">
-                            <h3>{label}</h3>
-                            <button
-                              type="button"
-                              className="toggle-all"
-                              onClick={() => handleToggleAllShapes(scriptKey, !allActive)}
-                            >
-                              {allActive ? "Clear All" : "Select All"}
-                            </button>
-                          </div>
-                          <div className="shape-toggle-grid">
-                            {groups.map((group) => {
-                              const active = customSelections.shapes[scriptKey]?.[group];
-                              return (
-                                <button
-                                  key={`${scriptKey}-shape-${group}`}
-                                  type="button"
-                                  className={`shape-toggle ${active ? "active" : ""}`}
-                                  onClick={() => handleShapeToggle(scriptKey, group)}
-                                >
-                                  Group {group}
-                                </button>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      );
-                    });
-                  })()}
-                </div>
-              ) : (
-                <div className="accuracy-selection-card">
-                  {(() => {
-                    const activeOptions = PATH_MODIFIER_OPTIONS.filter((option) =>
-                      option.type === "character" && getCharacterOptionActive(option)
-                    );
-                    if (!activeOptions.length) {
-                      return (
-                        <p className="empty-state">
-                          Enable a kana group above to set accuracy targets.
-                        </p>
-                      );
-                    }
-                    return activeOptions.map((option) => {
-                      const rowKeys = [option.key, ...modifierOptions.map((modifier) => getScriptModifierKey(option.key, modifier.key))];
-                      return rowKeys.map((rowKey) => {
-                        if (!customSelections.rows[rowKey]) return null;
-                        const sliderValue = getAccuracyValue(rowKey);
-                        return (
-                          <div key={`accuracy-${rowKey}`} className="accuracy-section">
-                            <div className="accuracy-header">
-                              <h3>{rowKey.replace('-', ' ').replace(/\b\w/g, (char) => char.toUpperCase())}</h3>
-                              <span>{sliderValue}%</span>
-                            </div>
-                            <input
-                              type="range"
-                              min="50"
-                              max="100"
-                              value={sliderValue}
-                              onChange={(event) =>
-                                handleAccuracyChange(rowKey, Number(event.target.value))
-                              }
-                            />
-                          </div>
-                        );
-                      });
-                    });
-                  })()}
-                </div>
-              )
+            {selectionTab === "rows" && (
+              <SelectByRow
+                scriptKeys={scriptKeys}
+                kanaOptionMap={kanaOptionMap}
+                modifierOptions={modifierOptions}
+                customSelections={customSelections}
+                getScriptModifierKey={getScriptModifierKey}
+                getRowsForKana={getRowsForKana}
+                getCharacterOptionActive={getCharacterOptionActive}
+                isAnyRowsSelected={isAnyRowsSelected}
+                handleCharacterOptionToggle={handleCharacterOptionToggle}
+                handleScriptModifierToggle={handleScriptModifierToggle}
+                handleRowToggle={handleRowToggle}
+                handleToggleAllRows={handleToggleAllRows}
+                areAllRowsEnabled={areAllRowsEnabled}
+              />
             )}
-
+            {selectionTab === "shapes" && (
+              <SelectByStroke
+                strokeKeys={STROKE_SECTION_KEYS}
+                kanaOptionMap={kanaOptionMap}
+                customSelections={customSelections}
+                getCharacterOptionActive={getCharacterOptionActive}
+                getStrokeGroupsForKana={getStrokeGroupsForKana}
+                areAllShapesEnabled={areAllShapesEnabled}
+                handleToggleAllShapes={handleToggleAllShapes}
+                handleShapeToggle={handleShapeToggle}
+              />
+            )}
+            {selectionTab === "accuracy" && (
+              <SelectByAccuracy
+                scriptKeys={scriptKeys}
+                modifierOptions={modifierOptions}
+                kanaOptionMap={kanaOptionMap}
+                customSelections={customSelections}
+                getScriptModifierKey={getScriptModifierKey}
+                getCharacterOptionActive={getCharacterOptionActive}
+                getAccuracyValue={getAccuracyValue}
+                handleAccuracyChange={handleAccuracyChange}
+              />
+            )}
           </div>
         </section>
 
