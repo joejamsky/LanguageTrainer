@@ -17,6 +17,9 @@
     
     overflow: hidden;
     text-align: center;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
 }
 
 .phonetic-romaji{
@@ -29,4 +32,3 @@
 .phonetic-hiragana.filled{
     background: vars.$color-accent-primary;
 }
-

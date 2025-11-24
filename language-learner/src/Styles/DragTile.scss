@@ -12,6 +12,9 @@
     overflow: hidden;
     position: relative;
     z-index: 1;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
 
     background-color: vars.$color-accent-primary;
     flex-wrap: wrap;

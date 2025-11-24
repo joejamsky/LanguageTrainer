@@ -72,14 +72,6 @@ const DragTile = ({
             }
           : undefined
       }
-      onTouchEnd={
-        !isDesktop
-          ? (event) => {
-              event.preventDefault();
-              resetSelection();
-            }
-          : undefined
-      }
       onClick={beginSelection}
     >
       <div className={`active-tile-indicator ${isActive ? 'visible' : ''}`} />
