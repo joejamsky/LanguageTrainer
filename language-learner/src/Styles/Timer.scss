@@ -5,7 +5,7 @@
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  color: #f7f7f7;
+  color: vars.$color-text-primary;
   text-align: center;
 }
 
@@ -34,14 +34,14 @@
 .level-divider {
   width: clamp(240px, 48vw, 340px);
   height: 1px;
-  background: rgb(255, 255, 255);
+  background: vars.$color-text-primary;
 }
 
 .timer-pill {
   min-width: 86px;
   padding: 4px;
   border-radius: 12px;
-  border: 1px solid #8d8d8d;
+  border: 1px solid vars.$color-border-default;
   font-size: 16px;
 }
 
