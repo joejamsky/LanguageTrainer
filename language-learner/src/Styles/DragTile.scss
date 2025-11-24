@@ -1,3 +1,5 @@
+@use './Variables' as vars;
+
 .bot-grid-item {
     height: 45px;
     border-radius: 10px;
@@ -11,19 +13,19 @@
     position: relative;
     z-index: 1;
 
-    background-color: #BC002D;
+    background-color: vars.$color-accent-primary;
     flex-wrap: wrap;
     gap: 4px;
 
 }
 
 .bot-grid-item:not(.placeholder) {
-    box-shadow: 0px 5px 0px 0px rgba(0, 0, 0, 1);
+    box-shadow: 0px 5px 0px 0px vars.$color-black;
 }
 
 .bot-grid-item.placeholder {
     background-color: transparent;
-    border: 1px dashed rgba(255, 255, 255, 0.15);
+    border: 1px dashed vars.$color-text-primary;
     pointer-events: none;
     box-shadow: none;
 }
@@ -48,7 +50,7 @@
     height: 0;
     border-left: 6px solid transparent;
     border-right: 6px solid transparent;
-    border-bottom: 10px solid #ffffff;
+    border-bottom: 10px solid vars.$color-text-primary;
     opacity: 0;
     transition: opacity 0.2s ease;
 }
@@ -72,25 +74,25 @@
 
 .column-0{
     // border: solid 1px rgb(173, 116, 116);
-    background-color: rgb(173, 116, 116);
+    background-color: vars.$color-grid-border-one;
 }
 
 .column-1{
     // border: solid 1px rgb(116, 173, 121);
-    background-color: rgb(116, 173, 121);
+    background-color: vars.$color-grid-border-two;
 }
 
 .column-2{
     // border: solid 1px rgb(116, 173, 168);
-    background-color: rgb(116, 173, 168);
+    background-color: vars.$color-grid-border-three;
 }
 
 .column-3{
     // border: solid 1px rgb(173, 116, 149);
-    background-color: rgb(173, 116, 149);
+    background-color: vars.$color-grid-border-four;
 }
 
 .column-4{
     // border: solid 1px rgb(153, 173, 116);
-    background-color: rgb(153, 173, 116);
+    background-color: vars.$color-grid-border-five;
 }

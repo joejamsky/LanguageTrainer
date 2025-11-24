@@ -1,14 +1,7 @@
 @use "./Variables" as vars;
 
 .mode-select {
-    min-height: 100vh;
-    padding: 80px 20px 40px;
-    background: radial-gradient(circle at top, rgba(255, 255, 255, 0.05) 0%, rgba(23, 23, 23, 1) 65%);
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 40px;
+    gap: 20px;
 }
 
 .mode-select-header {
@@ -18,7 +11,7 @@
     .eyebrow {
         text-transform: uppercase;
         letter-spacing: 2px;
-        color: rgba(255, 255, 255, 0.7);
+        color: vars.$color-text-primary;
         font-size: 14px;
         margin-bottom: 8px;
     }
@@ -30,7 +23,7 @@
 
     .subtitle {
         margin: 0;
-        color: rgba(255, 255, 255, 0.8);
+        color: vars.$color-text-primary;
         line-height: 1.5;
     }
 }
@@ -44,21 +37,21 @@
 }
 
 .mode-card {
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: vars.$color-black;
+    border: 1px solid vars.$color-text-primary;
     border-radius: 24px;
     padding: 32px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     gap: 24px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 20px 40px vars.$color-black;
 
     .card-eyebrow {
         text-transform: uppercase;
         letter-spacing: 1.5px;
         font-size: 13px;
-        color: rgba(255, 255, 255, 0.7);
+        color: vars.$color-text-primary;
         margin-bottom: 8px;
     }
 
@@ -69,7 +62,7 @@
 
     p {
         margin: 0;
-        color: rgba(255, 255, 255, 0.85);
+        color: vars.$color-text-primary;
         line-height: 1.5;
     }
 
@@ -77,15 +70,15 @@
         margin-top: 20px;
         padding: 16px;
         border-radius: 16px;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: vars.$color-bg-panel;
+        border: 1px solid vars.$color-text-primary;
         display: flex;
         flex-direction: column;
         gap: 12px;
 
         > span {
             font-size: 14px;
-            color: rgba(255, 255, 255, 0.7);
+            color: vars.$color-text-primary;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -106,7 +99,7 @@
             font-size: 12px;
             letter-spacing: 1px;
             text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.6);
+            color: vars.$color-text-primary;
         }
 
         strong {
@@ -121,26 +114,26 @@
         font-size: 16px;
         font-weight: 600;
         cursor: pointer;
-        color: #fff;
+        color: vars.$color-text-primary;
         transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
     }
 }
 
 .guided-card button {
-    background: linear-gradient(135deg, #bc002d 0%, #ff416c 100%);
-    box-shadow: 0 12px 24px rgba(188, 0, 45, 0.35);
+    background: linear-gradient(135deg, vars.$color-accent-primary 0%, vars.$color-accent-primary-light 100%);
+    box-shadow: 0 12px 24px vars.$color-accent-primary;
 }
 
 .custom-card button {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(135deg, vars.$color-accent-primary 0%, vars.$color-accent-primary-light 100%);
+    border: 1px solid vars.$color-text-primary;
+    box-shadow: 0 12px 24px vars.$color-black;
 }
 
 .mode-card button:hover,
 .mode-card button:focus-visible {
     transform: translateY(-2px);
-    box-shadow: 0 18px 32px rgba(0, 0, 0, 0.45);
+    box-shadow: 0 18px 32px vars.$color-black;
 }
 
 @media (max-width: vars.$breakpoint-mobile) {

@@ -22,7 +22,7 @@ const Options = () => {
   };
 
   return (
-    <main className="options-page">
+    <main className="gutter-container options-page">
       <AppHeader />
       <div className="options-card">
         <header>

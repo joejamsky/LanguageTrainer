@@ -6,8 +6,7 @@
     flex-direction: column;
     gap: 32px;
     padding: 80px clamp(16px, 6vw, 64px) 48px;
-    background: linear-gradient(160deg, rgba(20, 20, 20, 1) 55%, rgba(30, 30, 30, 1) 100%);
-    color: #f7f7f7;
+    color: vars.$color-neutral-light;
     position: relative;
 }
 
@@ -28,15 +27,15 @@
     margin: 8px 0 0;
     max-width: 480px;
     font-size: 15px;
-    color: rgba(255, 255, 255, 0.75);
+    color: vars.$color-text-primary;
 }
 
 .stats-nav {
     align-self: center;
     padding: 10px 22px;
     border-radius: 999px;
-    background: rgba(188, 0, 45, 0.18);
-    color: #ff8fa8;
+    background: vars.$color-accent-primary;
+    color: vars.$color-accent-primary-soft;
     font-weight: 600;
     text-decoration: none;
     letter-spacing: 0.6px;
@@ -46,22 +45,24 @@
 .stats-nav:hover,
 .stats-nav:focus-visible {
     transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(188, 0, 45, 0.25);
-    background: rgba(188, 0, 45, 0.28);
+    box-shadow: 0 10px 20px vars.$color-accent-primary;
+    background: vars.$color-accent-primary;
 }
 
 .stats-summary {
     display: flex;
     gap: 16px;
     flex-wrap: wrap;
+    flex-direction: column;
 }
 
 .summary-card {
-    min-width: 160px;
+    min-width: 120px;
+    min-height: 120px;
     padding: 16px 20px;
     border-radius: 16px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: vars.$color-bg-panel;
+    border: 1px solid vars.$color-text-primary;
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -71,7 +72,7 @@
     font-size: 12px;
     letter-spacing: 1px;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.55);
+    color: vars.$color-text-primary;
 }
 
 .summary-value {
@@ -101,7 +102,7 @@
 
 .stats-section-hint {
     font-size: 18px;
-    color: rgba(255, 255, 255, 0.65);
+    color: vars.$color-text-primary;
 }
 
 .stats-section-count {
@@ -112,7 +113,7 @@
     font-size: 12px;
     letter-spacing: 1px;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.45);
+    color: vars.$color-text-primary;
 }
 
 .stats-grid {
@@ -137,8 +138,8 @@
     gap: 8px;
     padding: 16px;
     border-radius: 16px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: vars.$color-bg-panel;
+    border: 1px solid vars.$color-text-primary;
 }
 
 .stats-tile {
@@ -152,21 +153,21 @@
     justify-content: center;
     font-size: 20px;
     font-weight: 600;
-    color: #ffffff;
-    background: #bc002d;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+    color: vars.$color-text-primary;
+    background: vars.$color-accent-primary;
+    box-shadow: 0 4px 12px vars.$color-black;
 }
 
 .stats-tile-hiragana {
-    background: rgba(188, 0, 45, 0.9);
+    background: vars.$color-accent-primary;
 }
 
 .stats-tile-katakana {
-    background: rgba(0, 102, 204, 0.9);
+    background: vars.$color-blue-highlight;
 }
 
 .stats-tile-romaji {
-    background: rgba(40, 40, 40, 0.9);
+    background: vars.$color-border-strong;
 }
 
 .stats-character {
@@ -176,7 +177,7 @@
 
 .stats-type {
     font-size: 12px;
-    color: rgba(255, 255, 255, 0.6);
+    color: vars.$color-text-primary;
 }
 
 .stats-missed {
@@ -203,7 +204,7 @@
     dt {
         letter-spacing: 0.5px;
         text-transform: uppercase;
-        color: rgba(255, 255, 255, 0.5);
+        color: vars.$color-text-primary;
     }
 
     dd {
@@ -232,8 +233,8 @@
 .daily-cell {
     padding: 12px 14px;
     border-radius: 12px;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: vars.$color-bg-panel;
+    border: 1px solid vars.$color-text-primary;
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -243,7 +244,7 @@
     font-size: 12px;
     text-transform: uppercase;
     letter-spacing: 1px;
-    color: rgba(255, 255, 255, 0.6);
+    color: vars.$color-text-primary;
 }
 
 .daily-count {
@@ -256,14 +257,25 @@
     text-align: center;
     padding: 24px;
     border-radius: 12px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px dashed rgba(255, 255, 255, 0.15);
-    color: rgba(255, 255, 255, 0.6);
+    background: vars.$color-bg-panel;
+    border: 1px dashed vars.$color-text-primary;
+    color: vars.$color-text-primary;
+}
+
+.tile-activity-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(120px, 1fr));
+    column-gap: 20px;
+    row-gap: 12px;
 }
 
 @media (max-width: vars.$breakpoint-tablet){
     .stats-grid.vertical {
         grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .tile-activity-grid {
+        grid-template-columns: repeat(2, minmax(120px, 1fr));
     }
 }
 

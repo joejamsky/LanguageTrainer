@@ -313,7 +313,7 @@ const Setup = () => {
   };
 
   return (
-    <main className="setup">
+    <main className="gutter-container setup">
       <AppHeader />
       <header className="setup-header">
         <h1>Customize Your Session</h1>

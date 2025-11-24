@@ -22,7 +22,7 @@ const GuidedSetup = () => {
   };
 
   return (
-    <main className="guided-setup">
+    <main className="gutter-container guided-setup">
       <AppHeader />
       <header className="guided-header">
         <h1>Select your script focus</h1>

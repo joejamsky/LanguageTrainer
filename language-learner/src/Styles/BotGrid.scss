@@ -1,3 +1,5 @@
+@use './Variables' as vars;
+
 .bot-grid-container{
     display: flex;
     align-items: center;
@@ -10,7 +12,7 @@
 }
 
 .shadow-gradient{
-    background-image: linear-gradient(to top, #171717, transparent);
+    background-image: linear-gradient(to top, vars.$color-bg-base, transparent);
     position: absolute;
     left: 0;
     right: 0;

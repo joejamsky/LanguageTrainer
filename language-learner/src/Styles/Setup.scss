@@ -1,15 +1,7 @@
 @use './Variables' as vars;
 
 .setup {
-    min-height: 100vh;
-    padding: 80px 20px 40px;
-    // background: radial-gradient(circle at top, rgba(255, 255, 255, 0.05) 0%, rgba(17, 17, 17, 1) 70%);
-    background: #171717;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     gap: 32px;
-    color: #fff;
 }
 
 .setup-header {
@@ -20,7 +12,7 @@
         text-transform: uppercase;
         letter-spacing: 2px;
         font-size: 14px;
-        color: rgba(255, 255, 255, 0.7);
+        color: vars.$color-text-primary;
         margin-bottom: 12px;
     }
 
@@ -32,7 +24,7 @@
     p {
         margin: 0;
         line-height: 1.5;
-        color: rgba(255, 255, 255, 0.8);
+        color: vars.$color-text-primary;
     }
 }
 
@@ -43,8 +35,8 @@
     gap: 8px;
     padding: 20px 24px;
     border-radius: 20px;
-    background: rgba(0, 0, 0, 0.35);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: vars.$color-black;
+    border: 1px solid vars.$color-text-primary;
     max-width: 540px;
     text-align: center;
 }
@@ -53,7 +45,7 @@
     text-transform: uppercase;
     font-size: 12px;
     letter-spacing: 1.5px;
-    color: rgba(255, 255, 255, 0.6);
+    color: vars.$color-text-primary;
 }
 
 .setup-summary-main {
@@ -65,7 +57,7 @@
 .setup-summary-note {
     margin: 0;
     font-size: 13px;
-    color: rgba(255, 255, 255, 0.65);
+    color: vars.$color-text-primary;
 }
 
 .setup-grid {
@@ -86,13 +78,13 @@
 
 .control-card {
     border-radius: 24px;
-    background: rgba(0, 0, 0, 0.35);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: vars.$color-black;
+    border: 1px solid vars.$color-text-primary;
     padding: 24px;
     display: flex;
     flex-direction: column;
     gap: 16px;
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 12px 32px vars.$color-black;
 }
 
 .control-card-header h2 {
@@ -102,14 +94,14 @@
 
 .control-card-header p {
     margin: 4px 0 0;
-    color: rgba(255, 255, 255, 0.75);
+    color: vars.$color-text-primary;
     font-size: 14px;
 }
 
 .control-caption {
     margin: 0;
     font-size: 13px;
-    color: rgba(255, 255, 255, 0.6);
+    color: vars.$color-text-primary;
 }
 
 .selection-grid {
@@ -134,10 +126,10 @@
 
 .selection-chip {
     border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid vars.$color-text-primary;
+    background: vars.$color-bg-panel;
     padding: 14px;
-    color: #fff;
+    color: vars.$color-text-primary;
     text-align: center;
     font-weight: 600;
     cursor: pointer;
@@ -149,8 +141,8 @@
 }
 
 .selection-chip.active {
-    border-color: rgba(188, 0, 45, 0.8);
-    background: rgba(188, 0, 45, 0.2);
+    border-color: vars.$color-accent-primary;
+    background: vars.$color-accent-primary;
 }
 
 .selection-actions {
@@ -164,9 +156,9 @@
 .selection-actions button {
     flex: 0 0 auto;
     border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid vars.$color-text-primary;
     background: transparent;
-    color: #fff;
+    color: vars.$color-text-primary;
     padding: 10px 16px;
     font-weight: 600;
     cursor: pointer;
@@ -175,7 +167,7 @@
 
 .selection-actions button:hover,
 .selection-actions button:focus-visible {
-    border-color: rgba(255, 255, 255, 0.6);
+    border-color: vars.$color-text-primary;
 }
 
 .selection-save {
@@ -217,9 +209,9 @@
 
 .script-main-toggle {
     border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid vars.$color-text-primary;
     background: transparent;
-    color: rgba(255, 255, 255, 0.9);
+    color: vars.$color-text-primary;
     padding: 10px 16px;
     font-weight: 600;
     cursor: pointer;
@@ -228,9 +220,9 @@
 }
 
 .script-main-toggle.active {
-    border-color: rgba(188, 0, 45, 0.8);
-    background: rgba(188, 0, 45, 0.2);
-    color: #fff;
+    border-color: vars.$color-accent-primary;
+    background: vars.$color-accent-primary;
+    color: vars.$color-text-primary;
 }
 
 .script-modifier-panels {
@@ -240,15 +232,15 @@
 }
 
 .script-modifier-panel {
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid vars.$color-text-primary;
     padding-top: 12px;
 }
 
 .script-sub-toggle {
     border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid vars.$color-text-primary;
     background: transparent;
-    color: rgba(255, 255, 255, 0.75);
+    color: vars.$color-text-primary;
     padding: 6px 14px;
     font-size: 12px;
     font-weight: 600;
@@ -257,9 +249,9 @@
 }
 
 .script-sub-toggle.active {
-    border-color: rgba(188, 0, 45, 0.7);
-    background: rgba(188, 0, 45, 0.16);
-    color: #fff;
+    border-color: vars.$color-accent-primary;
+    background: vars.$color-accent-primary;
+    color: vars.$color-text-primary;
 }
 
 .row-panel-grid {
@@ -272,9 +264,9 @@
     flex: 1 1 220px;
     min-width: 220px;
     border-radius: 18px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid vars.$color-text-primary;
     padding: 16px;
-    background: rgba(255, 255, 255, 0.03);
+    background: vars.$color-bg-panel;
 }
 
 .row-panel.disabled {
@@ -300,7 +292,7 @@
 .panel-placeholder {
     margin: 0;
     font-size: 13px;
-    color: rgba(255, 255, 255, 0.7);
+    color: vars.$color-text-primary;
 }
 
 .empty-state.small {
@@ -319,8 +311,8 @@
     margin: 0;
     padding: 16px;
     border-radius: 16px;
-    border: 1px dashed rgba(255, 255, 255, 0.2);
-    color: rgba(255, 255, 255, 0.7);
+    border: 1px dashed vars.$color-text-primary;
+    color: vars.$color-text-primary;
     text-align: center;
 }
 
@@ -343,19 +335,19 @@
 }
 
 .toggle-all {
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid vars.$color-text-primary;
     border-radius: 10px;
     padding: 6px 12px;
     background: transparent;
-    color: rgba(255, 255, 255, 0.85);
+    color: vars.$color-text-primary;
     cursor: pointer;
     transition: border 0.2s ease, color 0.2s ease;
 }
 
 .toggle-all:hover,
 .toggle-all:focus-visible {
-    border-color: rgba(255, 255, 255, 0.5);
-    color: #fff;
+    border-color: vars.$color-text-primary;
+    color: vars.$color-text-primary;
 }
 
 .row-toggle-grid {
@@ -367,9 +359,9 @@
 .row-toggle {
     border-radius: 0;
     border: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    border-bottom: 1px solid vars.$color-text-primary;
     background: transparent;
-    color: #fff;
+    color: vars.$color-text-primary;
     text-align: left;
     padding: 10px 4px;
     cursor: pointer;
@@ -377,8 +369,8 @@
 }
 
 .row-toggle.active {
-    border-color: #fff;
-    color: #fff;
+    border-color: vars.$color-text-primary;
+    color: vars.$color-text-primary;
 }
 
 .row-toggle-title {
@@ -389,7 +381,7 @@
 .row-toggle-caption {
     display: block;
     font-size: 12px;
-    color: rgba(255, 255, 255, 0.65);
+    color: vars.$color-text-primary;
 }
 
 .shape-toggle-grid {
@@ -401,17 +393,17 @@
 .shape-toggle {
     border-radius: 0;
     border: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    border-bottom: 1px solid vars.$color-text-primary;
     padding: 10px 6px;
     background: transparent;
-    color: #fff;
+    color: vars.$color-text-primary;
     cursor: pointer;
     transition: color 0.2s ease, border-color 0.2s ease;
 }
 
 .shape-toggle.active {
-    border-color: #fff;
-    color: #fff;
+    border-color: vars.$color-text-primary;
+    color: vars.$color-text-primary;
 }
 
 .accuracy-selection-card {
@@ -422,9 +414,9 @@
 
 .accuracy-section {
     border-radius: 18px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid vars.$color-text-primary;
     padding: 16px;
-    background: rgba(255, 255, 255, 0.03);
+    background: vars.$color-bg-panel;
 }
 
 .accuracy-header {
@@ -442,7 +434,7 @@
 
 .accuracy-header span {
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.8);
+    color: vars.$color-text-primary;
 }
 
 .accuracy-section input[type="range"] {
@@ -450,7 +442,7 @@
     appearance: none;
     height: 6px;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.2);
+    background: vars.$color-blue-switch;
 }
 
 .frequency-controls {
@@ -463,9 +455,9 @@
     border-radius: 50%;
     width: 40px;
     height: 40px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid vars.$color-text-primary;
     background: transparent;
-    color: #fff;
+    color: vars.$color-text-primary;
     font-size: 20px;
     cursor: pointer;
     transition: border 0.2s ease;
@@ -476,13 +468,13 @@
     appearance: none;
     height: 6px;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.2);
+    background: vars.$color-blue-switch;
 }
 
 .frequency-display {
     margin: 12px 0 0;
     font-size: 14px;
-    color: rgba(255, 255, 255, 0.8);
+    color: vars.$color-text-primary;
 }
 
 .shuffle-options {
@@ -493,9 +485,9 @@
 
 .shuffle-chip {
     border-radius: 18px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid vars.$color-text-primary;
     padding: 12px;
-    background: rgba(255, 255, 255, 0.03);
+    background: vars.$color-bg-panel;
     display: flex;
     gap: 12px;
     align-items: center;
@@ -505,8 +497,8 @@
 }
 
 .shuffle-chip.active {
-    border-color: rgba(188, 0, 45, 0.7);
-    background: rgba(188, 0, 45, 0.16);
+    border-color: vars.$color-accent-primary;
+    background: vars.$color-accent-primary;
 }
 
 .shuffle-icon {
@@ -525,7 +517,7 @@
 
 .shuffle-caption {
     font-size: 12px;
-    color: rgba(255, 255, 255, 0.65);
+    color: vars.$color-text-primary;
 }
 
 .tab-card {
@@ -540,9 +532,9 @@
 
 .tab-button {
     border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid vars.$color-text-primary;
     background: transparent;
-    color: rgba(255, 255, 255, 0.8);
+    color: vars.$color-text-primary;
     padding: 8px 16px;
     font-weight: 600;
     cursor: pointer;
@@ -550,9 +542,9 @@
 }
 
 .tab-button.active {
-    border-color: rgba(188, 0, 45, 0.7);
-    color: #fff;
-    background: rgba(188, 0, 45, 0.2);
+    border-color: vars.$color-accent-primary;
+    color: vars.$color-text-primary;
+    background: vars.$color-accent-primary;
 }
 
 .tab-content {
@@ -571,11 +563,11 @@
 }
 
 .mode-chip {
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid vars.$color-text-primary;
     border-radius: 14px;
     padding: 12px;
-    background: rgba(255, 255, 255, 0.03);
-    color: #fff;
+    background: vars.$color-bg-panel;
+    color: vars.$color-text-primary;
     text-align: left;
     transition: border-color 0.2s ease, background 0.2s ease;
     cursor: pointer;
@@ -583,8 +575,8 @@
 }
 
 .mode-chip.active {
-    border-color: rgba(255, 255, 255, 0.45);
-    background: rgba(255, 255, 255, 0.08);
+    border-color: vars.$color-text-primary;
+    background: vars.$color-bg-panel;
 }
 
 .mode-chip-title {
@@ -595,7 +587,7 @@
 .mode-chip-caption {
     display: block;
     font-size: 12px;
-    color: rgba(255, 255, 255, 0.6);
+    color: vars.$color-text-primary;
     margin-top: 4px;
 }
 
@@ -607,7 +599,7 @@
 .slider-header p {
     margin: 6px 0 0;
     font-size: 13px;
-    color: rgba(255, 255, 255, 0.6);
+    color: vars.$color-text-primary;
 }
 
 .slider-control {
@@ -621,7 +613,7 @@
     appearance: none;
     height: 6px;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.16);
+    background: vars.$color-blue-switch;
     outline: none;
 }
 
@@ -630,9 +622,9 @@
     height: 18px;
     width: 18px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #bc002d 0%, #ff416c 100%);
+    background: linear-gradient(135deg, vars.$color-accent-primary 0%, vars.$color-accent-primary-light 100%);
     cursor: pointer;
-    box-shadow: 0 0 0 3px rgba(188, 0, 45, 0.25);
+    box-shadow: 0 0 0 3px vars.$color-accent-primary;
 }
 
 .slider-control input[type="range"]::-moz-range-thumb {
@@ -640,9 +632,9 @@
     width: 18px;
     border: none;
     border-radius: 50%;
-    background: linear-gradient(135deg, #bc002d 0%, #ff416c 100%);
+    background: linear-gradient(135deg, vars.$color-accent-primary 0%, vars.$color-accent-primary-light 100%);
     cursor: pointer;
-    box-shadow: 0 0 0 3px rgba(188, 0, 45, 0.25);
+    box-shadow: 0 0 0 3px vars.$color-accent-primary;
 }
 
 .slider-value {
@@ -651,8 +643,8 @@
     gap: 4px;
     padding: 12px 14px;
     border-radius: 12px;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: vars.$color-bg-panel;
+    border: 1px solid vars.$color-text-primary;
 }
 
 .slider-title {
@@ -662,13 +654,13 @@
 
 .slider-caption {
     font-size: 12px;
-    color: rgba(255, 255, 255, 0.65);
+    color: vars.$color-text-primary;
 }
 
 .shuffle-hint {
     margin: 0;
     font-size: 13px;
-    color: rgba(255, 255, 255, 0.65);
+    color: vars.$color-text-primary;
 }
 
 .modifier-switches {
@@ -691,8 +683,8 @@
     gap: 12px;
     padding: 12px 16px;
     border-radius: 14px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(12, 12, 12, 0.75);
+    border: 1px solid vars.$color-text-primary;
+    background: vars.$color-bg-deep;
     cursor: pointer;
     transition: transform 0.2s ease, border 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
     font: inherit;
@@ -701,8 +693,8 @@
 .modifier-switch:hover,
 .modifier-switch:focus-visible {
     transform: translateY(-2px);
-    border-color: rgba(188, 0, 45, 0.45);
-    box-shadow: 0 10px 22px rgba(188, 0, 45, 0.25);
+    border-color: vars.$color-accent-primary;
+    box-shadow: 0 10px 22px vars.$color-accent-primary;
 }
 
 .modifier-switch input {
@@ -715,7 +707,7 @@
     width: 46px;
     height: 24px;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.18);
+    background: vars.$color-bg-panel;
     position: relative;
     transition: background 0.2s ease;
 }
@@ -728,13 +720,13 @@
     width: 18px;
     height: 18px;
     border-radius: 50%;
-    background: #fff;
+    background: vars.$color-bg-panel;
     transition: transform 0.2s ease;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 2px 6px vars.$color-black;
 }
 
 .modifier-switch.active .modifier-switch-track {
-    background: linear-gradient(135deg, #bc002d 0%, #ff416c 100%);
+    background: linear-gradient(135deg, vars.$color-accent-primary 0%, vars.$color-accent-primary-light 100%);
 }
 
 .modifier-switch.active .modifier-switch-track::after {
@@ -751,12 +743,12 @@
 .modifier-switch-title {
     font-size: 14px;
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.92);
+    color: vars.$color-text-primary;
 }
 
 .modifier-switch-caption {
     font-size: 12px;
-    color: rgba(255, 255, 255, 0.6);
+    color: vars.$color-text-primary;
 }
 
 .shuffle-row {
@@ -770,7 +762,7 @@
     display: inline-flex;
     gap: 12px;
     font-size: 18px;
-    color: rgba(255, 255, 255, 0.5);
+    color: vars.$color-text-primary;
 }
 
 .shuffle-glyph {
@@ -780,9 +772,9 @@
 }
 
 .shuffle-glyph.active {
-    color: #fff;
-    border-color: rgba(255, 255, 255, 0.4);
-    background: rgba(255, 255, 255, 0.05);
+    color: vars.$color-text-primary;
+    border-color: vars.$color-text-primary;
+    background: vars.$color-bg-panel;
 }
 
 .setup-actions {
@@ -801,27 +793,27 @@
     padding: 14px 36px;
     border-radius: 999px;
     border: none;
-    background: linear-gradient(135deg, #bc002d 0%, #e12850 100%);
-    color: #fff;
+    background: linear-gradient(135deg, vars.$color-accent-primary 0%, vars.$color-accent-primary-bright 100%);
+    color: vars.$color-text-primary;
     font-size: 16px;
     font-weight: 600;
     text-transform: uppercase;
     text-decoration: none;
     letter-spacing: 1.2px;
-    box-shadow: 0 10px 24px rgba(188, 0, 45, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    box-shadow: 0 10px 24px vars.$color-accent-primary, inset 0 1px 0 vars.$color-text-primary;
     transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
 }
 
 .setup-start:hover,
 .setup-start:focus-visible {
     transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 16px 28px rgba(188, 0, 45, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.3);
-    background: linear-gradient(135deg, #d41045 0%, #ff416c 100%);
+    box-shadow: 0 16px 28px vars.$color-accent-primary, inset 0 1px 0 vars.$color-text-primary;
+    background: linear-gradient(135deg, vars.$color-accent-primary-bold 0%, vars.$color-accent-primary-light 100%);
 }
 
 .setup-start:active {
     transform: translateY(-1px) scale(0.99);
-    box-shadow: 0 8px 16px rgba(188, 0, 45, 0.3);
+    box-shadow: 0 8px 16px vars.$color-accent-primary;
 }
 
 .setup-secondary {
@@ -830,8 +822,8 @@
     justify-content: center;
     padding: 14px 28px;
     border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: rgba(255, 255, 255, 0.85);
+    border: 1px solid vars.$color-text-primary;
+    color: vars.$color-text-primary;
     font-size: 15px;
     font-weight: 600;
     text-decoration: none;
@@ -842,8 +834,8 @@
 .setup-secondary:hover,
 .setup-secondary:focus-visible {
     transform: translateY(-2px);
-    border-color: rgba(255, 255, 255, 0.45);
-    color: #ffffff;
+    border-color: vars.$color-text-primary;
+    color: vars.$color-text-primary;
 }
 
 @media (max-width: vars.$breakpoint-tablet) {

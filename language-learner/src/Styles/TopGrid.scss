@@ -1,3 +1,5 @@
+@use './Variables' as vars;
+
 .top-grid-container{
     display: flex;
     justify-content: center;
@@ -16,7 +18,7 @@
     text-transform: uppercase;
     font-size: 14px;
     letter-spacing: 1px;
-    color: rgba(255, 255, 255, 0.65);
+    color: vars.$color-text-primary;
 }
 
 .top-grid-legend-item {
@@ -36,27 +38,27 @@
 
 
 .drag-proximity-hover{
-    background-color: #BC002D;
+    background-color: vars.$color-accent-primary;
 }
 
 .top-grid-item:nth-child(5n-4){
-    border-color: rgb(173, 116, 116);
+    border-color: vars.$color-grid-border-one;
 }
 
 .top-grid-item:nth-child(5n-3){
-    border-color: rgb(116, 173, 121);
+    border-color: vars.$color-grid-border-two;
 }
 
 .top-grid-item:nth-child(5n-2){
-    border-color: rgb(116, 173, 168);
+    border-color: vars.$color-grid-border-three;
 }
 
 .top-grid-item:nth-child(5n-1){
-    border-color: rgb(173, 116, 149);
+    border-color: vars.$color-grid-border-four;
 }
 
 .top-grid-item:nth-child(5n){
-    border-color: rgb(153, 173, 116);
+    border-color: vars.$color-grid-border-five;
 }
 
 /* Default hidden state */
@@ -145,14 +147,14 @@
 .phonetic-hiragana.inactive,
 .phonetic-katakana.inactive {
     opacity: 0.35;
-    color: rgba(255, 255, 255, 0.5);
+    color: vars.$color-text-primary;
 }
 
 /* Additional styling for specific cases */
 .phonetic-hiragana {
-    // background-color: #f0f8ff; /* Example: Light blue for Hiragana */
+    // background-color: vars.$color-neutral-sky; /* Example: Light blue for Hiragana */
 }
 
 .phonetic-katakana {
-    // background-color: #faebd7; /* Example: Light orange for Katakana */
+    // background-color: vars.$color-neutral-sand; /* Example: Light orange for Katakana */
 }

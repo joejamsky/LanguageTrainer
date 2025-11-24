@@ -1,3 +1,5 @@
+@use './Variables' as vars;
+
 .hint-toggle-container {
     
     display: flex;
@@ -28,7 +30,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background-color: #ccc;
+        background-color: vars.$color-neutral-mid;
         transition: 0.4s;
         border-radius: 24px;
         height: auto;
@@ -41,13 +43,13 @@
         width: 22px;
         left: 1px;
         bottom: 1px;
-        background-color: white;
+        background-color: vars.$color-neutral-light;
         transition: 0.4s;
         border-radius: 50%;
     }
 
     input:checked + .slider {
-        background-color: rgb(11, 70, 160);
+        background-color: vars.$color-blue-switch;
     }
 
     input:checked + .slider:before {

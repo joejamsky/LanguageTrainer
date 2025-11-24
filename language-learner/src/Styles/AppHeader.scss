@@ -1,7 +1,8 @@
 @use "./Variables" as vars;
 
 .app-header {
-  position: absolute;
+  position: sticky;
+  width: 100%;
   top: 16px;
   left: 16px;
   right: 16px;

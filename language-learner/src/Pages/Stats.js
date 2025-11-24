@@ -105,7 +105,7 @@ const Stats = () => {
   };
 
   return (
-    <main className="stats">
+    <main className="gutter-container stats">
       <AppHeader />
       <div className="stats-header">
         <div>
@@ -114,36 +114,59 @@ const Stats = () => {
         </div>
       </div>
 
+      <section className="stats-daily">
+        <header className="stats-section-header">
+          <h2>Daily Activity</h2>
+          <span className="stats-section-count">Last 7 days</span>
+        </header>
+        <div className="daily-grid">
+          {recentDailyAttempts.length === 0 && (
+            <div className="daily-empty">No sessions tracked yet.</div>
+          )}
+          {recentDailyAttempts.map(([date, count]) => (
+            <div key={date} className="daily-cell">
+              <span className="daily-date">{formatDailyLabel(date)}</span>
+              <span className="daily-count">{count}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
       <section className="stats-summary">
-        <div className="summary-card">
-          <span className="summary-label">Tiles tracked</span>
-          <span className="summary-value">{visibleTiles.length}</span>
-        </div>
-        <div className="summary-card">
-          <span className="summary-label">Total misses</span>
-          <span className="summary-value">{totalMisses}</span>
-        </div>
-        <div className="summary-card">
-          <span className="summary-label">Avg accuracy</span>
-          <span className="summary-value">
-            {averageAccuracy === null ? "--" : `${Math.round(averageAccuracy * 100)}%`}
-          </span>
-        </div>
-        <div className="summary-card">
-          <span className="summary-label">Memory trend</span>
-          <span className="summary-value">{formatMemoryScore(averageMemoryScore)}</span>
-        </div>
-        <div className="summary-card">
-          <span className="summary-label">Kana streak</span>
-          <span className="summary-value">{stats?.kanaStreak || 0}</span>
-        </div>
-        <div className="summary-card">
-          <span className="summary-label">Daily streak</span>
-          <span className="summary-value">{stats?.dailyStreak || 0}</span>
-        </div>
-        <div className="summary-card">
-          <span className="summary-label">Today's runs</span>
-          <span className="summary-value">{stats?.dailyAttempts?.[todayKey] || 0}</span>
+        <header className="stats-section-header">
+          <h2>Tile Activity</h2>
+        </header>
+        <div className="tile-activity-grid">
+          <div className="summary-card">
+            <span className="summary-label">Tiles tracked</span>
+            <span className="summary-value">{visibleTiles.length}</span>
+          </div>
+          <div className="summary-card">
+            <span className="summary-label">Total misses</span>
+            <span className="summary-value">{totalMisses}</span>
+          </div>
+          <div className="summary-card">
+            <span className="summary-label">Avg accuracy</span>
+            <span className="summary-value">
+              {averageAccuracy === null ? "--" : `${Math.round(averageAccuracy * 100)}%`}
+            </span>
+          </div>
+          <div className="summary-card">
+            <span className="summary-label">Memory trend</span>
+            <span className="summary-value">{formatMemoryScore(averageMemoryScore)}</span>
+          </div>
+          <div className="summary-card">
+            <span className="summary-label">Kana streak</span>
+            <span className="summary-value">{stats?.kanaStreak || 0}</span>
+          </div>
+          <div className="summary-card">
+            <span className="summary-label">Daily streak</span>
+            <span className="summary-value">{stats?.dailyStreak || 0}</span>
+          </div>
+          <div className="summary-card">
+            <span className="summary-label">Today's runs</span>
+            <span className="summary-value">{stats?.dailyAttempts?.[todayKey] || 0}</span>
+          </div>
         </div>
       </section>
 
@@ -194,23 +217,6 @@ const Stats = () => {
         );
       })}
 
-      <section className="stats-daily">
-        <header className="stats-section-header">
-          <h2>Daily Activity</h2>
-          <span className="stats-section-count">Last 7 days</span>
-        </header>
-        <div className="daily-grid">
-          {recentDailyAttempts.length === 0 && (
-            <div className="daily-empty">No sessions tracked yet.</div>
-          )}
-          {recentDailyAttempts.map(([date, count]) => (
-            <div key={date} className="daily-cell">
-              <span className="daily-date">{formatDailyLabel(date)}</span>
-              <span className="daily-count">{count}</span>
-            </div>
-          ))}
-        </div>
-      </section>
     </main>
   );
 };

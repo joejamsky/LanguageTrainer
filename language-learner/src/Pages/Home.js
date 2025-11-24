@@ -4,7 +4,7 @@ import "../Styles/Home.scss";
 
 const Home = () => {
   return (
-    <main className="home">
+    <main className="gutter-container home">
       <div className="home-content">
         <h1 className="home-title">Welcome to Language Learner</h1>
         <div className="home-actions">

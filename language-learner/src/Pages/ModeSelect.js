@@ -26,22 +26,18 @@ const ModeSelect = () => {
   };
 
   return (
-    <main className="mode-select">
+    <main className="gutter-container mode-select">
       <AppHeader />
       <header className="mode-select-header">
         <h1>How do you want to train?</h1>
-        <p className="subtitle">
-          Follow the guided sequence to resume your checkpoint or dive into a custom free play run.
-        </p>
       </header>
 
       <div className="mode-card-grid">
         <section className="mode-card guided-card">
           <div>
-            <p className="card-eyebrow">Guided</p>
             <h2>Guided Journey</h2>
             <p>
-              Resume from your saved checkpoint and progress through Kana with spaced repetition and built-in reviews.
+              Resume from saved checkpoints and progress through Kana using spaced repetition.
             </p>
             <div className="mode-summary">
               <span>Checkpoints</span>
@@ -62,15 +58,10 @@ const ModeSelect = () => {
 
         <section className="mode-card custom-card">
           <div>
-            <p className="card-eyebrow">Custom</p>
             <h2>Custom Session</h2>
             <p>
               Choose rows, modes, modifiers, and shuffle yourself. Perfect when you want to focus on a specific skill.
             </p>
-            <div className="mode-summary">
-              <span>Build your own run</span>
-              <strong>Path · Mode · Kana · Shuffle</strong>
-            </div>
           </div>
           <button type="button" onClick={handleCustomSelect}>
             Build Custom Run

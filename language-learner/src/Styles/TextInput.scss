@@ -1,5 +1,7 @@
+@use './Variables' as vars;
+
 input.input-field {
-    background-color: rgb(226, 226, 226); /* Transparent black */
+    background-color: vars.$color-neutral-field; /* Transparent black */
     outline: unset;
     border: unset;
     border-radius: 10px;
@@ -18,7 +20,7 @@ input.input-field {
 
     &::placeholder {
         font-size: 12px;
-        color: rgba(34, 34, 34, 0.6);
+        color: vars.$color-neutral-ink;
     }
 }
 
@@ -29,20 +31,20 @@ input.input-field:focus {
 /* Define the animation */
 @keyframes pulse {
     0% {
-        box-shadow: 0 2px 15px rgba(255, 255, 255, 0.5); /* Initial glow */
+        box-shadow: 0 2px 15px vars.$color-text-primary; /* Initial glow */
     }
     50% {
-        box-shadow: 0 2px 20px rgba(255, 255, 255, 1); /* Intense glow */
+        box-shadow: 0 2px 20px vars.$color-text-primary; /* Intense glow */
     }
     100% {
-        box-shadow: 0 2px 15px rgba(255, 255, 255, 0.5); /* Back to initial */
+        box-shadow: 0 2px 15px vars.$color-text-primary; /* Back to initial */
     }
 }
 
 /* Add the shake class for incorrect input */
 .input-field.shake {
     animation: shake 0.25s ease;
-    box-shadow: 0 2px 15px rgba(255, 0, 0, 1);
+    box-shadow: 0 2px 15px vars.$color-warning;
 }
 
 @keyframes shake {
