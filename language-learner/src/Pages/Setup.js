@@ -234,6 +234,47 @@ const Setup = () => {
     handleToggleAllRows(panelKey, shouldEnable);
   };
 
+  const handleSelectAll = () => {
+    setFilters((prev) => ({
+      ...prev,
+      characterTypes: {
+        ...prev.characterTypes,
+        hiragana: true,
+        katakana: true,
+      },
+      modifierGroup: {
+        ...prev.modifierGroup,
+        dakuten: true,
+        handakuten: true,
+      },
+    }));
+    updateCustomSelections((prevSelections) => {
+      const nextRows = {};
+      Object.keys(prevSelections.rows).forEach((key) => {
+        const rows = getRowsForKana(key);
+        nextRows[key] = rows.reduce((acc, row) => {
+          acc[row.value] = true;
+          return acc;
+        }, {});
+      });
+      const nextShapes = {};
+      Object.keys(prevSelections.shapes).forEach((key) => {
+        nextShapes[key] = Object.keys(prevSelections.shapes[key] || {}).reduce(
+          (shapeAcc, groupKey) => {
+            shapeAcc[groupKey] = true;
+            return shapeAcc;
+          },
+          {}
+        );
+      });
+      return {
+        ...prevSelections,
+        rows: nextRows,
+        shapes: nextShapes,
+      };
+    });
+  };
+
   const shuffleKey = getShuffleKeyFromSorting(options.sorting);
   const [selectionTab, setSelectionTab] = useState("rows");
 
@@ -362,6 +403,9 @@ const Setup = () => {
               </button>
             </div>
             <div className="selection-actions">
+              <button type="button" onClick={handleSelectAll}>
+                Select All
+              </button>
               <button type="button" onClick={handleResetForm}>
                 Reset All
               </button>
@@ -399,11 +443,11 @@ const Setup = () => {
                           {modifierOptions.map((modifier) => {
                             const rowKey = rowKeyMap[modifier.key];
                             if (!rowKey) return null;
-                            const rows = getRowsForKana(rowKey);
-                            if (!rows.length) return null;
-                            const modifierEnabled =
-                              getCharacterOptionActive(modifier) && scriptActive;
-                            const modifierActive = isAnyRowsSelected(rowKey) && modifierEnabled;
+                          const rows = getRowsForKana(rowKey);
+                          if (!rows.length) return null;
+                          const modifierEnabled =
+                            getCharacterOptionActive(modifier) && scriptActive;
+                          const modifierActive = isAnyRowsSelected(rowKey) && modifierEnabled;
                             return (
                               <button
                                 key={`${scriptKey}-${modifier.key}-btn`}
@@ -414,7 +458,7 @@ const Setup = () => {
                                 {modifier.label}
                               </button>
                             );
-                          })}
+                        })}
                         </div>
                       </div>
                       {renderRowPanel(
@@ -431,17 +475,18 @@ const Setup = () => {
                           if (!rowKey) return null;
                           const rows = getRowsForKana(rowKey);
                           if (!rows.length) return null;
-                          if (!isAnyRowsSelected(rowKey)) {
-                            return null;
-                          }
+                          const modifierEnabled =
+                            getCharacterOptionActive(modifier) && scriptActive;
                           return (
                             <div key={`${scriptKey}-${modifier.key}-panel`} className="script-modifier-panel">
                               {renderRowPanel(
                                 rowKey,
                                 modifier.label,
                                 rows,
-                                true,
-                                undefined,
+                                modifierEnabled,
+                                modifierEnabled
+                                  ? undefined
+                                  : `Enable ${modifier.label} above to select rows.`,
                                 `${scriptKey}-${modifier.key}`
                               )}
                             </div>
