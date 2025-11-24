@@ -14,12 +14,7 @@ const DragTile = ({
   const dragRef = useRef(null);
   const { game, setGame, selectedTile, setSelectedTile, screenSize, options } = useGameState();
   const isDesktop = screenSize === "laptop" || screenSize === "desktop";
-  const wantsRomaji = screenSize === "tablet" || screenSize === "mobile";
-  const isKanaTile = characterObj.type === "hiragana" || characterObj.type === "katakana";
-  const shouldShowRomaji = wantsRomaji && isKanaTile;
-  const displayCharacter = shouldShowRomaji
-    ? dictionaryKanaToRomaji[characterObj.character] || characterObj.character
-    : characterObj.character;
+  const displayCharacter = characterObj.character;
   const baseStyle = columnPosition ? { gridColumn: columnPosition } : undefined;
   const tileStyle = styleOverrides ? { ...baseStyle, ...styleOverrides } : baseStyle;
 
@@ -64,15 +59,7 @@ const DragTile = ({
       draggable={isDesktop && !characterObj.completed}
       onDragStart={isDesktop ? beginSelection : undefined}
       onDragEnd={isDesktop ? resetSelection : undefined}
-      onTouchStart={
-        !isDesktop
-          ? (event) => {
-              event.preventDefault();
-              beginSelection();
-            }
-          : undefined
-      }
-      onClick={isDesktop ? beginSelection : undefined}
+      onClick={beginSelection}
     >
       <div className={`active-tile-indicator ${isActive ? 'visible' : ''}`} />
       <div className="char-container">

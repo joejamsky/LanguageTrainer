@@ -16,6 +16,7 @@ const DropTile = ({ characterObj, index }) => {
 
     const active = !characterObj.completed;
     const isDesktop = screenSize === "laptop" || screenSize === "desktop";
+    const isMobileLayout = screenSize === 'mobile' || screenSize === 'tablet';
     const gridPosition = getGridCoordinatesForTile(characterObj);
     const customSelections = useMemo(
         () => ensureCustomSelections(options.customSelections),
@@ -72,45 +73,64 @@ const DropTile = ({ characterObj, index }) => {
 
 
     const renderCharacterContainers = () => {
+        const romajiScript = characterObj.scripts.romaji || {};
+        const hiraganaScript = characterObj.scripts.hiragana || {};
+        const katakanaScript = characterObj.scripts.katakana || {};
+        const hiraganaFilled = !!hiraganaScript.filled;
+        const katakanaFilled = !!katakanaScript.filled;
+        const romajiFilled = (hiraganaFilled && katakanaFilled) || !!romajiScript.filled;
+
+        const romajiVisible = (filters.characterTypes.romaji || options.hints || isMobileLayout);
+        const hiraganaVisible = isDesktop
+            ? filters.characterTypes.hiragana
+            : filters.characterTypes.hiragana;
+        const katakanaVisible = isDesktop
+            ? filters.characterTypes.katakana
+            : filters.characterTypes.katakana;
+        const showDividerBetweenKana = hiraganaVisible && katakanaVisible;
+        const showDividerBetweenRomajiAndKana = (hiraganaVisible || katakanaVisible) && romajiVisible;
+        const hiraganaCharVisible = options.hints || hiraganaFilled;
+        const katakanaCharVisible = options.hints || katakanaFilled;
+
         return (
             <div className="top-grid-phonetic">
                 {/* Romaji on the top */}
-                <div className={`grid-item-top ${(filters.characterTypes.romaji || options.hints) ? 'visible' : 'hidden'}`}>
+                <div className={`grid-item-top ${romajiVisible ? 'visible' : 'hidden'}`}>
                     <div className={`
                         phonetic-romaji
-                        ${characterObj.scripts.romaji.filled ? 'filled' : ''}
+                        ${romajiFilled ? 'filled' : ''}
                         `}>
-                        {characterObj.scripts.romaji.character}
+                        {romajiScript.character}
                     </div>
                 </div>
                 
-                <div className={`${(filters.characterTypes.hiragana || filters.characterTypes.katakana) && filters.characterTypes.romaji? 'UI-divider-container' : 'd-none'}`}>
+                <div className={`${showDividerBetweenRomajiAndKana ? 'UI-divider-container' : 'd-none'}`}>
                     <div className="UI-divider"></div>
                 </div>
 
-                <div className={`grid-item-top ${filters.characterTypes.hiragana || filters.characterTypes.katakana ? 'visible' : 'hidden'}`}>
+                <div className={`grid-item-top ${hiraganaVisible || katakanaVisible ? 'visible' : 'hidden'}`}>
                     {/* Hiragana on the left */}
                     <div className={`
                         phonetic-hiragana 
-                        ${filters.characterTypes.hiragana ? 'visible' : 'hidden'}
-                        ${characterObj.scripts.hiragana.filled ? 'filled' : ''}
+                        ${hiraganaVisible ? 'visible' : 'hidden'}
+                        ${hiraganaFilled ? 'filled' : ''}
                         ${filters.characterTypes.hiragana && !isRowEnabledForScript('hiragana') ? 'inactive' : ''}
                         `}>
-                        {characterObj.scripts.hiragana.character}
+                        {hiraganaCharVisible ? hiraganaScript.character : ''}
                     </div>
 
                     
-                    <div className={`${filters.characterTypes.hiragana && filters.characterTypes.katakana ? 'UI-divider-vertical' : 'd-none'}`}></div>
+                    <div className={`${showDividerBetweenKana ? 'UI-divider-vertical' : 'd-none'}`}></div>
                     
                     
                     {/* Katakana on the right */}
                     <div className={`
                             phonetic-katakana 
-                            ${filters.characterTypes.katakana ? 'visible' : 'hidden'}
-                            ${characterObj.scripts.katakana.filled ? 'filled' : ''}
+                            ${katakanaVisible ? 'visible' : 'hidden'}
+                            ${katakanaFilled ? 'filled' : ''}
                             ${filters.characterTypes.katakana && !isRowEnabledForScript('katakana') ? 'inactive' : ''}
                             `}>
-                        {characterObj.scripts.katakana.character}
+                        {katakanaCharVisible ? katakanaScript.character : ''}
                     </div>
                 </div>
             </div>

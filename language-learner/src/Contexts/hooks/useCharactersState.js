@@ -255,7 +255,6 @@ export const useCharactersState = ({
             }
           });
         }
-
         tempBotChars.splice(tileIndex, 1);
         clearCompletionTimeout(currentTile.id);
 

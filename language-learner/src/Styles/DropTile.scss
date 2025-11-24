@@ -26,6 +26,12 @@
     width: 100%;
 }
 
+.phonetic-romaji,
+.phonetic-katakana,
+.phonetic-hiragana {
+    min-height: 21px;
+}
+
 .top-grid-item.filled,
 .phonetic-romaji.filled,
 .phonetic-katakana.filled,
