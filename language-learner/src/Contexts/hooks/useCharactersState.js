@@ -122,8 +122,15 @@ export const useCharactersState = ({
       studyMode: options.studyMode,
       shapeGroup: resolvedShapeGroup,
       accuracyThreshold: options.accuracyThreshold,
+      customSelections: options.customSelections,
     }),
-    [options.rowRange, options.studyMode, resolvedShapeGroup, options.accuracyThreshold]
+    [
+      options.rowRange,
+      options.studyMode,
+      resolvedShapeGroup,
+      options.accuracyThreshold,
+      options.customSelections,
+    ]
   );
 
   useEffect(() => {

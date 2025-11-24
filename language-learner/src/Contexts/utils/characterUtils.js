@@ -8,6 +8,9 @@ import {
   resolveShapeGroup,
   resolveStudyMode,
 } from "./optionsUtils";
+import { ensureCustomSelections } from "../../Misc/customGameMode";
+
+const BASE_SCRIPT_ROW_KEYS = ["hiragana", "katakana"];
 
 export const matchInput = (scriptObj, userInput) => {
   if (scriptObj.type === "romaji") {
@@ -44,11 +47,38 @@ export const getGridCoordinatesForTile = (tile) => {
   };
 };
 
+const getRowNumberFromItem = (item) => {
+  const sourceId = item.parentId || item.id;
+  const rowIndex = getRowIndexFromId(sourceId);
+  return rowIndex === null ? null : rowIndex + 1;
+};
+
+const getSelectionKeyForItem = (item) => {
+  if (item.modifierGroup === "dakuten") {
+    if (item.type === "hiragana") return "hiragana-dakuten";
+    if (item.type === "katakana") return "katakana-dakuten";
+    return "dakuten";
+  }
+  if (item.modifierGroup === "handakuten") {
+    if (item.type === "hiragana") return "hiragana-handakuten";
+    if (item.type === "katakana") return "katakana-handakuten";
+    return "handakuten";
+  }
+  if (item.type === "hiragana") return "hiragana";
+  if (item.type === "katakana") return "katakana";
+  return null;
+};
+
 export const handleCharRenderToggles = (item, filters, options) => {
   const rowRange = clampRowRange(options?.rowRange || defaultState.options.rowRange);
   const studyMode = resolveStudyMode(options);
   const shapeGroup = resolveShapeGroup(options, filters) - 1;
   const accuracyThreshold = resolveAccuracyThreshold(options);
+  const customSelections = ensureCustomSelections(options?.customSelections);
+  const customRows = customSelections.rows || {};
+  const hasCustomRowFilters = BASE_SCRIPT_ROW_KEYS.some((key) =>
+    Object.values(customRows[key] || {}).some((value) => value === false)
+  );
   let baseEnabled = false;
   if (item.type === "hiragana") baseEnabled = filters.characterTypes.hiragana;
   else if (item.type === "katakana") baseEnabled = filters.characterTypes.katakana;
@@ -63,6 +93,17 @@ export const handleCharRenderToggles = (item, filters, options) => {
     return false;
   }
 
+  const selectionKey = getSelectionKeyForItem(item);
+  if (selectionKey) {
+    const rowNumber = getRowNumberFromItem(item);
+    if (rowNumber !== null) {
+      const rowsForKey = customRows[selectionKey];
+      if (rowsForKey && rowsForKey[rowNumber] === false) {
+        return false;
+      }
+    }
+  }
+
   if (studyMode === PROGRESSION_MODES.SHAPES) {
     if (typeof item.shapeGroup !== "number") return false;
     return item.shapeGroup === shapeGroup;
@@ -73,7 +114,7 @@ export const handleCharRenderToggles = (item, filters, options) => {
     return effectiveAccuracy <= accuracyThreshold;
   }
 
-  if (!isWithinRowRange(item, rowRange)) return false;
+  if (!hasCustomRowFilters && !isWithinRowRange(item, rowRange)) return false;
 
   return baseEnabled;
 };

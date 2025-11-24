@@ -142,6 +142,12 @@
     pointer-events: none; /* Prevent interaction */
 }
 
+.phonetic-hiragana.inactive,
+.phonetic-katakana.inactive {
+    opacity: 0.35;
+    color: rgba(255, 255, 255, 0.5);
+}
+
 /* Additional styling for specific cases */
 .phonetic-hiragana {
     // background-color: #f0f8ff; /* Example: Light blue for Hiragana */

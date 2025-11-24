@@ -52,25 +52,7 @@ const BotGrid = () => {
   const animationTimeoutRef = useRef(null);
 
   useEffect(() => {
-    setChunkSlots((prevSlots) => {
-      if (!prevSlots.length) {
-        return buildSlotSnapshot(activeTilePool);
-      }
-      const availableIds = new Set(activeTilePool.map((tile) => tile.id));
-      let changed = false;
-      const nextSlots = prevSlots.map((tileId) => {
-        const nextId = tileId && availableIds.has(tileId) ? tileId : null;
-        if (nextId !== tileId) {
-          changed = true;
-        }
-        return nextId;
-      });
-      const hasActiveSlot = nextSlots.some((id) => id);
-      if (!hasActiveSlot && activeTilePool.length > 0) {
-        return buildSlotSnapshot(activeTilePool);
-      }
-      return changed ? nextSlots : prevSlots;
-    });
+    setChunkSlots(buildSlotSnapshot(activeTilePool));
   }, [activeTilePool]);
 
   useEffect(() => {

@@ -1,7 +1,13 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import "../Styles/DropTile.scss";
 import { useGameState } from "../Contexts/GameStateContext";
 import { getGridCoordinatesForTile } from "../Contexts/utils/characterUtils";
+import { ensureCustomSelections } from "../Misc/customGameMode";
+import {
+    getRowNumberForTileId,
+    getModifierRowIndex,
+    getModifierRowOffset,
+} from "../Data/kanaGroups";
 
 
 const DropTile = ({ characterObj, index }) => {
@@ -12,9 +18,50 @@ const DropTile = ({ characterObj, index }) => {
     const active = !characterObj.completed;
     const isDesktop = screenSize === "laptop" || screenSize === "desktop";
     const gridPosition = getGridCoordinatesForTile(characterObj);
+    const customSelections = useMemo(
+        () => ensureCustomSelections(options.customSelections),
+        [options.customSelections]
+    );
+    const rowNumber = useMemo(
+        () => getRowNumberForTileId(characterObj?.id),
+        [characterObj?.id]
+    );
+    const modifierKey = characterObj?.modifierGroup || "base";
+    const displayRow = useMemo(() => {
+        if (!gridPosition || typeof rowNumber !== "number") {
+            return gridPosition?.row;
+        }
+        const relativeIndex =
+            getModifierRowIndex(modifierKey, rowNumber) ??
+            getModifierRowIndex("base", rowNumber) ??
+            rowNumber;
+        if (relativeIndex == null) {
+            return gridPosition.row;
+        }
+        return relativeIndex + getModifierRowOffset(modifierKey);
+    }, [gridPosition, modifierKey, rowNumber]);
     const tileStyle = gridPosition
-        ? { gridColumn: gridPosition.column, gridRow: gridPosition.row }
+        ? { gridColumn: gridPosition.column, gridRow: displayRow ?? gridPosition.row }
         : undefined;
+
+    const getRowSelectionKey = (scriptKey) => {
+        if (characterObj?.modifierGroup === "dakuten") return "dakuten";
+        if (characterObj?.modifierGroup === "handakuten") return "handakuten";
+        return scriptKey;
+    };
+
+    const isRowEnabledForScript = (scriptKey) => {
+        if (typeof rowNumber !== "number" || rowNumber <= 0) {
+            return true;
+        }
+        const selectionKey = getRowSelectionKey(scriptKey);
+        const rowsForKey = customSelections.rows?.[selectionKey];
+        if (!rowsForKey) {
+            return true;
+        }
+        const value = rowsForKey[rowNumber];
+        return typeof value === "boolean" ? value : true;
+    };
     
     const onDragOver = (e) => {
         e.preventDefault();
@@ -49,6 +96,7 @@ const DropTile = ({ characterObj, index }) => {
                         phonetic-hiragana 
                         ${filters.characterTypes.hiragana ? 'visible' : 'hidden'}
                         ${characterObj.scripts.hiragana.filled ? 'filled' : ''}
+                        ${filters.characterTypes.hiragana && !isRowEnabledForScript('hiragana') ? 'inactive' : ''}
                         `}>
                         {characterObj.scripts.hiragana.character}
                     </div>
@@ -62,6 +110,7 @@ const DropTile = ({ characterObj, index }) => {
                             phonetic-katakana 
                             ${filters.characterTypes.katakana ? 'visible' : 'hidden'}
                             ${characterObj.scripts.katakana.filled ? 'filled' : ''}
+                            ${filters.characterTypes.katakana && !isRowEnabledForScript('katakana') ? 'inactive' : ''}
                             `}>
                         {characterObj.scripts.katakana.character}
                     </div>

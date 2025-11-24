@@ -3,9 +3,6 @@ import { Link } from "react-router-dom";
 import "../Styles/Setup.scss";
 import { useGameState } from "../Contexts/GameStateContext";
 import {
-  ROW_TIERS,
-} from "../Data/skillTreeConfig";
-import {
   DEFAULT_LEVEL,
   getScriptLevelFromFilters,
   getShuffleLevelFromSorting,
@@ -25,16 +22,18 @@ import {
   toggleShapeSelection,
   toggleAllShapesSelection,
   areAllShapesEnabled,
-  clampFrequencyTarget,
-  adjustFrequencyTarget,
+  clampAccuracyTarget,
   CUSTOM_SHUFFLE_OPTIONS,
   getShuffleKeyFromSorting,
   getSortingForShuffleKey,
   getDefaultCustomSelections,
 } from "../Misc/customGameMode";
+import {
+  getRowsForKana,
+  getStrokeGroupsForKana,
+  STROKE_SECTION_KEYS,
+} from "../Data/kanaGroups";
 import { defaultState } from "../Misc/Utils";
-
-const ROW_SECTION_KEYS = ["hiragana", "katakana"];
 
 const Setup = () => {
   const {
@@ -86,11 +85,33 @@ const Setup = () => {
     () => ensureCustomSelections(options.customSelections),
     [options.customSelections]
   );
-  const frequencyTarget =
-    customSelections.frequencyTarget ??
-    clampFrequencyTarget(Math.round((1 - accuracyThreshold) * 100));
+  const accuracyTargets = customSelections.accuracyTargets || {};
+  const fallbackAccuracyPercent = clampAccuracyTarget(
+    Math.round(
+      (Number.isFinite(accuracyThreshold)
+        ? accuracyThreshold
+        : DEFAULT_LEVEL.accuracyThreshold) * 100
+    )
+  );
+  const getAccuracyValue = (key) =>
+    accuracyTargets[key] ?? fallbackAccuracyPercent;
+  const kanaOptionMap = useMemo(
+    () =>
+      PATH_MODIFIER_OPTIONS.reduce((acc, option) => {
+        acc[option.key] = option;
+        return acc;
+      }, {}),
+    []
+  );
+  const modifierOptions = useMemo(
+    () => PATH_MODIFIER_OPTIONS.filter((option) => option.type === "modifier"),
+    []
+  );
+  const scriptKeys = ["hiragana", "katakana"];
+  const getScriptModifierKey = (scriptKey, modifierKey) => `${scriptKey}-${modifierKey}`;
 
   const getCharacterOptionActive = (option) => {
+    if (!option) return false;
     if (option.type === "character") {
       return Boolean(filters.characterTypes[option.key]);
     }
@@ -164,34 +185,53 @@ const Setup = () => {
     }));
   };
 
-  const handleShapeToggle = (group) => {
+  const handleShapeToggle = (scriptKey, group) => {
     updateCustomSelections((prevSelections) => ({
       ...prevSelections,
-      shapes: toggleShapeSelection(prevSelections.shapes, group),
+      shapes: toggleShapeSelection(prevSelections.shapes, scriptKey, group),
     }));
   };
 
-  const handleToggleAllShapes = (enable) => {
+  const handleToggleAllShapes = (scriptKey, enable) => {
     updateCustomSelections((prevSelections) => ({
       ...prevSelections,
-      shapes: toggleAllShapesSelection(prevSelections.shapes, enable),
+      shapes: toggleAllShapesSelection(prevSelections.shapes, scriptKey, enable),
     }));
   };
 
-  const handleFrequencyChange = (value) => {
-    const nextValue = clampFrequencyTarget(value);
+  const handleAccuracyChange = (scriptKey, value) => {
+    const nextValue = clampAccuracyTarget(value);
     updateCustomSelections((prevSelections) => ({
       ...prevSelections,
-      frequencyTarget: nextValue,
+      accuracyTargets: {
+        ...prevSelections.accuracyTargets,
+        [scriptKey]: nextValue,
+      },
     }));
     setOptions((prev) => ({
       ...prev,
-      accuracyThreshold: 1 - nextValue / 100,
+      accuracyThreshold: nextValue / 100,
     }));
   };
+  const isAnyRowsSelected = (panelKey) => {
+    const rows = getRowsForKana(panelKey);
+    if (!rows.length) return false;
+    return rows.some((row) => customSelections.rows[panelKey]?.[row.value]);
+  };
 
-  const handleFrequencyAdjust = (delta) => {
-    handleFrequencyChange(adjustFrequencyTarget(frequencyTarget, delta));
+  const handleScriptModifierToggle = (scriptKey, modifierKey) => {
+    const panelKey = getScriptModifierKey(scriptKey, modifierKey);
+    const shouldEnable = !isAnyRowsSelected(panelKey);
+    if (shouldEnable && !filters.modifierGroup[modifierKey]) {
+      setFilters((prev) => ({
+        ...prev,
+        modifierGroup: {
+          ...prev.modifierGroup,
+          [modifierKey]: true,
+        },
+      }));
+    }
+    handleToggleAllRows(panelKey, shouldEnable);
   };
 
   const shuffleKey = getShuffleKeyFromSorting(options.sorting);
@@ -209,7 +249,9 @@ const Setup = () => {
     setOptions({
       ...defaultState.options,
       customSelections: getDefaultCustomSelections(),
+      accuracyThreshold: DEFAULT_LEVEL.accuracyThreshold,
     });
+    setSelectionTab("rows");
   };
 
   useEffect(() => {
@@ -226,15 +268,65 @@ const Setup = () => {
     setSessionType("freePlay");
   };
 
+  const renderRowPanel = (
+    panelKey,
+    title,
+    rows,
+    isEnabled = true,
+    emptyCopy = "Enable this group to make selections.",
+    keyPrefix = panelKey
+  ) => {
+    if (!rows.length) {
+      return null;
+    }
+    if (!isEnabled) {
+      return (
+        <div className="row-panel disabled" key={`${keyPrefix}-${panelKey}`}>
+          <div className="row-panel-header">
+            <h4>{title}</h4>
+          </div>
+          <p className="panel-placeholder">{emptyCopy}</p>
+        </div>
+      );
+    }
+    const allActive = areAllRowsEnabled(customSelections.rows, panelKey);
+    return (
+      <div className="row-panel" key={`${keyPrefix}-${panelKey}`}>
+        <div className="row-panel-header">
+          <h4>{title}</h4>
+          <button
+            type="button"
+            className="toggle-all"
+            onClick={() => handleToggleAllRows(panelKey, !allActive)}
+          >
+            {allActive ? "Clear All" : "Select All"}
+          </button>
+        </div>
+        <div className="row-toggle-grid">
+          {rows.map((row) => {
+            const active = customSelections.rows[panelKey]?.[row.value];
+            return (
+              <button
+                key={`${keyPrefix}-${panelKey}-${row.id}`}
+                type="button"
+                className={`row-toggle ${active ? "active" : ""}`}
+                onClick={() => handleRowToggle(panelKey, row.value)}
+              >
+                <span className="row-toggle-title">{row.title}</span>
+                <span className="row-toggle-caption">{row.caption}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <main className="setup">
       <PageNav />
       <header className="setup-header">
-        <p className="eyebrow">Step 2 · Custom Setup</p>
         <h1>Customize Your Session</h1>
-        <p>
-          Choose the exact path, mode, grouping, modifiers, and shuffle to craft your perfect practice run.
-        </p>
       </header>
 
       <section className="setup-summary">
@@ -244,92 +336,133 @@ const Setup = () => {
       </section>
 
       <div className="setup-grid">
-      <section className="control-card selection-card full-width-card">
-        <div className="control-card-header">
-          <h2>Characters & Extras</h2>
-          <p>Mix base scripts with dakuten add-ons.</p>
-        </div>
-          <div className="selection-grid">
-            {PATH_MODIFIER_OPTIONS.map((option) => {
-              const active = getCharacterOptionActive(option);
+        <section className="control-card grouping-card full-width-card">
+          <div className="grouping-card-header">
+            <div className="tab-header">
+              <button
+                type="button"
+                className={`tab-button ${selectionTab === "rows" ? "active" : ""}`}
+                onClick={() => setSelectionTab("rows")}
+              >
+                Select by Row
+              </button>
+              <button
+                type="button"
+                className={`tab-button ${selectionTab === "shapes" ? "active" : ""}`}
+                onClick={() => setSelectionTab("shapes")}
+              >
+                Select by Stroke
+              </button>
+              <button
+                type="button"
+                className={`tab-button ${selectionTab === "accuracy" ? "active" : ""}`}
+                onClick={() => setSelectionTab("accuracy")}
+              >
+                Select by Accuracy
+              </button>
+            </div>
+            <div className="selection-actions">
+              <button type="button" onClick={handleResetForm}>
+                Reset All
+              </button>
+              <button type="button" className="selection-save" disabled>
+                Save Preset
+              </button>
+            </div>
+          </div>
+          <p className="control-caption">
+            Toggle kana groups, then fine-tune what should be available in the round.
+          </p>
+          <div className="script-toggle-grid">
+            {scriptKeys.map((scriptKey) => {
+              const scriptOption = kanaOptionMap[scriptKey];
+              const scriptActive = getCharacterOptionActive(scriptOption);
+              const scriptLabel = scriptOption?.label || scriptKey;
               return (
-                <button
-                  key={option.key}
-                  type="button"
-                  className={`selection-chip ${active ? "active" : ""}`}
-                  onClick={() => handleCharacterOptionToggle(option)}
-                >
-                  <span className="selection-chip-title">{option.label}</span>
-                </button>
+                <div key={`${scriptKey}-toggle`} className="script-toggle-group">
+                  <button
+                    type="button"
+                    className={`script-main-toggle ${scriptActive ? "active" : ""}`}
+                    onClick={() => handleCharacterOptionToggle(scriptOption)}
+                  >
+                    {scriptLabel}
+                  </button>
+                  <div className="script-sub-toggle-row">
+                    {modifierOptions.map((modifier) => {
+                      const rowKey = getScriptModifierKey(scriptKey, modifier.key);
+                      const rowsAvailable = getRowsForKana(rowKey).length > 0;
+                      if (!rowsAvailable) {
+                        return null;
+                      }
+                      const modifierEnabled =
+                        getCharacterOptionActive(modifier) && scriptActive;
+                      const modifierActive =
+                        isAnyRowsSelected(rowKey) && modifierEnabled;
+                      return (
+                        <button
+                          key={`${scriptKey}-${modifier.key}-sub`}
+                          type="button"
+                          className={`script-sub-toggle ${modifierActive ? "active" : ""}`}
+                          onClick={() => handleScriptModifierToggle(scriptKey, modifier.key)}
+                        >
+                          {modifier.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
               );
             })}
           </div>
-          <div className="selection-actions">
-            <button type="button" onClick={handleResetForm}>
-              Reset
-            </button>
-            <button type="button" className="selection-save" disabled>
-              Save Preset
-            </button>
-          </div>
-        </section>
-        <section className="control-card tab-card">
-          <div className="tab-header">
-            <button
-              type="button"
-              className={`tab-button ${selectionTab === "rows" ? "active" : ""}`}
-              onClick={() => setSelectionTab("rows")}
-            >
-              Row Groups
-            </button>
-            <button
-              type="button"
-              className={`tab-button ${selectionTab === "shapes" ? "active" : ""}`}
-              onClick={() => setSelectionTab("shapes")}
-            >
-              Stroke Groups
-            </button>
-            <button
-              type="button"
-              className={`tab-button ${selectionTab === "frequency" ? "active" : ""}`}
-              onClick={() => setSelectionTab("frequency")}
-            >
-              Frequency
-            </button>
-          </div>
-          <div className="tab-content">
+          <div className="grouping-content">
             {selectionTab === "rows" && (
               <div className="row-selection-card">
-                {ROW_SECTION_KEYS.map((scriptKey) => {
-                  const label = scriptKey === "hiragana" ? "Hiragana" : "Katakana";
-                  const allActive = areAllRowsEnabled(customSelections.rows, scriptKey);
+                {scriptKeys.map((scriptKey) => {
+                  const scriptOption = kanaOptionMap[scriptKey];
+                  const scriptActive = getCharacterOptionActive(scriptOption);
+                  const scriptLabel = scriptOption?.label || scriptKey;
+                  const baseRows = getRowsForKana(scriptKey);
+                  const scriptPanel = renderRowPanel(
+                    scriptKey,
+                    "Rows",
+                    baseRows,
+                    scriptActive,
+                    `Enable ${scriptLabel} to choose rows.`,
+                    scriptKey
+                  );
+                  const scriptModifierPanels = modifierOptions
+                    .map((modifier) => {
+                      const rowKey = getScriptModifierKey(scriptKey, modifier.key);
+                      if (!getCharacterOptionActive(modifier) || !scriptActive) {
+                        return null;
+                      }
+                      if (!isAnyRowsSelected(rowKey)) {
+                        return null;
+                      }
+                      const modifierRows = getRowsForKana(rowKey);
+                      return renderRowPanel(
+                        rowKey,
+                        modifier.label,
+                        modifierRows,
+                        true,
+                        undefined,
+                        `${scriptKey}-${modifier.key}`
+                      );
+                    })
+                    .filter(Boolean);
                   return (
-                    <div key={scriptKey} className="row-section">
-                      <div className="row-section-header">
-                        <h3>{label}</h3>
-                        <button
-                          type="button"
-                          className="toggle-all"
-                          onClick={() => handleToggleAllRows(scriptKey, !allActive)}
-                        >
-                          {allActive ? "Clear All" : "Select All"}
-                        </button>
+                    <div key={scriptKey} className="script-row-group">
+                      <div className="script-row-header">
+                        <h3>{scriptLabel}</h3>
                       </div>
-                      <div className="row-toggle-grid">
-                        {ROW_TIERS.map((row) => {
-                          const active = customSelections.rows[scriptKey][row.value];
-                          return (
-                            <button
-                              key={`${scriptKey}-${row.id}`}
-                              type="button"
-                              className={`row-toggle ${active ? "active" : ""}`}
-                              onClick={() => handleRowToggle(scriptKey, row.value)}
-                            >
-                              <span className="row-toggle-title">{row.title}</span>
-                              <span className="row-toggle-caption">{row.caption}</span>
-                            </button>
-                          );
-                        })}
+                      <div className="row-panel-grid">
+                        {scriptPanel}
+                        {scriptModifierPanels}
+                        {!scriptPanel && !scriptModifierPanels.length && (
+                          <p className="empty-state small">
+                            Turn on {scriptLabel} above to configure rows.
+                          </p>
+                        )}
                       </div>
                     </div>
                   );
@@ -339,57 +472,89 @@ const Setup = () => {
 
             {selectionTab === "shapes" && (
               <div className="shape-selection-card">
-                <div className="row-section-header">
-                  <h3>Shapes</h3>
-                  <button
-                    type="button"
-                    className="toggle-all"
-                    onClick={() => handleToggleAllShapes(!areAllShapesEnabled(customSelections.shapes))}
-                  >
-                    {areAllShapesEnabled(customSelections.shapes) ? "Clear All" : "Select All"}
-                  </button>
-                </div>
-                <div className="shape-toggle-grid">
-                  {Object.keys(customSelections.shapes)
-                    .map((group) => Number(group))
-                    .sort((a, b) => a - b)
-                    .map((group) => {
-                      const active = customSelections.shapes[group];
-                      return (
-                        <button
-                          key={`shape-${group}`}
-                          type="button"
-                          className={`shape-toggle ${active ? "active" : ""}`}
-                          onClick={() => handleShapeToggle(Number(group))}
-                        >
-                          Group {group}
-                        </button>
-                      );
-                    })}
-                </div>
+                {(() => {
+                  const strokeKeys = STROKE_SECTION_KEYS.filter((key) =>
+                    getCharacterOptionActive(kanaOptionMap[key] || { key })
+                  );
+                  if (!strokeKeys.length) {
+                    return (
+                      <p className="empty-state">
+                        Turn on Hiragana or Katakana to pick stroke groups.
+                      </p>
+                    );
+                  }
+                  return strokeKeys.map((scriptKey) => {
+                    const groups = getStrokeGroupsForKana(scriptKey);
+                    const allActive = areAllShapesEnabled(customSelections.shapes, scriptKey);
+                    const label = kanaOptionMap[scriptKey]?.label || scriptKey;
+                    return (
+                      <div key={scriptKey} className="row-section">
+                        <div className="row-section-header">
+                          <h3>{label}</h3>
+                          <button
+                            type="button"
+                            className="toggle-all"
+                            onClick={() => handleToggleAllShapes(scriptKey, !allActive)}
+                          >
+                            {allActive ? "Clear All" : "Select All"}
+                          </button>
+                        </div>
+                        <div className="shape-toggle-grid">
+                          {groups.map((group) => {
+                            const active = customSelections.shapes[scriptKey]?.[group];
+                            return (
+                              <button
+                                key={`${scriptKey}-shape-${group}`}
+                                type="button"
+                                className={`shape-toggle ${active ? "active" : ""}`}
+                                onClick={() => handleShapeToggle(scriptKey, group)}
+                              >
+                                Group {group}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  });
+                })()}
               </div>
             )}
 
-            {selectionTab === "frequency" && (
-              <div className="frequency-selection-card">
-                <div className="control-card-header">
-                  <h2>Frequency Focus</h2>
-                  <p>Prioritize kana most frequently missed.</p>
-                </div>
-                <div className="frequency-controls">
-                  <button type="button" onClick={() => handleFrequencyAdjust(-5)}>-</button>
-                  <input
-                    type="range"
-                    min="0"
-                    max="100"
-                    value={frequencyTarget}
-                    onChange={(event) => handleFrequencyChange(Number(event.target.value))}
-                  />
-                  <button type="button" onClick={() => handleFrequencyAdjust(5)}>+</button>
-                </div>
-                <p className="frequency-display">
-                  Target kana missed more than <strong>{frequencyTarget}%</strong>
-                </p>
+            {selectionTab === "accuracy" && (
+              <div className="accuracy-selection-card">
+                {(() => {
+                  const activeOptions = PATH_MODIFIER_OPTIONS.filter((option) =>
+                    getCharacterOptionActive(option)
+                  );
+                  if (!activeOptions.length) {
+                    return (
+                      <p className="empty-state">
+                        Enable a kana group above to set accuracy targets.
+                      </p>
+                    );
+                  }
+                  return activeOptions.map((option) => {
+                    const sliderValue = getAccuracyValue(option.key);
+                    return (
+                      <div key={option.key} className="accuracy-section">
+                        <div className="accuracy-header">
+                          <h3>{option.label}</h3>
+                          <span>{sliderValue}%</span>
+                        </div>
+                        <input
+                          type="range"
+                          min="50"
+                          max="100"
+                          value={sliderValue}
+                          onChange={(event) =>
+                            handleAccuracyChange(option.key, Number(event.target.value))
+                          }
+                        />
+                      </div>
+                    );
+                  });
+                })()}
               </div>
             )}
           </div>
@@ -425,7 +590,7 @@ const Setup = () => {
           className="setup-start"
           onClick={handleFreePlayStart}
         >
-          Start Custom Run
+          Start Round
         </Link>
       </div>
     </main>

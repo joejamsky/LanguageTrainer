@@ -1,5 +1,10 @@
-import { ROW_TIERS } from "../Data/skillTreeConfig";
-import { DEFAULT_LEVEL, getShapeGroupCount } from "./levelUtils";
+import {
+  KANA_SECTION_KEYS,
+  STROKE_SECTION_KEYS,
+  getRowsForKana,
+  getStrokeGroupsForKana,
+} from "../Data/kanaGroups";
+import { DEFAULT_LEVEL } from "./levelUtils";
 
 export const PATH_MODIFIER_OPTIONS = [
   { key: "hiragana", label: "Hiragana", type: "character" },
@@ -8,76 +13,100 @@ export const PATH_MODIFIER_OPTIONS = [
   { key: "handakuten", label: "Handakuten", type: "modifier" },
 ];
 
-const buildRowState = () =>
-  ROW_TIERS.reduce(
-    (acc, row) => ({
-      ...acc,
-      [row.value]: true,
-    }),
-    {}
-  );
+const buildRowsForKey = (key) => {
+  const rows = getRowsForKana(key);
+  const defaultValue = key.includes("-") ? false : true;
+  return rows.reduce((acc, row) => {
+    acc[row.value] = defaultValue;
+    return acc;
+  }, {});
+};
 
-const DEFAULT_FREQUENCY_TARGET = Math.round(
-  (1 - DEFAULT_LEVEL.accuracyThreshold) * 100
+const buildRowState = () =>
+  KANA_SECTION_KEYS.reduce((acc, key) => {
+    acc[key] = buildRowsForKey(key);
+    return acc;
+  }, {});
+
+const DEFAULT_ACCURACY_PERCENT = Math.round(
+  DEFAULT_LEVEL.accuracyThreshold * 100
 );
 
-const buildShapeState = () => {
-  const total = getShapeGroupCount();
-  const shapeState = {};
-  for (let i = 1; i <= total; i += 1) {
-    shapeState[i] = true;
-  }
-  return shapeState;
-};
+const buildShapeState = () =>
+  STROKE_SECTION_KEYS.reduce((acc, key) => {
+    const groups = getStrokeGroupsForKana(key);
+    acc[key] = groups.reduce((shapeAcc, value) => {
+      shapeAcc[value] = true;
+      return shapeAcc;
+    }, {});
+    return acc;
+  }, {});
+
+const buildAccuracyState = () =>
+  KANA_SECTION_KEYS.reduce((acc, key) => {
+    acc[key] = DEFAULT_ACCURACY_PERCENT;
+    return acc;
+  }, {});
 
 export const getDefaultCustomSelections = () => ({
   rows: {
-    hiragana: buildRowState(),
-    katakana: buildRowState(),
+    ...buildRowState(),
   },
   shapes: buildShapeState(),
-  frequencyTarget: DEFAULT_FREQUENCY_TARGET,
+  accuracyTargets: buildAccuracyState(),
 });
 
-export const clampFrequencyTarget = (value = 50) =>
+export const clampAccuracyTarget = (value = DEFAULT_ACCURACY_PERCENT) =>
   Math.min(Math.max(Math.round(value), 0), 100);
 
 export const ensureCustomSelections = (selections = {}) => {
   const defaults = getDefaultCustomSelections();
+  const rows = {};
+  KANA_SECTION_KEYS.forEach((key) => {
+    rows[key] = {
+      ...defaults.rows[key],
+      ...(selections.rows?.[key] || {}),
+    };
+  });
+  const shapes = {};
+  STROKE_SECTION_KEYS.forEach((key) => {
+    shapes[key] = {
+      ...defaults.shapes[key],
+      ...(selections.shapes?.[key] || {}),
+    };
+  });
+  const fallbackAccuracy =
+    typeof selections.frequencyTarget === "number"
+      ? clampAccuracyTarget(100 - selections.frequencyTarget)
+      : null;
+  const accuracyTargets = {};
+  KANA_SECTION_KEYS.forEach((key) => {
+    const savedValue = selections.accuracyTargets?.[key];
+    const baseValue =
+      typeof savedValue === "number"
+        ? clampAccuracyTarget(savedValue)
+        : fallbackAccuracy ?? defaults.accuracyTargets[key];
+    accuracyTargets[key] = baseValue;
+  });
   return {
-    rows: {
-      hiragana: {
-        ...defaults.rows.hiragana,
-        ...(selections.rows?.hiragana || {}),
-      },
-      katakana: {
-        ...defaults.rows.katakana,
-        ...(selections.rows?.katakana || {}),
-      },
-    },
-    shapes: {
-      ...defaults.shapes,
-      ...(selections.shapes || {}),
-    },
-    frequencyTarget:
-      typeof selections.frequencyTarget === "number"
-        ? clampFrequencyTarget(selections.frequencyTarget)
-        : defaults.frequencyTarget,
+    rows,
+    shapes,
+    accuracyTargets,
   };
 };
 
 export const toggleRowSelection = (rowsState, scriptKey, rowValue) => ({
   ...rowsState,
   [scriptKey]: {
-    ...rowsState[scriptKey],
-    [rowValue]: !rowsState[scriptKey][rowValue],
+    ...(rowsState[scriptKey] || {}),
+    [rowValue]: !rowsState[scriptKey]?.[rowValue],
   },
 });
 
 export const toggleAllRowsSelection = (rowsState, scriptKey, enabled) => {
   const nextState = {};
-  Object.keys(rowsState[scriptKey]).forEach((row) => {
-    nextState[row] = enabled;
+  getRowsForKana(scriptKey).forEach((row) => {
+    nextState[row.value] = enabled;
   });
   return {
     ...rowsState,
@@ -86,26 +115,33 @@ export const toggleAllRowsSelection = (rowsState, scriptKey, enabled) => {
 };
 
 export const areAllRowsEnabled = (rowsState, scriptKey) =>
-  Object.values(rowsState[scriptKey]).every(Boolean);
+  getRowsForKana(scriptKey).every(
+    (row) => rowsState[scriptKey]?.[row.value]
+  );
 
-export const toggleShapeSelection = (shapeState, groupValue) => ({
+export const toggleShapeSelection = (shapeState, scriptKey, groupValue) => ({
   ...shapeState,
-  [groupValue]: !shapeState[groupValue],
+  [scriptKey]: {
+    ...(shapeState[scriptKey] || {}),
+    [groupValue]: !shapeState[scriptKey]?.[groupValue],
+  },
 });
 
-export const toggleAllShapesSelection = (shapeState, enabled) => {
+export const toggleAllShapesSelection = (shapeState, scriptKey, enabled) => {
   const nextState = {};
-  Object.keys(shapeState).forEach((group) => {
+  getStrokeGroupsForKana(scriptKey).forEach((group) => {
     nextState[group] = enabled;
   });
-  return nextState;
+  return {
+    ...shapeState,
+    [scriptKey]: nextState,
+  };
 };
 
-export const areAllShapesEnabled = (shapeState) =>
-  Object.values(shapeState).every(Boolean);
-
-export const adjustFrequencyTarget = (value, delta = 5) =>
-  clampFrequencyTarget(value + delta);
+export const areAllShapesEnabled = (shapeState, scriptKey) =>
+  getStrokeGroupsForKana(scriptKey).every(
+    (group) => shapeState[scriptKey]?.[group]
+  );
 
 export const CUSTOM_SHUFFLE_OPTIONS = [
   {
