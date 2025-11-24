@@ -4,7 +4,7 @@ import { useGameState } from "../Contexts/GameStateContext.js";
 import { describeLevel } from "../Misc/levelUtils";
 
 function Timer() {
-  const { game, stats, setStats, currentLevel } = useGameState();
+  const { game, setStats, currentLevel } = useGameState();
   const [timeElapsed, setTimeElapsed] = useState(0);
   const levelKey = currentLevel?.key;
   const currentLevelDescriptor = currentLevel ? describeLevel(currentLevel) : null;

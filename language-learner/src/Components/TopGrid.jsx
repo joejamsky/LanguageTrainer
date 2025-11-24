@@ -15,14 +15,14 @@ const TopGrid = () => {
     () => ensureCustomSelections(options.customSelections),
     [options.customSelections]
   );
-  const baseScriptKeys = ["hiragana", "katakana"];
+  const baseScriptKeys = useMemo(() => ["hiragana", "katakana"], []);
 
   const hasCustomRowFiltering = useMemo(() => {
     const rowGroups = customSelections.rows || {};
     return baseScriptKeys.some((key) =>
       Object.values(rowGroups[key] || {}).some((value) => !value)
     );
-  }, [customSelections]);
+  }, [customSelections, baseScriptKeys]);
 
   const isWithinRowRange = (identifier) => {
     if (!identifier) return true;

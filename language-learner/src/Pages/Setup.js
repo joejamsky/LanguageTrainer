@@ -49,7 +49,7 @@ const Setup = () => {
   const studyMode = options.studyMode || PROGRESSION_MODES.LINEAR;
   const rowRange = useMemo(
     () => options.rowRange || { start: options.rowLevel || 1, end: options.rowLevel || 1 },
-    [options.rowRange?.start, options.rowRange?.end, options.rowLevel]
+    [options.rowRange, options.rowLevel]
   );
   const rowCount = Math.max(1, rowRange.end - rowRange.start + 1);
   const shapeGroup = options.shapeGroup || 1;
