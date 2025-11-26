@@ -419,6 +419,11 @@
     background: vars.$color-bg-panel;
 }
 
+.accuracy-section.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
 .accuracy-header {
     display: flex;
     align-items: center;

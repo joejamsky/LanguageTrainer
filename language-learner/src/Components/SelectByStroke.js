@@ -9,52 +9,80 @@ const SelectByStroke = ({
   areAllShapesEnabled,
   handleToggleAllShapes,
   handleShapeToggle,
+  handleCharacterOptionToggle,
 }) => {
-  const activeStrokeKeys = strokeKeys.filter((key) =>
-    getCharacterOptionActive(kanaOptionMap[key] || { key })
-  );
-
-  if (!activeStrokeKeys.length) {
+  const renderPanel = (panelKey, headerLabel, enabled, scriptLabel) => {
+    const groups = getStrokeGroupsForKana(panelKey);
+    if (!groups.length) return null;
+    const allActive = areAllShapesEnabled(customSelections.shapes, panelKey);
+    const panelClass = ["row-panel", enabled ? "" : "disabled"]
+      .filter(Boolean)
+      .join(" ");
     return (
-      <div className="shape-selection-card">
-        <p className="empty-state">Activate Hiragana or Katakana to pick stroke groups.</p>
+      <div key={`${panelKey}-panel`} className={panelClass}>
+        <div className="row-panel-header">
+          <h4>{headerLabel}</h4>
+          <button
+            type="button"
+            className="toggle-all"
+            onClick={() => handleToggleAllShapes(panelKey, !allActive)}
+            disabled={!enabled}
+          >
+            {allActive ? "Clear All" : "Select All"}
+          </button>
+        </div>
+        {enabled ? (
+          <div className="shape-toggle-grid">
+            {groups.map((group) => {
+              const active = customSelections.shapes[panelKey]?.[group];
+              return (
+                <button
+                  key={`${panelKey}-shape-${group}`}
+                  type="button"
+                  className={`shape-toggle ${active ? "active" : ""}`}
+                  onClick={() => handleShapeToggle(panelKey, group)}
+                >
+                  Group {group}
+                </button>
+              );
+            })}
+          </div>
+        ) : (
+          <p className="panel-placeholder">
+            Enable {scriptLabel || headerLabel} to choose stroke groups.
+          </p>
+        )}
       </div>
     );
-  }
+  };
 
   return (
-    <div className="shape-selection-card">
-      {activeStrokeKeys.map((scriptKey) => {
-        const groups = getStrokeGroupsForKana(scriptKey);
-        const allActive = areAllShapesEnabled(customSelections.shapes, scriptKey);
-        const label = kanaOptionMap[scriptKey]?.label || scriptKey;
+    <div className="script-grid">
+      {strokeKeys.map((scriptKey) => {
+        const scriptOption = kanaOptionMap[scriptKey] || {
+          key: scriptKey,
+          label: scriptKey,
+          type: "character",
+        };
+        const scriptActive = getCharacterOptionActive(scriptOption);
+        const label = scriptOption?.label || scriptKey;
         return (
-          <div key={scriptKey} className="row-section">
-            <div className="row-section-header">
-              <h3>{label}</h3>
+          <div key={scriptKey} className="script-panel">
+            <div className="script-panel-header">
               <button
                 type="button"
-                className="toggle-all"
-                onClick={() => handleToggleAllShapes(scriptKey, !allActive)}
+                className={`script-main-toggle ${scriptActive ? "active" : ""}`}
+                onClick={() => handleCharacterOptionToggle(scriptOption)}
               >
-                {allActive ? "Clear All" : "Select All"}
+                {label}
               </button>
             </div>
-            <div className="shape-toggle-grid">
-              {groups.map((group) => {
-                const active = customSelections.shapes[scriptKey]?.[group];
-                return (
-                  <button
-                    key={`${scriptKey}-shape-${group}`}
-                    type="button"
-                    className={`shape-toggle ${active ? "active" : ""}`}
-                    onClick={() => handleShapeToggle(scriptKey, group)}
-                  >
-                    Group {group}
-                  </button>
-                );
-              })}
-            </div>
+            {renderPanel(
+              scriptKey,
+              "Stroke Groups",
+              scriptActive,
+              label
+            )}
           </div>
         );
       })}

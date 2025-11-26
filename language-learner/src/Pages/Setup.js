@@ -394,6 +394,7 @@ const Setup = () => {
                 areAllShapesEnabled={areAllShapesEnabled}
                 handleToggleAllShapes={handleToggleAllShapes}
                 handleShapeToggle={handleShapeToggle}
+                handleCharacterOptionToggle={handleCharacterOptionToggle}
               />
             )}
             {selectionTab === "accuracy" && (
@@ -406,6 +407,10 @@ const Setup = () => {
                 getCharacterOptionActive={getCharacterOptionActive}
                 getAccuracyValue={getAccuracyValue}
                 handleAccuracyChange={handleAccuracyChange}
+                handleCharacterOptionToggle={handleCharacterOptionToggle}
+                handleScriptModifierToggle={handleScriptModifierToggle}
+                isAnyRowsSelected={isAnyRowsSelected}
+                handleToggleAllRows={handleToggleAllRows}
               />
             )}
           </div>
