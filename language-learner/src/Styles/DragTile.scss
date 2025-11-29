@@ -1,11 +1,14 @@
 @use './Variables' as vars;
 
 .bot-grid-item {
-    height: 45px;
+    width: 100%;
+    min-width: var(--tile-min, 32px);
+    max-width: var(--tile-max, 45px);
+    max-height: var(--tile-max, 45px);
+    aspect-ratio: 1 / 1;
+    height: auto;
     border-radius: 10px;
-    width: 50px;
-
-    margin: 0 5px;
+    margin: 0 auto;
     display: flex;   
     justify-content: center;
     align-items: center;

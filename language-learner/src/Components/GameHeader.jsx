@@ -5,11 +5,16 @@ import MobileHint from "./MobileHint.jsx";
 
 const GameHeader = () => {
   return (
-    <div className="UI-header">
-      <AppHeader showHome={false}>
+    <div className="game-header">
+      <div className="header-left">
+        <AppHeader showHome={false} />
+      </div>
+      <div className="header-center">
+        <Timer />
+      </div>
+      <div className="header-right">
         <MobileHint />
-      </AppHeader>
-      <Timer />
+      </div>
     </div>
   );
 };

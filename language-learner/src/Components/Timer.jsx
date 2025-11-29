@@ -8,7 +8,7 @@ function Timer() {
   const [timeElapsed, setTimeElapsed] = useState(0);
   const levelKey = currentLevel?.key;
   const currentLevelDescriptor = currentLevel ? describeLevel(currentLevel) : null;
-  const levelGridHeaders = ["Mode", "Group", "Kana", "Shuff"];
+  const levelGridHeaders = ["Mode", "Group", "Kana", "Shuffle"];
   const levelGridValues = [
     currentLevelDescriptor?.mode || "--",
     currentLevelDescriptor?.grouping || "--",

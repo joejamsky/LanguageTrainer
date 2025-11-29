@@ -29,35 +29,36 @@
   .app-header-extras {
     justify-self: flex-end;
   }
+}
 
-  .app-header-button {
-    pointer-events: auto;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    border: 1px solid vars.$color-border-default;
-    background: vars.$color-bg-panel;
-    color: vars.$color-text-primary;
-    font-size: 22px;
-    font-weight: 600;
-    text-decoration: none;
-  }
+/* Allow header buttons to be styled even when used outside .app-header (e.g., hint button in header-right) */
+.app-header-button {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 1px solid vars.$color-border-default;
+  background: vars.$color-bg-panel;
+  color: vars.$color-text-primary;
+  font-size: 22px;
+  font-weight: 600;
+  text-decoration: none;
+}
 
-  .app-header-button:hover,
-  .app-header-button:focus-visible {
-    box-shadow: 0 0 2px 0 vars.$color-text-primary;
-    transform: translateY(-2px);
-  }
+.app-header-button:hover,
+.app-header-button:focus-visible {
+  box-shadow: 0 0 2px 0 vars.$color-text-primary;
+  transform: translateY(-2px);
+}
 
-  .app-header-button:active{
-    box-shadow: inset 0 0 4px 2px vars.$color-text-primary, 0 0 8px 2px vars.$color-text-primary;
-    transform: translateY(2px);
-  }
+.app-header-button:active {
+  box-shadow: inset 0 0 4px 2px vars.$color-text-primary, 0 0 8px 2px vars.$color-text-primary;
+  transform: translateY(2px);
+}
 
-  .app-header-button > * {
-    line-height: 1;
-  }
+.app-header-button > * {
+  line-height: 1;
 }

@@ -1,13 +1,13 @@
 @use './Variables' as vars;
 
 .top-grid-item{
-    max-height: 45px;
-    width: 50px;
+    width: 100%;
+    min-width: var(--tile-min, 32px);
+    max-width: var(--tile-max, 45px);
+    max-height: var(--tile-max, 45px);
+    aspect-ratio: 1 / 1;
     position: relative;
-    // width: 100%;
     margin: 0 auto; // center in grid column
-    // max-width: 90px;
-    // min-width: 60px;
     display: flex;
     // flex-direction: row;
     // justify-content: space-around;

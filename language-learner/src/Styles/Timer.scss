@@ -1,15 +1,14 @@
 @use "./Variables" as vars;
 
 .timer-container {
-  position: absolute;
-  top: 0;
-  height: 130px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 12px;
   color: vars.$color-text-primary;
   text-align: center;
+  width: auto;
+  margin: 0 auto;
 }
 
 .level-info {
@@ -20,22 +19,21 @@
 }
 
 .level-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 22px;
+  display: grid;
+  grid-template-columns: repeat(4, 50px);
+  gap: 2px;
+  text-align: center;
   font-size: 14px;
   font-weight: 500;
-  letter-spacing: 0.2px;
 }
 
 .level-cell {
   text-align: center;
-  min-width: 46px;
+  min-width: 20px;
 }
 
 .level-divider {
-  width: clamp(240px, 48vw, 340px);
+  width: clamp(100%, 48vw, 340px);
   height: 1px;
   background: vars.$color-border-default;
 }

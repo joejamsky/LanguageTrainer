@@ -13,40 +13,29 @@ const Game = () => {
 
   return (
     <main className="gutter-container game">
-      <>
-        <div className="game-header-container">
-          <GameHeader />
+      <div className="game-layout">
+        <div className="header-cell">
+          <div className="game-header-container">
+            <GameHeader />
+          </div>
         </div>
-        <TopGrid />
-        <div className="UI-divider-container m-1">
+
+        <div className="rail left-rail" aria-hidden />
+        <div className="rail right-rail" aria-hidden />
+
+        <div className="board-section top-board">
+          <TopGrid />
+        </div>
+
+        <div className="board-divider">
           <div className="UI-divider"></div>
         </div>
-        <BotGrid />
-        <LevelCompleteModal />
-        {/* {hintVisible && (
-          <div className="gameplay-hint-box">
-            <button
-              type="button"
-              className="gameplay-hint-close"
-              aria-label="Close hint"
-              onClick={() => setHintVisible(false)}
-            >
-              ×
-            </button>
-            <p className="gameplay-hint-title">How to Play</p>
-            <p className="gameplay-hint-copy">
-              {isMobileScreen
-                ? "Drag the tiles from the bottom grid into the matching slots above to clear the board."
-                : "Type the romaji answer in the input field (or drag a tile) to fill the matching slot above."}
-            </p>
-            {!isMobileScreen && (
-              <p className="gameplay-hint-shortcut">
-                Tip: Hold Cmd + Shift (Ctrl + Shift on Windows) to briefly reveal hints.
-              </p>
-            )}
-          </div>
-        )} */}
-      </>
+
+        <div className="board-section bottom-board">
+          <BotGrid />
+        </div>
+      </div>
+      <LevelCompleteModal />
     </main>
   );
 };

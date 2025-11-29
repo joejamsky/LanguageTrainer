@@ -22,13 +22,14 @@
 }
 
 #draggrid {
-    overflow: visible;
-    padding: 3px 0;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(var(--tile-min, 32px), var(--tile-max, 45px)));
+    grid-auto-rows: 1fr;
+    gap: var(--tile-gap, 4px);
     width: 100%;
-    display: flex;
+    overflow: visible;
     justify-content: center;
-    gap: 10px;
-    // grid-template-columns: repeat(5, minmax(48px, 120px));
+    padding: 0;
     position: relative;
 }
 
