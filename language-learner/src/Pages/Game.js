@@ -6,6 +6,7 @@ import TopGrid from "../Components/TopGrid.jsx";
 import BotGrid from "../Components/BotGrid.jsx";
 import LevelCompleteModal from "../Components/LevelCompleteModal.jsx";
 import GameHeader from "../Components/GameHeader.jsx";
+import PronunciationSpeaker from "../Components/PronunciationSpeaker.jsx";
 import { useGameState } from "../Contexts/GameStateContext.js";
 
 const Game = () => {
@@ -35,6 +36,7 @@ const Game = () => {
           <BotGrid />
         </div>
       </div>
+      <PronunciationSpeaker />
       <LevelCompleteModal />
     </main>
   );

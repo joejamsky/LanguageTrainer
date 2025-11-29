@@ -58,6 +58,14 @@
   font-size: 14px;
 }
 
+.options-item--toggle {
+  align-items: center;
+}
+
+.options-item--toggle .switch {
+  transform: scale(1.1);
+}
+
 .options-item button,
 .options-link {
   border-radius: 999px;

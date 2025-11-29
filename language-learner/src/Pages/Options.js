@@ -5,8 +5,15 @@ import { useGameState } from "../Contexts/GameStateContext";
 import { DEFAULT_LEVEL, clearStoredData, normalizeLevel } from "../Misc/levelUtils";
 
 const Options = () => {
-  const { applyLevelConfiguration } = useGameState();
+  const { applyLevelConfiguration, options, setOptions } = useGameState();
   const [statusMessage, setStatusMessage] = useState("");
+
+  const handlePronunciationToggle = () => {
+    setOptions((prev) => ({
+      ...prev,
+      pronunciation: !prev.pronunciation,
+    }));
+  };
 
   const handleResetCourse = () => {
     const normalized = normalizeLevel(DEFAULT_LEVEL);
@@ -49,6 +56,24 @@ const Options = () => {
             <button type="button" onClick={handleClearStorage}>
               Clear Saved Data
             </button>
+          </div>
+
+          <div className="options-item options-item--toggle">
+            <div>
+              <h2>Kana Pronunciation</h2>
+              <p>Hear system speech for each kana when you complete it.</p>
+            </div>
+            <label className="switch" aria-label="Toggle pronunciation">
+              <input
+                type="checkbox"
+                checked={Boolean(options?.pronunciation)}
+                onChange={handlePronunciationToggle}
+              />
+              <span className="slider"></span>
+              <span className="check-slider-label">
+                <i className="fa-solid fa-volume-high"></i>
+              </span>
+            </label>
           </div>
         </div>
 

@@ -35,6 +35,7 @@ export const defaultState = {
       methods: ['sound', 'h-shape', 'k-shape', 'missed']
     },
     hints: false,
+    pronunciation: true,
     sound: false,
     sorting: {
       shuffleLevel: 0,
