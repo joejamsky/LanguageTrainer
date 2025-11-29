@@ -28,6 +28,12 @@ const DropTile = ({ characterObj, index }) => {
     const tileStyle = gridPosition
         ? { gridColumn: gridPosition.column }
         : undefined;
+    
+    const columnClass =
+        gridPosition && typeof gridPosition.column === "number"
+            ? `column-${Math.max(0, gridPosition.column - 1)}`
+            : "";
+    const hintClass = options?.hints ? "column-hint-active" : "";
 
     const getRowSelectionKey = (scriptKey) => {
         if (characterObj?.modifierGroup === "dakuten") return "dakuten";
@@ -138,6 +144,8 @@ const DropTile = ({ characterObj, index }) => {
                 top-grid-item 
                 ${characterObj.completed ? 'filled' : ''}
                 ${dragHover ? 'drag-proximity-hover' : ''}
+                ${columnClass}
+                ${hintClass}
             `}
             style={tileStyle}
             onDrop={active && isDesktop ? completeDrop : undefined} 

@@ -96,24 +96,44 @@
     background-color: vars.$color-accent-primary;
 }
 
-.top-grid-item:nth-child(5n-4){
+.top-grid-item.column-0{
     border-color: vars.$color-grid-border-one;
 }
 
-.top-grid-item:nth-child(5n-3){
+.top-grid-item.column-1{
     border-color: vars.$color-grid-border-two;
 }
 
-.top-grid-item:nth-child(5n-2){
+.top-grid-item.column-2{
     border-color: vars.$color-grid-border-three;
 }
 
-.top-grid-item:nth-child(5n-1){
+.top-grid-item.column-3{
     border-color: vars.$color-grid-border-four;
 }
 
-.top-grid-item:nth-child(5n){
+.top-grid-item.column-4{
     border-color: vars.$color-grid-border-five;
+}
+
+.top-grid-item.column-hint-active:not(.filled).column-0{
+    background-color: vars.$color-grid-border-one;
+}
+
+.top-grid-item.column-hint-active:not(.filled).column-1{
+    background-color: vars.$color-grid-border-two;
+}
+
+.top-grid-item.column-hint-active:not(.filled).column-2{
+    background-color: vars.$color-grid-border-three;
+}
+
+.top-grid-item.column-hint-active:not(.filled).column-3{
+    background-color: vars.$color-grid-border-four;
+}
+
+.top-grid-item.column-hint-active:not(.filled).column-4{
+    background-color: vars.$color-grid-border-five;
 }
 
 /* Default hidden state */
