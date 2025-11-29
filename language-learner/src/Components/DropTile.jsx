@@ -5,7 +5,6 @@ import { getGridCoordinatesForTile } from "../Contexts/utils/characterUtils";
 import { ensureCustomSelections } from "../Misc/customGameMode";
 import {
     getRowNumberForTileId,
-    getModifierRowIndex,
 } from "../Data/kanaGroups";
 
 
@@ -26,21 +25,8 @@ const DropTile = ({ characterObj, index }) => {
         () => getRowNumberForTileId(characterObj?.id),
         [characterObj?.id]
     );
-    const modifierKey = characterObj?.modifierGroup || "base";
-    const displayRow = useMemo(() => {
-        if (!gridPosition || typeof rowNumber !== "number") {
-            return gridPosition?.row;
-        }
-        const calculated =
-            getModifierRowIndex(modifierKey, rowNumber) ??
-            getModifierRowIndex("base", rowNumber);
-        if (calculated == null) {
-            return gridPosition.row;
-        }
-        return calculated;
-    }, [gridPosition, modifierKey, rowNumber]);
     const tileStyle = gridPosition
-        ? { gridColumn: gridPosition.column, gridRow: displayRow ?? gridPosition.row }
+        ? { gridColumn: gridPosition.column }
         : undefined;
 
     const getRowSelectionKey = (scriptKey) => {

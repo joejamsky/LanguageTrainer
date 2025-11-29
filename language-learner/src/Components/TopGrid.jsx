@@ -70,14 +70,14 @@ const TopGrid = () => {
 
   return (
     <div className="top-grid-container">
-      <div className="top-grid-legend">
+      <div className="board-grid top-grid-legend">
         {vowelHeaders.map((letter) => (
           <span key={letter} className="top-grid-legend-item">
             {letter.toUpperCase()}
           </span>
         ))}
       </div>
-      <div className={`grid dropgrid ${true ? 'vertical' : 'horizontal'}`}>
+      <div className="board-grid">
 
       {characters &&
         characters.topCharacters.map((character, index) => {

@@ -167,7 +167,7 @@ const BotGrid = () => {
 
   return (
     <div className="bot-grid-container">
-      <div id="draggrid" className="grid draggrid vertical">
+      <div id="draggrid" className="board-grid">
         {slotEntries.map(({ slotIndex, tile, rawIndex }) => {
           if (!tile) {
             return (

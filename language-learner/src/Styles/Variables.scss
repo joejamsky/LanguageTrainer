@@ -34,3 +34,17 @@ $color-grid-border-two: #74ad79;
 $color-grid-border-three: #74ada8;
 $color-grid-border-four: #ad7495;
 $color-grid-border-five: #99ad74;
+
+$tile-size-min: 32px;
+$tile-size-max: 45px;
+$board-grid-columns: 5;
+$board-grid-column-gap: clamp(
+  6px,
+  calc(
+    (100% - ($board-grid-columns * $tile-size-max))
+    / ($board-grid-columns - 1)
+  ),
+  20px
+);
+$board-grid-row-gap: 6px;
+

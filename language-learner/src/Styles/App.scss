@@ -94,22 +94,22 @@ button {
 }
 
 // Grids {
-.grid {
+.board-grid {
     display: grid;
-    grid-gap: 4px;
-    font-size: 14px;
-    max-height: 65vh;
-    grid-auto-flow: row dense;
+    width: 100%;
+    column-gap: vars.$board-grid-column-gap;
+    row-gap: vars.$board-grid-row-gap;
     justify-content: center;
+    grid-template-columns: repeat(
+        vars.$board-grid-columns,
+        minmax(vars.$tile-size-min, vars.$tile-size-max)
+    );
 }
 
-.grid.horizontal{
-    grid-template-columns: repeat(10, minmax(auto, 120px)); /* Adjust number of columns based on your needs */
+.board-grid--squares {
+    grid-auto-rows: minmax(vars.$tile-size-min, vars.$tile-size-max);
 }
 
-.grid.vertical{
-    grid-template-columns: repeat(5, minmax(auto, 120px)); /* Adjust number of columns based on your needs */
-}
 // Grids }
 
 

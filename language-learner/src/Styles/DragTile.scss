@@ -2,9 +2,9 @@
 
 .bot-grid-item {
     width: 100%;
-    min-width: var(--tile-min, 32px);
-    max-width: var(--tile-max, 45px);
-    max-height: var(--tile-max, 45px);
+    min-width: vars.$tile-size-min;
+    max-width: vars.$tile-size-max;
+    max-height: vars.$tile-size-max;
     aspect-ratio: 1 / 1;
     height: auto;
     border-radius: 10px;
