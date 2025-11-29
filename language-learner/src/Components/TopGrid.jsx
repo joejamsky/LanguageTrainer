@@ -6,8 +6,8 @@ import { PROGRESSION_MODES } from "../Misc/levelUtils";
 import { ensureCustomSelections } from "../Misc/customGameMode";
 import { getRowNumberForTileId } from "../Data/kanaGroups";
 
-const CONSONANT_LABELS = {
-  1: "",
+const BASE_ROW_LABELS = {
+  1: "V",
   2: "K",
   3: "S",
   4: "T",
@@ -17,6 +17,17 @@ const CONSONANT_LABELS = {
   8: "Y",
   9: "R",
   10: "W",
+};
+
+const DAKUTEN_ROW_LABELS = {
+  2: "G",
+  3: "Z",
+  4: "D",
+  6: "B",
+};
+
+const HANDAKUTEN_ROW_LABELS = {
+  6: "P",
 };
 
 const TopGrid = () => {
@@ -92,13 +103,24 @@ const TopGrid = () => {
         return;
       }
       const rowNumber = getRowNumberForTileId(character.id);
-      if (!rowNumber || seen.has(rowNumber)) {
+      const modifierGroup = character.modifierGroup || "base";
+      const rowKey = `${modifierGroup}-${rowNumber}`;
+      if (!rowNumber || seen.has(rowKey)) {
         return;
       }
-      seen.add(rowNumber);
+      seen.add(rowKey);
+      let label = "";
+      if (modifierGroup === "dakuten") {
+        label = DAKUTEN_ROW_LABELS[rowNumber] || BASE_ROW_LABELS[rowNumber] || "";
+      } else if (modifierGroup === "handakuten") {
+        label = HANDAKUTEN_ROW_LABELS[rowNumber] || BASE_ROW_LABELS[rowNumber] || "";
+      } else {
+        label = BASE_ROW_LABELS[rowNumber] || "";
+      }
       labels.push({
         rowNumber,
-        label: CONSONANT_LABELS[rowNumber] || "",
+        modifierGroup,
+        label,
       });
     });
     return labels;
