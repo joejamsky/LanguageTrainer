@@ -8,18 +8,75 @@
     width: 100%;
 }
 
+.top-grid-layout {
+    width: 100%;
+    max-width: vars.$top-grid-layout-max-width;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: auto minmax(0, vars.$top-grid-center-max-width) auto;
+    grid-template-rows: auto 1fr;
+    column-gap: vars.$top-grid-layout-column-gap;
+    row-gap: vars.$board-grid-row-gap;
+    align-items: start;
+}
+
+.top-grid-center {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    display: flex;
+    flex-direction: column;
+    gap: vars.$board-grid-row-gap;
+    width: 100%;
+}
+
+.top-grid-rail {
+    grid-row: 1 / span 2;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    justify-items: center;
+    row-gap: vars.$board-grid-row-gap;
+}
+
+.top-grid-rail-body {
+    display: grid;
+    grid-auto-rows: minmax(vars.$tile-size-min, vars.$tile-size-max);
+    row-gap: vars.$board-grid-row-gap;
+    justify-items: center;
+}
+
+.top-grid-rail-label {
+    min-width: vars.$tile-size-min;
+    max-width: vars.$tile-size-max;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    // font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: vars.$color-text-primary;
+    border-radius: 10px;
+    font-size: 11px;
+}
+
+.top-grid-rail-header{
+    width: 100%;
+    min-height: vars.$tile-size-max;
+}
+
 .top-grid-legend {
     justify-items: center;
     align-items: center;
     text-transform: uppercase;
-    font-size: 14px;
+    font-size: 11px;
     letter-spacing: 1px;
     color: vars.$color-text-primary;
+    grid-auto-rows: minmax(vars.$tile-size-min, vars.$tile-size-max);
 }
 
 .top-grid-legend-item {
     text-align: center;
-    font-weight: 600;
+    // font-weight: 600;
     min-width: vars.$tile-size-min;
     max-width: vars.$tile-size-max;
     width: 100%;
@@ -155,4 +212,21 @@
 
 .phonetic-katakana {
     // background-color: vars.$color-neutral-sand; /* Example: Light orange for Katakana */
+}
+
+@media only screen and (max-width: vars.$breakpoint-tablet) {
+    .top-grid-layout {
+        max-width: vars.$top-grid-layout-max-width-mobile;
+        grid-template-columns: auto minmax(0, vars.$top-grid-center-max-width-mobile) auto;
+        column-gap: vars.$top-grid-layout-column-gap-mobile;
+        margin: 0 auto;
+    }
+
+    .top-grid-rail {
+        display: grid;
+    }
+
+    .top-grid-center {
+        max-width: vars.$top-grid-center-max-width-mobile;
+    }
 }
