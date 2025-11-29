@@ -1,39 +1,103 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import "../Styles/TextInput.scss";
 import { useGameState } from "../Contexts/GameStateContext.js";
+import { dictionaryKanaToRomaji } from "../Misc/Utils";
 
 const TextInput = ({ targetTileId = null, completionDelayMs = 0 }) => {
-    const {handleTextSubmit, setOptions, currentLevel, inputFocusKey} = useGameState();
+    const {handleTextSubmit, setOptions, currentLevel, inputFocusKey, characters} = useGameState();
     const [textInput, setTextInput] = useState('');
     const [shakeTimer, setShakeTimer] = useState(false);
     const [placeholderVisible, setPlaceholderVisible] = useState(true);
+    const [hasActiveMistake, setHasActiveMistake] = useState(false);
     const inputRef = useRef(null);
 
     useEffect(() => {
         inputRef.current?.focus();
     }, [currentLevel?.key, inputFocusKey]);
 
-    const handleInputChange = (e) => {
-        if (placeholderVisible && e.target.value.length > 0) {
-            setPlaceholderVisible(false);
+    const targetTile = useMemo(() => {
+        if (!targetTileId) return null;
+        return (characters?.botCharacters || []).find((tile) => tile?.id === targetTileId) || null;
+    }, [characters?.botCharacters, targetTileId]);
+
+    const expectedAnswer = useMemo(() => {
+        if (!targetTile) {
+            return "";
         }
-        setTextInput(e.target.value); // Update state with new input value
+        const romajiFromScript = targetTile.scripts?.romaji?.character;
+        if (romajiFromScript) {
+            return romajiFromScript.toLowerCase();
+        }
+        const kanaChar = targetTile.character || "";
+        const romajiFromDict = dictionaryKanaToRomaji[kanaChar];
+        if (romajiFromDict) {
+            return romajiFromDict.toLowerCase();
+        }
+        return kanaChar.toLowerCase();
+    }, [targetTile]);
+
+    useEffect(() => {
+        setHasActiveMistake(false);
+        setTextInput('');
+    }, [targetTileId]);
+
+    const triggerShake = () => {
+        setShakeTimer(true);
+        setTimeout(() => {
+            setShakeTimer(false);
+        }, 500);
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault(); // Prevent form submission (default behavior)
-        const submissionResult = handleTextSubmit(textInput, targetTileId, {
+    const submitAttempt = (value, { clearOnError = true } = {}) => {
+        if (!value) {
+            return null;
+        }
+        const submissionResult = handleTextSubmit(value, targetTileId, {
             delayCompletionMs: completionDelayMs
         });
-        if(submissionResult === -1){
-            setShakeTimer(true)
-
-            setTimeout(() => {
-                setShakeTimer(false)
-            }, 500); 
+        if (submissionResult === -1) {
+            triggerShake();
+            setHasActiveMistake(true);
+            if (clearOnError) {
+                setTextInput('');
+            }
+        } else if (submissionResult) {
+            setHasActiveMistake(false);
+            setTextInput('');
+            setPlaceholderVisible(false);
         }
-        setTextInput('')
-        setPlaceholderVisible(false);
+        return submissionResult;
+    };
+
+    const handleInputChange = (e) => {
+        const { value } = e.target;
+        if (placeholderVisible && value.length > 0) {
+            setPlaceholderVisible(false);
+        }
+        setTextInput(value); // Update state with new input value
+
+        if (!expectedAnswer) {
+            return;
+        }
+
+        const normalizedValue = value.trim().toLowerCase();
+        if (!normalizedValue) {
+            setHasActiveMistake(false);
+            return;
+        }
+
+        if (hasActiveMistake && expectedAnswer.startsWith(normalizedValue)) {
+            setHasActiveMistake(false);
+        }
+
+        if (!hasActiveMistake && !expectedAnswer.startsWith(normalizedValue)) {
+            submitAttempt(value, { clearOnError: false });
+            return;
+        }
+
+        if (normalizedValue === expectedAnswer) {
+            submitAttempt(value);
+        }
     };
 
     const handleKeyPress = (event) => {
@@ -64,7 +128,7 @@ const TextInput = ({ targetTileId = null, completionDelayMs = 0 }) => {
     
 
     return (
-        <form onSubmit={handleSubmit}>
+        <div className="text-input-wrapper">
             <input
                 type="text"
                 value={textInput} 
@@ -75,7 +139,7 @@ const TextInput = ({ targetTileId = null, completionDelayMs = 0 }) => {
                 className={shakeTimer ? "shake input-field" : "input-field"}
                 ref={inputRef}
             />
-        </form>
+        </div>
     );
 };
 
