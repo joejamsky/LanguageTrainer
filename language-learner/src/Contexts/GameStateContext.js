@@ -10,20 +10,15 @@ import React, {
 import { defaultState } from "../Misc/Utils";
 import {
   DEFAULT_LEVEL,
-  PROGRESSION_MODES,
   buildLevelKey,
-  clampShuffleLevelForRow,
   getNextLevel,
   getScriptLevelFromFilters,
-  getShuffleLevelFromSorting,
-  getShuffleNodeByValue,
   levelToScriptKey,
   normalizeLevel,
   persistStoredLevel,
 } from "../Misc/levelUtils";
 import {
   clampRowRange,
-  getRowCountFromRange,
   resolveAccuracyThreshold,
   resolveShapeGroup,
   resolveStudyMode,
@@ -71,24 +66,17 @@ export const GameStateProvider = ({ children }) => {
     () => clampRowRange(options.rowRange),
     [options.rowRange]
   );
-  const rowCount = getRowCountFromRange(rowRange);
   const studyMode = resolveStudyMode(options);
   const shapeGroup = resolveShapeGroup(options, filters);
   const adaptiveThreshold = resolveAccuracyThreshold(options);
   const derivedScriptLevel = getScriptLevelFromFilters(filters.characterTypes);
-  const derivedShuffleLevel = getShuffleLevelFromSorting(options.sorting);
-  const effectiveShuffleLevel =
-    studyMode === PROGRESSION_MODES.ADAPTIVE
-      ? 0
-      : clampShuffleLevelForRow(rowCount, derivedShuffleLevel);
-
   const currentLevel = useMemo(() => {
     const baseLevel = {
       mode: studyMode,
       rowStart: rowRange.start,
       rowEnd: rowRange.end,
       scriptLevel: derivedScriptLevel,
-      shuffleLevel: effectiveShuffleLevel,
+      shuffleLevel: 0,
       shapeGroup,
       accuracyThreshold: adaptiveThreshold,
     };
@@ -99,49 +87,11 @@ export const GameStateProvider = ({ children }) => {
   }, [
     adaptiveThreshold,
     derivedScriptLevel,
-    effectiveShuffleLevel,
     rowRange.end,
     rowRange.start,
     shapeGroup,
     studyMode,
   ]);
-
-  useEffect(() => {
-    setOptions((prevOptions) => {
-      const prevRange = clampRowRange(prevOptions.rowRange);
-      const prevRowCount = getRowCountFromRange(prevRange);
-      const prevMode = resolveStudyMode(prevOptions);
-      const forceOrdered = prevMode === PROGRESSION_MODES.ADAPTIVE;
-      const clampedShuffleLevel = forceOrdered
-        ? 0
-        : clampShuffleLevelForRow(
-            prevRowCount,
-            prevOptions.sorting.shuffleLevel
-          );
-      const shouldDisableColumns = forceOrdered || prevRowCount <= 1;
-      const needsUpdate =
-        prevOptions.sorting.shuffleLevel !== clampedShuffleLevel ||
-        (shouldDisableColumns && prevOptions.sorting.columnShuffle) ||
-        (forceOrdered && prevOptions.sorting.rowShuffle);
-
-      if (!needsUpdate) {
-        return prevOptions;
-      }
-
-      const shuffleNode = getShuffleNodeByValue(clampedShuffleLevel);
-      return {
-        ...prevOptions,
-        sorting: {
-          ...prevOptions.sorting,
-          rowShuffle: forceOrdered ? false : shuffleNode.rowShuffle,
-          columnShuffle: shouldDisableColumns
-            ? false
-            : shuffleNode.columnShuffle,
-          shuffleLevel: forceOrdered ? 0 : shuffleNode.value,
-        },
-      };
-    });
-  }, [options.rowRange, options.studyMode, setOptions]);
 
   useEffect(() => {
     if (!previousGameover.current && game.gameover) {
@@ -166,17 +116,6 @@ export const GameStateProvider = ({ children }) => {
         start: normalizedLevel.rowStart,
         end: normalizedLevel.rowEnd,
       });
-      const rowCountForLevel = getRowCountFromRange(normalizedRange);
-      const enforceOrdered = normalizedLevel.mode === PROGRESSION_MODES.ADAPTIVE;
-      const effectiveShuffleLevelForLevel = enforceOrdered
-        ? 0
-        : clampShuffleLevelForRow(
-            rowCountForLevel,
-            normalizedLevel.shuffleLevel
-          );
-      const shuffleNode = getShuffleNodeByValue(
-        effectiveShuffleLevelForLevel
-      );
       const updatedOptions = {
         ...options,
         studyMode: normalizedLevel.mode,
@@ -184,15 +123,6 @@ export const GameStateProvider = ({ children }) => {
         rowRange: normalizedRange,
         shapeGroup: normalizedLevel.shapeGroup,
         accuracyThreshold: normalizedLevel.accuracyThreshold,
-        sorting: {
-          ...options.sorting,
-          rowShuffle: enforceOrdered ? false : shuffleNode.rowShuffle,
-          columnShuffle:
-            enforceOrdered || rowCountForLevel <= 1
-              ? false
-              : shuffleNode.columnShuffle,
-          shuffleLevel: enforceOrdered ? 0 : shuffleNode.value,
-        },
       };
 
       setFilters(updatedFilters);
@@ -201,7 +131,7 @@ export const GameStateProvider = ({ children }) => {
         ...normalizedLevel,
         rowStart: normalizedRange.start,
         rowEnd: normalizedRange.end,
-        shuffleLevel: effectiveShuffleLevelForLevel,
+        shuffleLevel: 0,
       });
       reset(updatedFilters, updatedOptions);
       bumpInputFocusKey();

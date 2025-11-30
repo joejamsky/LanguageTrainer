@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import "../Styles/GuidedSetup.scss";
+import "../Styles/Pages/GuidedSetup.scss";
 import AppHeader from "../Components/AppHeader";
 import { useGameState } from "../Contexts/GameStateContext";
 import { GUIDED_SCRIPT_OPTIONS } from "../Constants/guidedPaths";

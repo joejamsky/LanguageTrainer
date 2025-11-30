@@ -1,17 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { defaultState } from "../../Misc/Utils";
-import { getSoundSorted, shuffleByShapeGroup } from "../../Misc/ShuffleSort";
-import { PROGRESSION_MODES } from "../../Misc/levelUtils";
 import {
   applyAttemptToTilePerformance,
   applyMissToTilePerformance,
 } from "../../Misc/statUtils";
-import {
-  clampRowRange,
-  getRowCountFromRange,
-  resolveStudyMode,
-  resolveShapeGroup,
-} from "../utils/optionsUtils";
+import { resolveShapeGroup } from "../utils/optionsUtils";
 import {
   cloneTopCharacters,
   getInitialCharacters,
@@ -23,6 +16,21 @@ import {
 } from "../utils/characterUtils";
 import { isBrowser } from "../utils/storageUtils";
 import { TILE_COMPLETION_ANIMATION_MS } from "../../Constants/animation";
+
+const getSoundOrderedTiles = (tiles = []) => [...tiles];
+
+const getShapeGroupOrderedTiles = (tiles = [], desiredType) =>
+  tiles
+    .filter((tile) => tile.type === desiredType)
+    .sort((a, b) => {
+      const groupDiff = (a.shapeGroup ?? 0) - (b.shapeGroup ?? 0);
+      if (groupDiff !== 0) {
+        return groupDiff;
+      }
+      const aId = String(a.parentId || a.id || "");
+      const bId = String(b.parentId || b.id || "");
+      return aId.localeCompare(bId);
+    });
 
 const saveCharactersToLocalStorage = (state) => {
   if (!isBrowser) return;
@@ -108,7 +116,6 @@ export const useCharactersState = ({
     [clearAllCompletionTimeouts, filters, options, tileStats, setGame]
   );
 
-  const { rowShuffle, columnShuffle } = options.sorting;
   const { current, methods } = options.gameMode;
 
   const resolvedShapeGroup = useMemo(
@@ -139,38 +146,16 @@ export const useCharactersState = ({
       const filteredBot = prevChars.masterBotCharacters.filter((item) =>
         handleCharRenderToggles(item, filters, filteringOptions)
       );
-      const rowRange = clampRowRange(filteringOptions.rowRange);
-      const rowCount = getRowCountFromRange(rowRange);
-      const studyMode = resolveStudyMode(filteringOptions);
-      const shouldDisableShuffle = studyMode === PROGRESSION_MODES.ADAPTIVE;
-      const effectiveColumnShuffle =
-        !shouldDisableShuffle && rowCount > 1 ? columnShuffle : false;
-      const effectiveRowShuffle = shouldDisableShuffle ? false : rowShuffle;
-
       let updatedBotCharacters;
       switch (methods[current]) {
         case "sound":
-          updatedBotCharacters = getSoundSorted(
-            filteredBot,
-            effectiveRowShuffle,
-            effectiveColumnShuffle
-          );
+          updatedBotCharacters = getSoundOrderedTiles(filteredBot);
           break;
         case "h-shape":
-          updatedBotCharacters = shuffleByShapeGroup(
-            filteredBot,
-            "hiragana",
-            effectiveRowShuffle,
-            effectiveColumnShuffle
-          );
+          updatedBotCharacters = getShapeGroupOrderedTiles(filteredBot, "hiragana");
           break;
         case "k-shape":
-          updatedBotCharacters = shuffleByShapeGroup(
-            filteredBot,
-            "katakana",
-            effectiveRowShuffle,
-            effectiveColumnShuffle
-          );
+          updatedBotCharacters = getShapeGroupOrderedTiles(filteredBot, "katakana");
           break;
         case "missed":
           updatedBotCharacters = filteredBot.sort((a, b) => b.missed - a.missed);
@@ -185,20 +170,13 @@ export const useCharactersState = ({
         topCharacters: cloneTopCharacters(),
       };
     });
-  }, [
-    filters,
-    filteringOptions,
-    rowShuffle,
-    columnShuffle,
-    current,
-    methods,
-  ]);
+  }, [filters, filteringOptions, current, methods]);
 
   useEffect(() => {
     const botTiles = characters?.botCharacters || [];
     let nextPlayableTile = botTiles[0] ?? null;
 
-    if (botTiles.length && !columnShuffle) {
+    if (botTiles.length) {
       const firstCoords = getGridCoordinatesForTile(botTiles[0]);
       const currentRowNumber = firstCoords?.row ?? null;
       if (currentRowNumber !== null) {
@@ -223,7 +201,7 @@ export const useCharactersState = ({
         misses: 0,
       };
     });
-  }, [characters?.botCharacters, columnShuffle]);
+  }, [characters?.botCharacters]);
 
   const completeTileAtIndex = useCallback(
     (tileTarget) => {

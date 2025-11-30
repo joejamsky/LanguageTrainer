@@ -1,6 +1,6 @@
 import React from "react";
 import "../Styles/Main.scss";
-import "../Styles/Game.scss";
+import "../Styles/Pages/Game.scss";
 import "@fortawesome/fontawesome-free/css/all.css";
 import TopGrid from "../Components/TopGrid.jsx";
 import BotGrid from "../Components/BotGrid.jsx";

@@ -9,16 +9,12 @@ import { TILE_COMPLETION_ANIMATION_MS } from "../Constants/animation";
 
 const TRAY_SLOT_COUNT = 5;
 
-const buildSlotSnapshot = (tiles = []) =>
-  Array.from({ length: TRAY_SLOT_COUNT }, (_, idx) => tiles[idx]?.id ?? null);
-
 const buildEmptySlots = () => Array(TRAY_SLOT_COUNT).fill(null);
 
 const BotGrid = () => {
-  const { characters, screenSize, options, registerTileCompletionListener } = useGameState();
+  const { characters, screenSize, registerTileCompletionListener } = useGameState();
 
   const rawTiles = useMemo(() => characters.botCharacters || [], [characters.botCharacters]);
-  const columnShuffleEnabled = options?.sorting?.columnShuffle;
   const isDesktopView = screenSize === 'laptop' || screenSize === 'desktop';
   const tileLookupById = useMemo(() => {
     const map = new Map();
@@ -30,20 +26,6 @@ const BotGrid = () => {
 
   const trayQueue = useMemo(() => {
     if (!rawTiles.length) return [];
-    if (columnShuffleEnabled) {
-      const entries = [];
-      for (let i = 0; i < rawTiles.length; i += TRAY_SLOT_COUNT) {
-        const chunk = rawTiles.slice(i, i + TRAY_SLOT_COUNT);
-        if (!chunk.length) continue;
-        const keySeed = chunk.map((tile) => tile?.id).join('-');
-        entries.push({
-          key: `chunk-${keySeed}-${i}`,
-          rowNumber: null,
-          slots: buildSlotSnapshot(chunk),
-        });
-      }
-      return entries;
-    }
     const entries = [];
     let currentRowNumber = null;
     let currentSlots = buildEmptySlots();
@@ -77,7 +59,7 @@ const BotGrid = () => {
       });
     }
     return entries;
-  }, [columnShuffleEnabled, rawTiles]);
+  }, [rawTiles]);
 
   const [chunkSlots, setChunkSlots] = useState(() => buildEmptySlots());
   const [currentTrayKey, setCurrentTrayKey] = useState(null);
