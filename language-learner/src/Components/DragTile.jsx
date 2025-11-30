@@ -53,6 +53,7 @@ const DragTile = ({
           ${selectedTile.id === characterObj.id ? "dragging" : ""}
           ${characterObj.completed ? "hide" : ""}
           ${options.hints ? `column-${Number(characterObj.parentId.split('-')[0]) % 5}` : ''}
+          ${isActive ? "active-bot-tile" : ""}
           ${extraClassName}
         `}
       style={tileStyle}

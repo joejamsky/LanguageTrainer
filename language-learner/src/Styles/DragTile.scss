@@ -36,6 +36,10 @@
     box-shadow: none;
 }
 
+.bot-grid-item.active-bot-tile {
+    animation: pulse 1.5s infinite;
+}
+
 .bot-grid-item.dragging {
     opacity: 0.5;
     cursor: grabbing !important;

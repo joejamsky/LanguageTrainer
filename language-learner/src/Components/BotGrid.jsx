@@ -12,11 +12,14 @@ const TRAY_SLOT_COUNT = 5;
 const buildSlotSnapshot = (tiles = []) =>
   Array.from({ length: TRAY_SLOT_COUNT }, (_, idx) => tiles[idx]?.id ?? null);
 
+const buildEmptySlots = () => Array(TRAY_SLOT_COUNT).fill(null);
+
 const BotGrid = () => {
   const { characters, screenSize, options, registerTileCompletionListener } = useGameState();
 
   const rawTiles = useMemo(() => characters.botCharacters || [], [characters.botCharacters]);
   const columnShuffleEnabled = options?.sorting?.columnShuffle;
+  const isDesktopView = screenSize === 'laptop' || screenSize === 'desktop';
   const tileLookupById = useMemo(() => {
     const map = new Map();
     rawTiles.forEach((tile, rawIndex) => {
@@ -25,35 +28,108 @@ const BotGrid = () => {
     return map;
   }, [rawTiles]);
 
-  const currentRowNumber = useMemo(() => {
-    if (!rawTiles.length || columnShuffleEnabled) return null;
-    const coords = getGridCoordinatesForTile(rawTiles[0]);
-    return coords?.row ?? null;
-  }, [rawTiles, columnShuffleEnabled]);
-
-  const rowTiles = useMemo(() => {
-    if (!currentRowNumber) return [];
-    return rawTiles.filter((tile) => {
-      const coords = getGridCoordinatesForTile(tile);
-      return (coords?.row ?? null) === currentRowNumber;
-    });
-  }, [rawTiles, currentRowNumber]);
-
-  const activeTilePool = useMemo(() => {
+  const trayQueue = useMemo(() => {
+    if (!rawTiles.length) return [];
     if (columnShuffleEnabled) {
-      return rawTiles.slice(0, TRAY_SLOT_COUNT);
+      const entries = [];
+      for (let i = 0; i < rawTiles.length; i += TRAY_SLOT_COUNT) {
+        const chunk = rawTiles.slice(i, i + TRAY_SLOT_COUNT);
+        if (!chunk.length) continue;
+        const keySeed = chunk.map((tile) => tile?.id).join('-');
+        entries.push({
+          key: `chunk-${keySeed}-${i}`,
+          rowNumber: null,
+          slots: buildSlotSnapshot(chunk),
+        });
+      }
+      return entries;
     }
-    return rowTiles.slice(0, TRAY_SLOT_COUNT);
-  }, [columnShuffleEnabled, rawTiles, rowTiles]);
+    const entries = [];
+    let currentRowNumber = null;
+    let currentSlots = buildEmptySlots();
+    rawTiles.forEach((tile) => {
+      const coords = getGridCoordinatesForTile(tile);
+      const rowNumber = coords?.row ?? null;
+      if (currentRowNumber === null) {
+        currentRowNumber = rowNumber;
+      } else if (rowNumber !== currentRowNumber) {
+        entries.push({
+          key: `row-${currentRowNumber}`,
+          rowNumber: currentRowNumber,
+          slots: currentSlots,
+        });
+        currentRowNumber = rowNumber;
+        currentSlots = buildEmptySlots();
+      }
+      const columnIndex =
+        coords?.column && coords.column >= 1 && coords.column <= TRAY_SLOT_COUNT
+          ? coords.column - 1
+          : currentSlots.findIndex((slot) => slot === null);
+      if (columnIndex >= 0) {
+        currentSlots[columnIndex] = tile.id;
+      }
+    });
+    if (currentRowNumber !== null) {
+      entries.push({
+        key: `row-${currentRowNumber}`,
+        rowNumber: currentRowNumber,
+        slots: currentSlots,
+      });
+    }
+    return entries;
+  }, [columnShuffleEnabled, rawTiles]);
 
-  const [chunkSlots, setChunkSlots] = useState(() => buildSlotSnapshot(activeTilePool));
+  const [chunkSlots, setChunkSlots] = useState(() => buildEmptySlots());
+  const [currentTrayKey, setCurrentTrayKey] = useState(null);
   const [activeAnimation, setActiveAnimation] = useState(null);
   const [pendingClears, setPendingClears] = useState(() => new Set());
   const animationTimeoutRef = useRef(null);
 
   useEffect(() => {
-    setChunkSlots(buildSlotSnapshot(activeTilePool));
-  }, [activeTilePool]);
+    setChunkSlots((prev) => {
+      let changed = false;
+      const next = prev.map((tileId) => {
+        if (!tileId) return null;
+        if (tileLookupById.has(tileId)) return tileId;
+        changed = true;
+        return null;
+      });
+      return changed ? next : prev;
+    });
+  }, [tileLookupById]);
+
+  useEffect(() => {
+    if (!trayQueue.length) {
+      if (currentTrayKey !== null || chunkSlots.some(Boolean)) {
+        setChunkSlots(buildEmptySlots());
+        setCurrentTrayKey(null);
+      }
+      return;
+    }
+
+    if (!currentTrayKey) {
+      setChunkSlots(trayQueue[0].slots);
+      setCurrentTrayKey(trayQueue[0].key);
+      return;
+    }
+
+    const currentIndex = trayQueue.findIndex((entry) => entry.key === currentTrayKey);
+    if (currentIndex === -1) {
+      setChunkSlots(trayQueue[0].slots);
+      setCurrentTrayKey(trayQueue[0].key);
+      return;
+    }
+
+    if (chunkSlots.every((slot) => slot === null)) {
+      const nextEntry = trayQueue[currentIndex + 1];
+      if (nextEntry) {
+        setChunkSlots(nextEntry.slots);
+        setCurrentTrayKey(nextEntry.key);
+      } else {
+        setCurrentTrayKey(null);
+      }
+    }
+  }, [chunkSlots, currentTrayKey, trayQueue]);
 
   useEffect(() => {
     setPendingClears((prev) => {
@@ -172,8 +248,9 @@ const BotGrid = () => {
           if (!tile) {
             return (
               <div
-                key={`bot-grid-placeholder-${slotIndex}`}
+                key={`bot-grid-placeholder-${currentTrayKey ?? 'tray'}-${slotIndex}`}
                 className="bot-grid-item placeholder"
+                style={{ gridColumn: slotIndex + 1 }}
                 aria-hidden
               />
             );
@@ -186,7 +263,7 @@ const BotGrid = () => {
               }
             : undefined;
           const extraClassName = isCompleting ? 'completing' : '';
-          const isActive = tile.id === activeTileId;
+          const isActive = isDesktopView && tile.id === activeTileId;
           return (
             <DragTile
               key={`bot-grid-item-${tile.id}`}
