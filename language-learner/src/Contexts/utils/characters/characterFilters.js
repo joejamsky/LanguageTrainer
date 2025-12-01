@@ -99,6 +99,10 @@ export const tilePassesFilter = (item, filterState) => {
   }
 
   if (studyMode === PROGRESSION_MODES.ADAPTIVE) {
+    if (accuracyThreshold === 0) {
+      // 0% accuracy target means "show all"
+      return true;
+    }
     const effectiveAccuracy = Number.isFinite(item.accuracy) ? item.accuracy : 1;
     return effectiveAccuracy <= accuracyThreshold;
   }

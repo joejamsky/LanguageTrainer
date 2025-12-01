@@ -17,6 +17,12 @@ const parseRowFromId = (tileId) => {
 
 const BASE_MODIFIER_KEYS = ["base", "dakuten", "handakuten"];
 const SCRIPT_KEYS = ["hiragana", "katakana"];
+const STROKE_SECTION_KEYS = [
+  ...SCRIPT_KEYS,
+  ...SCRIPT_KEYS.flatMap((scriptKey) =>
+    ["dakuten", "handakuten"].map((modifier) => `${scriptKey}-${modifier}`)
+  ),
+];
 const rowsByModifier = BASE_MODIFIER_KEYS.reduce((acc, key) => {
   acc[key] = new Set();
   return acc;
@@ -100,33 +106,49 @@ export const getModifierRowIndex = (modifierKey = "base", rowValue) => {
   return map?.[rowValue] ?? null;
 };
 
-const shapeGroupSets = {
-  hiragana: new Set(),
-  katakana: new Set(),
-};
+const SHAPE_GROUPS_BY_SECTION = {};
+const SHAPE_GROUP_SAMPLE_BY_SECTION = {};
+
+STROKE_SECTION_KEYS.forEach((sectionKey) => {
+  SHAPE_GROUPS_BY_SECTION[sectionKey] = new Set();
+  SHAPE_GROUP_SAMPLE_BY_SECTION[sectionKey] = {};
+});
 
 BOT_CHARACTERS.forEach((tile) => {
   if (!["hiragana", "katakana"].includes(tile.type)) return;
   if (typeof tile.shapeGroup !== "number") return;
-  shapeGroupSets[tile.type].add(tile.shapeGroup + 1);
+  const baseKey = tile.type;
+  const groupValue = tile.shapeGroup + 1;
+
+  // Always record on the base script
+  SHAPE_GROUPS_BY_SECTION[baseKey].add(groupValue);
+  if (!SHAPE_GROUP_SAMPLE_BY_SECTION[baseKey][groupValue]) {
+    SHAPE_GROUP_SAMPLE_BY_SECTION[baseKey][groupValue] = tile.character;
+  }
+
+  // Record on script-modifier combinations when applicable
+  if (tile.modifierGroup === "dakuten" || tile.modifierGroup === "handakuten") {
+    const modifierKey = `${baseKey}-${tile.modifierGroup}`;
+    SHAPE_GROUPS_BY_SECTION[modifierKey].add(groupValue);
+    if (!SHAPE_GROUP_SAMPLE_BY_SECTION[modifierKey][groupValue]) {
+      SHAPE_GROUP_SAMPLE_BY_SECTION[modifierKey][groupValue] = tile.character;
+    }
+  }
 });
 
-const toShapeList = (key) => {
-  const values = Array.from(shapeGroupSets[key] || []).sort((a, b) => a - b);
-  if (!values.length) return [1];
-  return values;
-};
-
-const STROKE_GROUPS_BY_SECTION = {
-  hiragana: toShapeList("hiragana"),
-  katakana: toShapeList("katakana"),
-};
+const STROKE_GROUPS_BY_SECTION = {};
+STROKE_SECTION_KEYS.forEach((sectionKey) => {
+  const values = Array.from(SHAPE_GROUPS_BY_SECTION[sectionKey] || []).sort((a, b) => a - b);
+  STROKE_GROUPS_BY_SECTION[sectionKey] = values;
+});
 
 export const getStrokeGroupsForKana = (key) => STROKE_GROUPS_BY_SECTION[key] || [];
+export const getStrokeGroupSampleForKana = (key, group) =>
+  (SHAPE_GROUP_SAMPLE_BY_SECTION[key] && SHAPE_GROUP_SAMPLE_BY_SECTION[key][group]) || null;
 
 export const ROW_SECTION_KEYS = [
   ...SCRIPT_KEYS,
   ...SCRIPT_KEYS.flatMap((scriptKey) => ["dakuten", "handakuten"].map((modifier) => `${scriptKey}-${modifier}`)),
 ];
 export const KANA_SECTION_KEYS = ROW_SECTION_KEYS;
-export const STROKE_SECTION_KEYS = ["hiragana", "katakana"];
+export { STROKE_SECTION_KEYS };

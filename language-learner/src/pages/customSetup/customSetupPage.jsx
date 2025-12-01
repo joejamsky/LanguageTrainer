@@ -236,6 +236,22 @@ const CustomSetup = () => {
     panelKeys.forEach((panelKey) => handleToggleAllRows(panelKey, shouldEnable));
   };
 
+  const handleScriptToggleShapes = (scriptKey) => {
+    const modifierKeys = ["dakuten", "handakuten"].map((modifier) =>
+      getScriptModifierKey(scriptKey, modifier)
+    );
+    const panelKeys = [scriptKey, ...modifierKeys].filter((panelKey) => {
+      const groups = getStrokeGroupsForKana(panelKey);
+      return groups.length > 0;
+    });
+    if (!panelKeys.length) return;
+    const allActive = panelKeys.every((panelKey) =>
+      areAllShapesEnabled(customSelections.shapes, panelKey)
+    );
+    const shouldEnable = !allActive;
+    panelKeys.forEach((panelKey) => handleToggleAllShapes(panelKey, shouldEnable));
+  };
+
   const handleShapeToggle = (scriptKey, group) => {
     updateCustomSelections((prevSelections) => ({
       ...prevSelections,
@@ -266,50 +282,79 @@ const CustomSetup = () => {
   };
 
   const handleSelectAll = () => {
-    const allRowsOn = Object.values(customSelections.rows).every((panel) =>
-      Object.values(panel || {}).every(Boolean)
-    );
-    const shouldEnable = !allRowsOn;
+    if (selectionTab === "rows") {
+      const allRowsOn = Object.values(customSelections.rows).every((panel) =>
+        Object.values(panel || {}).every(Boolean)
+      );
+      const shouldEnable = !allRowsOn;
 
-    setFilters((prev) => ({
-      ...prev,
-      characterTypes: {
-        ...prev.characterTypes,
-        hiragana: shouldEnable,
-        katakana: shouldEnable,
-      },
-      modifierGroup: {
-        ...prev.modifierGroup,
-        dakuten: shouldEnable,
-        handakuten: shouldEnable,
-      },
-    }));
+      setFilters((prev) => ({
+        ...prev,
+        characterTypes: {
+          ...prev.characterTypes,
+          hiragana: shouldEnable,
+          katakana: shouldEnable,
+        },
+        modifierGroup: {
+          ...prev.modifierGroup,
+          dakuten: shouldEnable,
+          handakuten: shouldEnable,
+        },
+      }));
 
-    updateCustomSelections((prevSelections) => {
-      const nextRows = {};
-      Object.keys(prevSelections.rows).forEach((key) => {
-        const rows = getRowsForKana(key);
-        nextRows[key] = rows.reduce((acc, row) => {
-          acc[row.value] = shouldEnable;
-          return acc;
-        }, {});
+      updateCustomSelections((prevSelections) => {
+        const nextRows = {};
+        Object.keys(prevSelections.rows).forEach((key) => {
+          const rows = getRowsForKana(key);
+          nextRows[key] = rows.reduce((acc, row) => {
+            acc[row.value] = shouldEnable;
+            return acc;
+          }, {});
+        });
+        return {
+          ...prevSelections,
+          rows: nextRows,
+        };
       });
-      const nextShapes = {};
-      Object.keys(prevSelections.shapes).forEach((key) => {
-        nextShapes[key] = Object.keys(prevSelections.shapes[key] || {}).reduce(
-          (shapeAcc, groupKey) => {
-            shapeAcc[groupKey] = shouldEnable;
-            return shapeAcc;
-          },
-          {}
-        );
+    } else if (selectionTab === "shapes") {
+      const allShapesOn = Object.values(customSelections.shapes).every((panel) =>
+        Object.values(panel || {}).every(Boolean)
+      );
+      const shouldEnable = !allShapesOn;
+
+      updateCustomSelections((prevSelections) => {
+        const nextShapes = {};
+        Object.keys(prevSelections.shapes).forEach((key) => {
+          nextShapes[key] = Object.keys(prevSelections.shapes[key] || {}).reduce(
+            (shapeAcc, groupKey) => {
+              shapeAcc[groupKey] = shouldEnable;
+              return shapeAcc;
+            },
+            {}
+          );
+        });
+        return {
+          ...prevSelections,
+          shapes: nextShapes,
+        };
       });
-      return {
-        ...prevSelections,
-        rows: nextRows,
-        shapes: nextShapes,
-      };
-    });
+    } else if (selectionTab === "accuracy") {
+      // Accuracy tab: "Toggle All" sets all targets to 0% (show all)
+      updateCustomSelections((prevSelections) => {
+        const nextTargets = {};
+        Object.keys(prevSelections.accuracyTargets || {}).forEach((key) => {
+          nextTargets[key] = 0;
+        });
+        return {
+          ...prevSelections,
+          accuracyTargets: nextTargets,
+        };
+      });
+      setOptions((prev) => ({
+        ...prev,
+        accuracyThreshold: 0,
+      }));
+    }
   };
 
   const [selectionTab, setSelectionTab] = useState("rows");
@@ -323,13 +368,81 @@ const CustomSetup = () => {
   );
 
   const handleResetForm = () => {
-    setFilters(defaultState.filters);
-    setOptions({
-      ...defaultState.options,
-      customSelections: getDefaultCustomSelections(),
-      accuracyThreshold: DEFAULT_LEVEL.accuracyThreshold,
-    });
-    setSelectionTab("rows");
+    if (selectionTab === "rows") {
+      // Rows tab: only base Hiragana rows selected
+      setFilters((prev) => ({
+        ...prev,
+        characterTypes: {
+          ...prev.characterTypes,
+          hiragana: true,
+          katakana: false,
+        },
+        modifierGroup: {
+          ...prev.modifierGroup,
+          dakuten: false,
+          handakuten: false,
+        },
+      }));
+      updateCustomSelections((prevSelections) => {
+        const nextRows = {};
+        Object.keys(prevSelections.rows).forEach((key) => {
+          const rows = getRowsForKana(key);
+          nextRows[key] = rows.reduce((acc, row) => {
+            acc[row.value] = key === "hiragana";
+            return acc;
+          }, {});
+        });
+        return {
+          ...prevSelections,
+          rows: nextRows,
+        };
+      });
+    } else if (selectionTab === "shapes") {
+      // Stroke tab: only Hiragana stroke group 1 selected
+      setFilters((prev) => ({
+        ...prev,
+        characterTypes: {
+          ...prev.characterTypes,
+          hiragana: true,
+          katakana: false,
+        },
+        modifierGroup: {
+          ...prev.modifierGroup,
+          dakuten: false,
+          handakuten: false,
+        },
+      }));
+      updateCustomSelections((prevSelections) => {
+        const nextShapes = {};
+        Object.keys(prevSelections.shapes).forEach((key) => {
+          const groups = getStrokeGroupsForKana(key);
+          nextShapes[key] = groups.reduce((acc, group) => {
+            acc[group] = key === "hiragana" && group === 1;
+            return acc;
+          }, {});
+        });
+        return {
+          ...prevSelections,
+          shapes: nextShapes,
+        };
+      });
+    } else if (selectionTab === "accuracy") {
+      // Accuracy tab: reset to "just Hiragana at 80% and below"
+      updateCustomSelections((prevSelections) => {
+        const nextTargets = {};
+        Object.keys(prevSelections.accuracyTargets || {}).forEach((key) => {
+          nextTargets[key] = key === "hiragana" ? 80 : 100;
+        });
+        return {
+          ...prevSelections,
+          accuracyTargets: nextTargets,
+        };
+      });
+      setOptions((prev) => ({
+        ...prev,
+        accuracyThreshold: 0.8,
+      }));
+    }
   };
 
   useEffect(() => {
@@ -414,15 +527,17 @@ const CustomSetup = () => {
             )}
             {selectionTab === "shapes" && (
               <SelectByStroke
-                strokeKeys={STROKE_SECTION_KEYS}
+                scriptKeys={scriptKeys}
                 kanaOptionMap={kanaOptionMap}
+                modifierOptions={modifierOptions}
                 customSelections={customSelections}
-                getCharacterOptionActive={getCharacterOptionActive}
                 getStrokeGroupsForKana={getStrokeGroupsForKana}
+                getScriptModifierKey={getScriptModifierKey}
+                getCharacterOptionActive={getCharacterOptionActive}
                 areAllShapesEnabled={areAllShapesEnabled}
+                handleScriptToggleShapes={handleScriptToggleShapes}
                 handleToggleAllShapes={handleToggleAllShapes}
                 handleShapeToggle={handleShapeToggle}
-                handleCharacterOptionToggle={handleCharacterOptionToggle}
               />
             )}
             {selectionTab === "accuracy" && (
@@ -430,6 +545,8 @@ const CustomSetup = () => {
                 scriptKeys={scriptKeys}
                 kanaOptionMap={kanaOptionMap}
                 customSelections={customSelections}
+                modifierOptions={modifierOptions}
+                getScriptModifierKey={getScriptModifierKey}
                 getCharacterOptionActive={getCharacterOptionActive}
                 getAccuracyValue={getAccuracyValue}
                 handleAccuracyChange={handleAccuracyChange}

@@ -322,6 +322,25 @@
     color: vars.$color-text-primary;
 }
 
+.stroke-modifier-toggles {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.shape-toggle-title {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.shape-toggle-caption {
+    display: block;
+    font-size: 12px;
+    margin-top: 2px;
+}
+
 .row-toggle-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -391,6 +410,29 @@
     background: vars.$color-bg-panel;
 }
 
+.accuracy-section-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.accuracy-section-row {
+    display: grid;
+    grid-template-columns: minmax(160px, auto) 1fr;
+    align-items: center;
+    gap: 12px;
+}
+.accuracy-section-row.disabled {
+    opacity: 0.5;
+}
+
+.accuracy-slider {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
 .accuracy-section.disabled {
     opacity: 0.5;
     pointer-events: none;
@@ -415,11 +457,33 @@
 }
 
 .accuracy-section input[type="range"] {
-    width: 100%;
-    appearance: none;
-    height: 6px;
-    border-radius: 999px;
-    background: vars.$color-blue-switch;
+    display: none;
+}
+
+.accuracy-spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.accuracy-arrow {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid vars.$color-border-default;
+    background: transparent;
+    color: vars.$color-text-primary;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.accuracy-value {
+    min-width: 48px;
+    text-align: center;
+    font-weight: 600;
 }
 
 .frequency-controls {
