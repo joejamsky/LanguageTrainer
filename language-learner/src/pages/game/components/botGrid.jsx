@@ -5,7 +5,7 @@ import DragTile from './dragTile';
 import TextInput from './textInput';
 import { useCharacters, useSettings } from "../../../contexts/gameStateContext.js";
 import { getGridCoordinatesForTile } from "../../../contexts/utils/characterUtils";
-import { TILE_COMPLETION_ANIMATION_MS } from "../../../constants/animation";
+import { TILE_COMPLETION_ANIMATION_MS } from "../../../core/constants/animation";
 
 const TRAY_SLOT_COUNT = 5;
 

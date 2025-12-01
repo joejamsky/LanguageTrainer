@@ -1,4 +1,4 @@
-import { defaultState } from "../../../core/utils";
+import { defaultState } from "../../../core/state";
 import japaneseCharactersBot from "../../../data/japanese_characters_standard_bot.json";
 import japaneseCharactersTop from "../../../data/japanese_characters_standard_top.json";
 import { buildTileFilterState, tilePassesFilter } from "./characterFilters";

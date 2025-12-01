@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import "../../styles/Pages/Stats.scss";
+import "../../styles/pages/stats.scss";
 import { useCharacters, useStatsContext } from "../../contexts/gameStateContext";
 import AppHeader from "../../components/appHeader";
 

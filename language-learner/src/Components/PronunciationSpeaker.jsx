@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useCharacters, useSettings } from "../contexts/gameStateContext.js";
-import { dictionaryKanaToRomaji } from "../core/utils";
+import { dictionaryKanaToRomaji } from "../core/state";
 
 const hasSpeechSupport = () =>
   typeof window !== "undefined" && typeof window.speechSynthesis !== "undefined";

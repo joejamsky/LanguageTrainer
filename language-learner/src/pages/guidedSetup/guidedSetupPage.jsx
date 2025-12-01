@@ -1,8 +1,25 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import "../../styles/Pages/GuidedSetup.scss";
+import "../../styles/pages/guidedsetup.scss";
 import AppHeader from "../../components/appHeader";
-import { GUIDED_SCRIPT_OPTIONS } from "../../constants/guidedPaths";
+
+const GUIDED_SCRIPT_OPTIONS = [
+  {
+    key: "hiragana",
+    title: "Hiragana",
+    caption: "Start with あ rows",
+  },
+  {
+    key: "katakana",
+    title: "Katakana",
+    caption: "Train ア rows",
+  },
+  {
+    key: "both",
+    title: "Both",
+    caption: "Mix Hiragana + Katakana",
+  },
+];
 
 const GuidedSetup = () => {
   const [scriptSelection, setScriptSelection] = useState(

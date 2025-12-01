@@ -1,12 +1,11 @@
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { defaultState } from "../core/utils";
+import { defaultState } from "../core/state";
 import { useStatsContext } from "./StatsContext";
 
 const GameContext = createContext();
 
 export const GameProvider = ({ children }) => {
   const [game, setGame] = useState(defaultState.game);
-  const [startMenuOpen, setStartMenuOpen] = useState(true);
   const { registerDailyCompletion } = useStatsContext();
   const previousGameoverRef = useRef(false);
 
@@ -21,10 +20,8 @@ export const GameProvider = ({ children }) => {
     () => ({
       game,
       setGame,
-      startMenuOpen,
-      setStartMenuOpen,
     }),
-    [game, startMenuOpen]
+    [game]
   );
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;

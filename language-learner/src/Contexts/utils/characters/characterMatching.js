@@ -1,4 +1,4 @@
-import { dictionaryKanaToRomaji } from "../../../core/utils";
+import { dictionaryKanaToRomaji } from "../../../core/state";
 
 export const matchInput = (scriptObj, userInput) => {
   if (!scriptObj || typeof userInput !== "string") {

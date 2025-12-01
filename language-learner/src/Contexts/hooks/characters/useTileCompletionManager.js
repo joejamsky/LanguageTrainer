@@ -1,6 +1,6 @@
 import { useCallback, useRef } from "react";
-import { TILE_COMPLETION_ANIMATION_MS } from "../../../constants/animation";
-import { defaultState } from "../../../core/utils";
+import { TILE_COMPLETION_ANIMATION_MS } from "../../../core/constants/animation";
+import { defaultState } from "../../../core/state";
 import { getRemainingPlayableTiles } from "../../utils/characterUtils";
 import { saveCharactersToLocalStorage } from "./characterStorage";
 

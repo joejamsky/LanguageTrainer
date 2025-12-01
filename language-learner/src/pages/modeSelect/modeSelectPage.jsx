@@ -1,26 +1,24 @@
 import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../../styles/Pages/ModeSelect.scss";
+import "../../styles/pages/modeselect.scss";
 import AppHeader from "../../components/appHeader";
-import { GUIDED_SCRIPT_OPTIONS } from "../../constants/guidedPaths";
 
 const ModeSelect = () => {
   const navigate = useNavigate();
-  const [guidedStatus, setGuidedStatus] = useState("");
+  const [guidedStatus] = useState("");
 
-  const guidedCheckpoints = useMemo(() => {
-    return GUIDED_SCRIPT_OPTIONS.reduce((acc, option) => {
-      acc[option.key] = "Coming soon";
-      return acc;
-    }, {});
-  }, []);
+  const guidedCheckpointSummaries = [
+    { key: "hiragana", title: "Hiragana", summary: "Kana | Mode | Group | Shuffle" },
+    { key: "katakana", title: "Katakana", summary: "Kana | Mode | Group | Shuffle" },
+    { key: "both", title: "Both", summary: "Kana | Mode | Group | Shuffle" },
+  ];
 
   const handleGuidedSelect = () => {
-    setGuidedStatus("Guided gameplay is coming soon.");
+    navigate("/guided/setup");
   };
 
   const handleCustomSelect = () => {
-    navigate("/setup");
+    navigate("/custom/setup");
   };
 
   return (
@@ -31,7 +29,7 @@ const ModeSelect = () => {
       </header>
 
       <div className="mode-card-grid">
-        <section className="mode-card guided-card">
+        <section className="mode-card">
           <div>
             <h2>Guided Journey</h2>
             <p>
@@ -40,22 +38,21 @@ const ModeSelect = () => {
             <div className="mode-summary">
               <span>Checkpoints</span>
               <div className="mode-summary-grid">
-                {GUIDED_SCRIPT_OPTIONS.map((option) => (
-                  <div key={option.key} className="mode-summary-item">
-                    <span className="mode-summary-title">{option.title}</span>
-                    <strong>{guidedCheckpoints[option.key]}</strong>
+                {guidedCheckpointSummaries.map((item) => (
+                  <div key={item.key} className="mode-summary-item">
+                    <span className="mode-summary-title">{item.title}</span>
+                    <span>{item.summary}</span>
                   </div>
                 ))}
               </div>
             </div>
           </div>
           <button type="button" onClick={handleGuidedSelect}>
-            Start Guided
+            Enter Guided Setup
           </button>
-          {guidedStatus && <p className="mode-status">{guidedStatus}</p>}
         </section>
 
-        <section className="mode-card custom-card">
+        <section className="mode-card">
           <div>
             <h2>Custom Session</h2>
             <p>
@@ -63,7 +60,7 @@ const ModeSelect = () => {
             </p>
           </div>
           <button type="button" onClick={handleCustomSelect}>
-            Build Custom Run
+            Enter Custom Setup
           </button>
         </section>
       </div>

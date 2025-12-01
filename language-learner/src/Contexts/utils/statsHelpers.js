@@ -1,4 +1,4 @@
-import { defaultState } from "../../core/utils";
+import { defaultState } from "../../core/state";
 import { loadLevelStats } from "../../core/levelUtils";
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000;

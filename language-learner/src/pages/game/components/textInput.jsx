@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import "../../../styles/TextInput.scss";
 import { useCharacters, useSettings } from "../../../contexts/gameStateContext.js";
-import { dictionaryKanaToRomaji } from "../../../core/utils";
+import { dictionaryKanaToRomaji } from "../../../core/state";
 
 const TextInput = ({ targetTileId = null, completionDelayMs = 0 }) => {
     const { handleTextSubmit, inputFocusKey, characters } = useCharacters();

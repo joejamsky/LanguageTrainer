@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import "../../styles/Pages/Setup.scss";
+import "../../styles/pages/setup.scss";
 import { useSettings } from "../../contexts/gameStateContext";
 import {
   DEFAULT_LEVEL,
@@ -31,7 +31,7 @@ import {
   getStrokeGroupsForKana,
   STROKE_SECTION_KEYS,
 } from "../../data/kanaGroups";
-import { defaultState } from "../../core/utils";
+import { defaultState } from "../../core/state";
 
 const Setup = () => {
   const { filters, setFilters, options, setOptions } = useSettings();

@@ -1,4 +1,4 @@
-import { defaultState } from "../../core/utils";
+import { defaultState } from "../../core/state";
 import { TOTAL_ROWS } from "./constants";
 import { getShapeGroupOptionsForFilters } from "../../core/levelUtils";
 import { ensureCustomSelections } from "../../core/customSelections";

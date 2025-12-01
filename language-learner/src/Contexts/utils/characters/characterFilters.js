@@ -1,4 +1,4 @@
-import { defaultState } from "../../../core/utils";
+import { defaultState } from "../../../core/state";
 import { PROGRESSION_MODES } from "../../../core/levelUtils";
 import { ensureCustomSelections } from "../../../core/customSelections";
 import {

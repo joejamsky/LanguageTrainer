@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { defaultState } from "../../core/utils";
+import { defaultState } from "../../core/state";
 import {
   applyAttemptToTilePerformance,
   applyMissToTilePerformance,

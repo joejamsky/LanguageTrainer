@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../../styles/Pages/Options.scss";
+import "../../styles/pages/options.scss";
 import AppHeader from "../../components/appHeader";
 import { useSettings } from "../../contexts/gameStateContext";
 import { clearStoredData } from "../../core/levelUtils";
