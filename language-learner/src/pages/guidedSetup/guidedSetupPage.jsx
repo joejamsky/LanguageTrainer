@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import "../../styles/pages/guidedsetup.scss";
+import "../../styles/pages/guidedSetup.scss";
 import AppHeader from "../../components/appHeader";
 import Button from "../../components/button";
 

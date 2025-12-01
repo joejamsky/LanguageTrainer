@@ -2,20 +2,17 @@ import React from "react";
 
 const SelectByAccuracy = ({
   scriptKeys,
-  modifierOptions,
   kanaOptionMap,
   customSelections,
-  getScriptModifierKey,
   getCharacterOptionActive,
   getAccuracyValue,
   handleAccuracyChange,
   handleCharacterOptionToggle,
-  handleScriptModifierToggle,
-  isAnyRowsSelected,
   handleToggleAllRows,
 }) => {
   const toggleBaseGroup = (scriptOption, scriptKey) => {
-    const hasRowsSelected = isAnyRowsSelected(scriptKey);
+    const scriptRows = customSelections.rows[scriptKey] || {};
+    const hasRowsSelected = Object.values(scriptRows).some(Boolean);
     const shouldEnable = !hasRowsSelected;
     handleToggleAllRows(scriptKey, shouldEnable);
     const scriptActive = getCharacterOptionActive(scriptOption);
@@ -34,12 +31,9 @@ const SelectByAccuracy = ({
           label: scriptKey,
           type: "character",
         };
-        const scriptActive = isAnyRowsSelected(scriptKey);
+        const scriptRows = customSelections.rows[scriptKey] || {};
+        const scriptActive = Object.values(scriptRows).some(Boolean);
         const scriptLabel = scriptOption?.label || scriptKey;
-        const rowKeyMap = modifierOptions.reduce((acc, modifier) => {
-          acc[modifier.key] = getScriptModifierKey(scriptKey, modifier.key);
-          return acc;
-        }, {});
         const sliderValue = getAccuracyValue(scriptKey);
 
         return (
@@ -52,23 +46,6 @@ const SelectByAccuracy = ({
               >
                 {scriptLabel}
               </button>
-              <div className="script-inline-modifiers">
-                {modifierOptions.map((modifier) => {
-                  const panelKey = rowKeyMap[modifier.key];
-                  if (!panelKey || !customSelections.rows[panelKey]) return null;
-                  const modifierActive = isAnyRowsSelected(panelKey);
-                  return (
-                    <button
-                      key={`${scriptKey}-${modifier.key}-btn`}
-                      type="button"
-                      className={`script-sub-toggle ${modifierActive ? "active" : ""}`}
-                      onClick={() => handleScriptModifierToggle(scriptKey, modifier.key)}
-                    >
-                      {modifier.label}
-                    </button>
-                  );
-                })}
-              </div>
             </div>
             <div className={`accuracy-section ${scriptActive ? "" : "disabled"}`}>
               <div className="accuracy-header">

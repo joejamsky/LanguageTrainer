@@ -102,6 +102,7 @@
     margin: 0;
     font-size: 13px;
     color: vars.$color-text-primary;
+    text-align: center;
 }
 
 .selection-grid {
@@ -118,8 +119,6 @@
 
 @media (min-width: 640px) {
     .grouping-card-header {
-        flex-direction: row;
-        align-items: center;
         justify-content: space-between;
     }
 }
@@ -150,7 +149,6 @@
     display: flex;
     gap: 12px;
     flex-wrap: wrap;
-    justify-content: flex-end;
 }
 
 .selection-actions button {
@@ -201,12 +199,6 @@
     flex-wrap: wrap;
 }
 
-.script-inline-modifiers {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-}
-
 .script-main-toggle {
     border-radius: 16px;
     border: 1px solid vars.$color-border-default;
@@ -231,29 +223,6 @@
     gap: 12px;
 }
 
-.script-modifier-panel {
-    border-top: 1px solid vars.$color-border-strong;
-    padding-top: 12px;
-}
-
-.script-sub-toggle {
-    border-radius: 999px;
-    border: 1px solid vars.$color-border-default;
-    background: transparent;
-    color: vars.$color-text-primary;
-    padding: 6px 14px;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: border 0.2s ease, background 0.2s ease, color 0.2s ease;
-}
-
-.script-sub-toggle.active {
-    border-color: vars.$color-accent-primary;
-    background: vars.$color-accent-primary;
-    color: vars.$color-text-primary;
-}
-
 .row-panel-grid {
     display: flex;
     flex-wrap: wrap;
@@ -271,7 +240,6 @@
 
 .row-panel.disabled {
     opacity: 0.5;
-    pointer-events: none;
 }
 
 .row-panel-header {
@@ -286,6 +254,10 @@
         font-size: 14px;
         text-transform: uppercase;
         letter-spacing: 0.5px;
+    }
+
+    button.active{
+        background-color: vars.$color-accent-primary;
     }
 }
 
@@ -789,6 +761,14 @@
     justify-content: center;
     margin-top: 8px;
     width: 100%;
+}
+
+.setup-warning {
+    width: 100%;
+    text-align: center;
+    font-size: 13px;
+    color: vars.$color-warning;
+    margin-top: 4px;
 }
 
 .setup-start {

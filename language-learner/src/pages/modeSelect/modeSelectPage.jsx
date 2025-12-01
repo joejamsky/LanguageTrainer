@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../../styles/pages/modeselect.scss";
+import "../../styles/pages/modeSelect.scss";
 import AppHeader from "../../components/appHeader";
 
 const ModeSelect = () => {

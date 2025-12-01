@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../../styles/pages/setup.scss";
+import "../../styles/pages/customSetup.scss";
 import { useSettings } from "../../contexts/gameStateContext";
 import {
   DEFAULT_LEVEL,
@@ -34,10 +34,9 @@ import {
 } from "../../data/kanaGroups";
 import { defaultState } from "../../core/state";
 
-const Setup = () => {
+const CustomSetup = () => {
   const { filters, setFilters, options, setOptions } = useSettings();
   const navigate = useNavigate();
-  const studyMode = options.studyMode || PROGRESSION_MODES.LINEAR;
   const rowRange = useMemo(
     () => options.rowRange || { start: options.rowLevel || 1, end: options.rowLevel || 1 },
     [options.rowRange, options.rowLevel]
@@ -57,14 +56,14 @@ const Setup = () => {
   const customLevel = useMemo(
     () =>
       normalizeLevel({
-        mode: studyMode,
+        mode: PROGRESSION_MODES.LINEAR,
         rowStart: rowRange.start,
         rowEnd: rowRange.end,
         scriptLevel,
         shapeGroup,
         accuracyThreshold,
       }),
-    [studyMode, rowRange, scriptLevel, shapeGroup, accuracyThreshold]
+    [rowRange, scriptLevel, shapeGroup, accuracyThreshold]
   );
   const customDescriptor = useMemo(() => describeLevel(customLevel), [customLevel]);
 
@@ -104,6 +103,46 @@ const Setup = () => {
       return Boolean(filters.characterTypes[option.key]);
     }
     return Boolean(filters.modifierGroup[option.key]);
+  };
+
+  const hasActiveRows = (rowsState, panelKey) => {
+    const panel = rowsState[panelKey] || {};
+    return Object.values(panel).some(Boolean);
+  };
+
+  const parsePanelKey = (panelKey) => {
+    if (!panelKey) return {};
+    const [scriptKey, modifierKey] = panelKey.split("-");
+    return { scriptKey, modifierKey };
+  };
+
+  const syncFiltersForPanel = (panelKey, rowsState) => {
+    const { scriptKey, modifierKey } = parsePanelKey(panelKey);
+    if (!scriptKey) return;
+    const hasRows = hasActiveRows(rowsState, panelKey);
+    setFilters((prev) => {
+      if (modifierKey) {
+        return {
+          ...prev,
+          modifierGroup: {
+            ...prev.modifierGroup,
+            [modifierKey]: hasRows,
+          },
+        };
+      }
+      const nextCharacterTypes = {
+        ...prev.characterTypes,
+        [scriptKey]: hasRows,
+      };
+      if (!nextCharacterTypes.hiragana && !nextCharacterTypes.katakana) {
+        nextCharacterTypes[scriptKey] = true;
+      }
+      updateShapeGroupFromTypes(nextCharacterTypes);
+      return {
+        ...prev,
+        characterTypes: nextCharacterTypes,
+      };
+    });
   };
 
   const updateShapeGroupFromTypes = (nextTypes) => {
@@ -159,18 +198,42 @@ const Setup = () => {
     });
   };
 
-  const handleRowToggle = (scriptKey, rowValue) => {
-    updateCustomSelections((prevSelections) => ({
-      ...prevSelections,
-      rows: toggleRowSelection(prevSelections.rows, scriptKey, rowValue),
-    }));
+  const handleRowToggle = (panelKey, rowValue) => {
+    updateCustomSelections((prevSelections) => {
+      const nextRows = toggleRowSelection(prevSelections.rows, panelKey, rowValue);
+      syncFiltersForPanel(panelKey, nextRows);
+      return {
+        ...prevSelections,
+        rows: nextRows,
+      };
+    });
   };
 
-  const handleToggleAllRows = (scriptKey, enable) => {
-    updateCustomSelections((prevSelections) => ({
-      ...prevSelections,
-      rows: toggleAllRowsSelection(prevSelections.rows, scriptKey, enable),
-    }));
+  const handleToggleAllRows = (panelKey, enable) => {
+    updateCustomSelections((prevSelections) => {
+      const nextRows = toggleAllRowsSelection(prevSelections.rows, panelKey, enable);
+      syncFiltersForPanel(panelKey, nextRows);
+      return {
+        ...prevSelections,
+        rows: nextRows,
+      };
+    });
+  };
+
+  const handleScriptToggle = (scriptKey) => {
+    const modifierKeys = ["dakuten", "handakuten"].map((modifier) =>
+      getScriptModifierKey(scriptKey, modifier)
+    );
+    const panelKeys = [scriptKey, ...modifierKeys].filter((panelKey) => {
+      const rows = getRowsForKana(panelKey);
+      return rows.length > 0;
+    });
+    if (!panelKeys.length) return;
+    const allActive = panelKeys.every((panelKey) =>
+      areAllRowsEnabled(customSelections.rows, panelKey)
+    );
+    const shouldEnable = !allActive;
+    panelKeys.forEach((panelKey) => handleToggleAllRows(panelKey, shouldEnable));
   };
 
   const handleShapeToggle = (scriptKey, group) => {
@@ -201,47 +264,33 @@ const Setup = () => {
       accuracyThreshold: nextValue / 100,
     }));
   };
-  const isAnyRowsSelected = (panelKey) => {
-    const rows = getRowsForKana(panelKey);
-    if (!rows.length) return false;
-    return rows.some((row) => customSelections.rows[panelKey]?.[row.value]);
-  };
-
-  const handleScriptModifierToggle = (scriptKey, modifierKey) => {
-    const panelKey = getScriptModifierKey(scriptKey, modifierKey);
-    const shouldEnable = !isAnyRowsSelected(panelKey);
-    if (shouldEnable && !filters.modifierGroup[modifierKey]) {
-      setFilters((prev) => ({
-        ...prev,
-        modifierGroup: {
-          ...prev.modifierGroup,
-          [modifierKey]: true,
-        },
-      }));
-    }
-    handleToggleAllRows(panelKey, shouldEnable);
-  };
 
   const handleSelectAll = () => {
+    const allRowsOn = Object.values(customSelections.rows).every((panel) =>
+      Object.values(panel || {}).every(Boolean)
+    );
+    const shouldEnable = !allRowsOn;
+
     setFilters((prev) => ({
       ...prev,
       characterTypes: {
         ...prev.characterTypes,
-        hiragana: true,
-        katakana: true,
+        hiragana: shouldEnable,
+        katakana: shouldEnable,
       },
       modifierGroup: {
         ...prev.modifierGroup,
-        dakuten: true,
-        handakuten: true,
+        dakuten: shouldEnable,
+        handakuten: shouldEnable,
       },
     }));
+
     updateCustomSelections((prevSelections) => {
       const nextRows = {};
       Object.keys(prevSelections.rows).forEach((key) => {
         const rows = getRowsForKana(key);
         nextRows[key] = rows.reduce((acc, row) => {
-          acc[row.value] = true;
+          acc[row.value] = shouldEnable;
           return acc;
         }, {});
       });
@@ -249,7 +298,7 @@ const Setup = () => {
       Object.keys(prevSelections.shapes).forEach((key) => {
         nextShapes[key] = Object.keys(prevSelections.shapes[key] || {}).reduce(
           (shapeAcc, groupKey) => {
-            shapeAcc[groupKey] = true;
+            shapeAcc[groupKey] = shouldEnable;
             return shapeAcc;
           },
           {}
@@ -264,6 +313,14 @@ const Setup = () => {
   };
 
   const [selectionTab, setSelectionTab] = useState("rows");
+
+  const hasAnyRowSelected = useMemo(
+    () =>
+      Object.values(customSelections.rows).some((panel) =>
+        Object.values(panel || {}).some(Boolean)
+      ),
+    [customSelections.rows]
+  );
 
   const handleResetForm = () => {
     setFilters(defaultState.filters);
@@ -295,7 +352,7 @@ const Setup = () => {
       <section className="setup-summary">
         <span className="setup-badge">Current Plan</span>
         <p className="setup-summary-main">{customDescriptor.summary}</p>
-        <p className="setup-summary-note">Mode · Grouping · Kana</p>
+        <p className="setup-summary-note">Mode · Grouping · Kana · Shuffle</p>
       </section>
 
       <div className="setup-grid">
@@ -324,17 +381,17 @@ const Setup = () => {
                 Select by Accuracy
               </button>
             </div>
-            <div className="selection-actions">
-              <button type="button" onClick={handleSelectAll}>
-                Select All
-              </button>
-              <button type="button" onClick={handleResetForm}>
-                Reset All
-              </button>
-              <button type="button" className="selection-save" disabled>
-                Save Preset
-              </button>
-            </div>
+          </div>
+        </section>
+
+        <section className="control-card grouping-card full-width-card">
+          <div className="selection-actions">
+            <button type="button" onClick={handleSelectAll}>
+              Toggle All
+            </button>
+            <button type="button" onClick={handleResetForm}>
+              Reset All
+            </button>
           </div>
           <p className="control-caption">
             Toggle kana groups, then fine-tune what should be available in the round.
@@ -349,9 +406,7 @@ const Setup = () => {
                 getScriptModifierKey={getScriptModifierKey}
                 getRowsForKana={getRowsForKana}
                 getCharacterOptionActive={getCharacterOptionActive}
-                isAnyRowsSelected={isAnyRowsSelected}
-                handleCharacterOptionToggle={handleCharacterOptionToggle}
-                handleScriptModifierToggle={handleScriptModifierToggle}
+                handleScriptToggle={handleScriptToggle}
                 handleRowToggle={handleRowToggle}
                 handleToggleAllRows={handleToggleAllRows}
                 areAllRowsEnabled={areAllRowsEnabled}
@@ -373,16 +428,12 @@ const Setup = () => {
             {selectionTab === "accuracy" && (
               <SelectByAccuracy
                 scriptKeys={scriptKeys}
-                modifierOptions={modifierOptions}
                 kanaOptionMap={kanaOptionMap}
                 customSelections={customSelections}
-                getScriptModifierKey={getScriptModifierKey}
                 getCharacterOptionActive={getCharacterOptionActive}
                 getAccuracyValue={getAccuracyValue}
                 handleAccuracyChange={handleAccuracyChange}
                 handleCharacterOptionToggle={handleCharacterOptionToggle}
-                handleScriptModifierToggle={handleScriptModifierToggle}
-                isAnyRowsSelected={isAnyRowsSelected}
                 handleToggleAllRows={handleToggleAllRows}
               />
             )}
@@ -392,12 +443,21 @@ const Setup = () => {
       </div>
 
       <div className="setup-actions">
-        <Button className="setup-start" onClick={() => navigate("/game")}>
+        <Button
+          className="setup-start"
+          onClick={() => navigate("/game")}
+          disabled={!hasAnyRowSelected}
+        >
           Start Round
         </Button>
+        {!hasAnyRowSelected && (
+          <p className="setup-warning">
+            Select at least one row to start a round.
+          </p>
+        )}
       </div>
     </main>
   );
 };
 
-export default Setup;
+export default CustomSetup;

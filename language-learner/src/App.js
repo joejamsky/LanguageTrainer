@@ -6,7 +6,7 @@ import { AppStateProvider } from "./contexts/gameStateContext";
 import Home from "./pages/home/homePage";
 import ModeSelect from "./pages/modeSelect/modeSelectPage";
 import GuidedSetup from "./pages/guidedSetup/guidedSetupPage";
-import Setup from "./pages/setup/setupPage";
+import CustomSetup from "./pages/customSetup/customSetupPage";
 import Stats from "./pages/stats/statsPage";
 import Options from "./pages/options/optionsPage";
 
@@ -20,8 +20,8 @@ function App() {
             <Route path="/mode" element={<ModeSelect />} />
             <Route path="/guided" element={<GuidedSetup />} />
             <Route path="/guided/setup" element={<GuidedSetup />} />
-            <Route path="/setup" element={<Setup />} />
-            <Route path="/custom/setup" element={<Setup />} />
+            <Route path="/setup" element={<CustomSetup />} />
+            <Route path="/custom/setup" element={<CustomSetup />} />
             <Route path="/options" element={<Options />} />
             <Route path="/stats" element={<Stats />} />
             <Route path="/game" element={<Game />} />
