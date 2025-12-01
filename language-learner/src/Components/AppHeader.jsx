@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "@fortawesome/fontawesome-free/css/all.css";
-import "../Styles/AppHeader.scss";
+import "../styles/AppHeader.scss";
 
 const AppHeader = ({ showHome = true, children }) => {
   const navigate = useNavigate();

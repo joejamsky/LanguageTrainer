@@ -1,11 +1,11 @@
 import React, { useMemo, useState } from "react";
-import "../Styles/DropTile.scss";
-import { useGameState } from "../Contexts/GameStateContext";
-import { getGridCoordinatesForTile } from "../Contexts/utils/characterUtils";
-import { ensureCustomSelections } from "../Misc/customGameMode";
+import "../../../styles/DropTile.scss";
+import { useGameState } from "../../../contexts/gameStateContext";
+import { getGridCoordinatesForTile } from "../../../contexts/utils/characterUtils";
+import { ensureCustomSelections } from "../../../misc/customSelections";
 import {
     getRowNumberForTileId,
-} from "../Data/kanaGroups";
+} from "../../../data/kanaGroups";
 
 
 const DropTile = ({ characterObj, index }) => {
@@ -70,9 +70,11 @@ const DropTile = ({ characterObj, index }) => {
         const katakanaScript = characterObj.scripts.katakana || {};
         const hiraganaFilled = !!hiraganaScript.filled;
         const katakanaFilled = !!katakanaScript.filled;
-        const romajiFilled = (hiraganaFilled && katakanaFilled) || !!romajiScript.filled;
-
-        const romajiVisible = (filters.characterTypes.romaji || options.hints || isMobileLayout);
+        const romajiFilled = (hiraganaFilled && katakanaFilled) 
+            || !!romajiScript.filled;
+        const romajiVisible = (filters.characterTypes.romaji 
+            || options.hints 
+            || isMobileLayout);
         const hiraganaVisible = isDesktop
             ? filters.characterTypes.hiragana
             : filters.characterTypes.hiragana;

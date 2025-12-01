@@ -1,7 +1,7 @@
-import { defaultState } from "../../Misc/Utils";
+import { defaultState } from "../../misc/utils";
 import { TOTAL_ROWS } from "./constants";
-import { getShapeGroupOptionsForFilters } from "../../Misc/levelUtils";
-import { ensureCustomSelections } from "../../Misc/customGameMode";
+import { getShapeGroupOptionsForFilters } from "../../misc/levelUtils";
+import { ensureCustomSelections } from "../../misc/customSelections";
 
 export const clampRowRange = (range = defaultState.options.rowRange) => {
   const start = Number.isFinite(range?.start) ? range.start : 1;

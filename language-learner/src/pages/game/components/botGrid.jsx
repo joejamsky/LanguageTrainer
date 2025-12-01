@@ -1,11 +1,11 @@
 // BotGrid.jsx
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import "../Styles/BotGrid.scss";
-import DragTile from './DragTile';
-import TextInput from './TextInput';
-import { useGameState } from "../Contexts/GameStateContext.js";
-import { getGridCoordinatesForTile } from "../Contexts/utils/characterUtils";
-import { TILE_COMPLETION_ANIMATION_MS } from "../Constants/animation";
+import "../../../styles/BotGrid.scss";
+import DragTile from './dragTile';
+import TextInput from './textInput';
+import { useGameState } from "../../../contexts/gameStateContext.js";
+import { getGridCoordinatesForTile } from "../../../contexts/utils/characterUtils";
+import { TILE_COMPLETION_ANIMATION_MS } from "../../../constants/animation";
 
 const TRAY_SLOT_COUNT = 5;
 

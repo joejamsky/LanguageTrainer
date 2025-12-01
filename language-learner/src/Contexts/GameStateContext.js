@@ -7,7 +7,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { defaultState } from "../Misc/Utils";
+import { defaultState } from "../misc/utils";
 import {
   DEFAULT_LEVEL,
   buildLevelKey,
@@ -16,7 +16,7 @@ import {
   levelToScriptKey,
   normalizeLevel,
   persistStoredLevel,
-} from "../Misc/levelUtils";
+} from "../misc/levelUtils";
 import {
   clampRowRange,
   resolveAccuracyThreshold,
@@ -76,7 +76,6 @@ export const GameStateProvider = ({ children }) => {
       rowStart: rowRange.start,
       rowEnd: rowRange.end,
       scriptLevel: derivedScriptLevel,
-      shuffleLevel: 0,
       shapeGroup,
       accuracyThreshold: adaptiveThreshold,
     };
@@ -131,7 +130,6 @@ export const GameStateProvider = ({ children }) => {
         ...normalizedLevel,
         rowStart: normalizedRange.start,
         rowEnd: normalizedRange.end,
-        shuffleLevel: 0,
       });
       reset(updatedFilters, updatedOptions);
       bumpInputFocusKey();

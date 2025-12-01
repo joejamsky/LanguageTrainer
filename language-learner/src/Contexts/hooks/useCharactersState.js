@@ -1,36 +1,24 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { defaultState } from "../../Misc/Utils";
+import { defaultState } from "../../misc/utils";
 import {
   applyAttemptToTilePerformance,
   applyMissToTilePerformance,
-} from "../../Misc/statUtils";
+} from "../../misc/statUtils";
 import { resolveShapeGroup } from "../utils/optionsUtils";
 import {
   cloneTopCharacters,
   getInitialCharacters,
   getGridCoordinatesForTile,
   getRemainingPlayableTiles,
-  handleCharRenderToggles,
+  buildTileFilterState,
+  tilePassesFilter,
   matchInput,
   updateMissedTile,
 } from "../utils/characterUtils";
 import { isBrowser } from "../utils/storageUtils";
-import { TILE_COMPLETION_ANIMATION_MS } from "../../Constants/animation";
+import { TILE_COMPLETION_ANIMATION_MS } from "../../constants/animation";
 
 const getSoundOrderedTiles = (tiles = []) => [...tiles];
-
-const getShapeGroupOrderedTiles = (tiles = [], desiredType) =>
-  tiles
-    .filter((tile) => tile.type === desiredType)
-    .sort((a, b) => {
-      const groupDiff = (a.shapeGroup ?? 0) - (b.shapeGroup ?? 0);
-      if (groupDiff !== 0) {
-        return groupDiff;
-      }
-      const aId = String(a.parentId || a.id || "");
-      const bId = String(b.parentId || b.id || "");
-      return aId.localeCompare(bId);
-    });
 
 const saveCharactersToLocalStorage = (state) => {
   if (!isBrowser) return;
@@ -116,7 +104,6 @@ export const useCharactersState = ({
     [clearAllCompletionTimeouts, filters, options, tileStats, setGame]
   );
 
-  const { current, methods } = options.gameMode;
 
   const resolvedShapeGroup = useMemo(
     () => resolveShapeGroup({ shapeGroup: options.shapeGroup }, filters),
@@ -140,29 +127,26 @@ export const useCharactersState = ({
     ]
   );
 
+  const filterToggles = useMemo(
+    () => ({
+      characterTypes: filters.characterTypes,
+      modifierGroup: filters.modifierGroup,
+    }),
+    [filters.characterTypes, filters.modifierGroup]
+  );
+
+  const tileFilterState = useMemo(
+    () => buildTileFilterState(filterToggles, filteringOptions),
+    [filterToggles, filteringOptions]
+  );
+
   useEffect(() => {
     setCharacters((prevChars) => {
       if (!prevChars) return prevChars;
       const filteredBot = prevChars.masterBotCharacters.filter((item) =>
-        handleCharRenderToggles(item, filters, filteringOptions)
+        tilePassesFilter(item, tileFilterState)
       );
-      let updatedBotCharacters;
-      switch (methods[current]) {
-        case "sound":
-          updatedBotCharacters = getSoundOrderedTiles(filteredBot);
-          break;
-        case "h-shape":
-          updatedBotCharacters = getShapeGroupOrderedTiles(filteredBot, "hiragana");
-          break;
-        case "k-shape":
-          updatedBotCharacters = getShapeGroupOrderedTiles(filteredBot, "katakana");
-          break;
-        case "missed":
-          updatedBotCharacters = filteredBot.sort((a, b) => b.missed - a.missed);
-          break;
-        default:
-          updatedBotCharacters = filteredBot;
-      }
+      const updatedBotCharacters = getSoundOrderedTiles(filteredBot);
 
       return {
         ...prevChars,
@@ -170,7 +154,7 @@ export const useCharactersState = ({
         topCharacters: cloneTopCharacters(),
       };
     });
-  }, [filters, filteringOptions, current, methods]);
+  }, [tileFilterState]);
 
   useEffect(() => {
     const botTiles = characters?.botCharacters || [];

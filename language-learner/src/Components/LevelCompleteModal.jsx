@@ -1,8 +1,8 @@
 import React, { useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import "../Styles/LevelCompleteModal.scss";
-import { useGameState } from "../Contexts/GameStateContext";
-import { describeLevel } from "../Misc/levelUtils";
+import "../styles/LevelCompleteModal.scss";
+import { useGameState } from "../contexts/gameStateContext";
+import { describeLevel } from "../misc/levelUtils";
 
 const formatTime = (seconds = 0) => {
   if (!Number.isFinite(seconds)) return "--:--";

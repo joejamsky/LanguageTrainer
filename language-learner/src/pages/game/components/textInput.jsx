@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import "../Styles/TextInput.scss";
-import { useGameState } from "../Contexts/GameStateContext.js";
-import { dictionaryKanaToRomaji } from "../Misc/Utils";
+import "../../../styles/TextInput.scss";
+import { useGameState } from "../../../contexts/gameStateContext.js";
+import { dictionaryKanaToRomaji } from "../../../misc/utils";
 
 const TextInput = ({ targetTileId = null, completionDelayMs = 0 }) => {
     const {handleTextSubmit, setOptions, currentLevel, inputFocusKey, characters} = useGameState();

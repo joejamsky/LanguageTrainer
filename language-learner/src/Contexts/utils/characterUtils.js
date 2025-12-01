@@ -1,14 +1,14 @@
-import { defaultState, dictionaryKanaToRomaji } from "../../Misc/Utils";
-import japaneseCharactersBot from "../../Data/japanese_characters_standard_bot.json";
-import japaneseCharactersTop from "../../Data/japanese_characters_standard_top.json";
-import { PROGRESSION_MODES } from "../../Misc/levelUtils";
+import { defaultState, dictionaryKanaToRomaji } from "../../misc/utils";
+import japaneseCharactersBot from "../../data/japanese_characters_standard_bot.json";
+import japaneseCharactersTop from "../../data/japanese_characters_standard_top.json";
+import { PROGRESSION_MODES } from "../../misc/levelUtils";
 import {
   clampRowRange,
   resolveAccuracyThreshold,
   resolveShapeGroup,
   resolveStudyMode,
 } from "./optionsUtils";
-import { ensureCustomSelections } from "../../Misc/customGameMode";
+import { ensureCustomSelections } from "../../misc/customSelections";
 
 const BASE_SCRIPT_ROW_KEYS = ["hiragana", "katakana"];
 
@@ -69,27 +69,58 @@ const getSelectionKeyForItem = (item) => {
   return null;
 };
 
-export const handleCharRenderToggles = (item, filters, options) => {
+export const buildTileFilterState = (
+  filters = defaultState.filters,
+  options = defaultState.options
+) => {
   const rowRange = clampRowRange(options?.rowRange || defaultState.options.rowRange);
   const studyMode = resolveStudyMode(options);
-  const shapeGroup = resolveShapeGroup(options, filters) - 1;
+  const shapeGroupIndex = resolveShapeGroup(options, filters) - 1;
   const accuracyThreshold = resolveAccuracyThreshold(options);
   const customSelections = ensureCustomSelections(options?.customSelections);
   const customRows = customSelections.rows || {};
   const hasCustomRowFilters = BASE_SCRIPT_ROW_KEYS.some((key) =>
     Object.values(customRows[key] || {}).some((value) => value === false)
   );
+  const characterTypes = filters?.characterTypes || defaultState.filters.characterTypes;
+  const modifierGroup = filters?.modifierGroup || defaultState.filters.modifierGroup;
+
+  return {
+    characterTypes,
+    modifierGroup,
+    rowRange,
+    studyMode,
+    shapeGroupIndex,
+    accuracyThreshold,
+    customRows,
+    hasCustomRowFilters,
+  };
+};
+
+export const tilePassesFilter = (item, filterState) => {
+  if (!filterState) return false;
+  const {
+    characterTypes,
+    modifierGroup,
+    rowRange,
+    studyMode,
+    shapeGroupIndex,
+    accuracyThreshold,
+    customRows,
+    hasCustomRowFilters,
+  } = filterState;
+
   let baseEnabled = false;
-  if (item.type === "hiragana") baseEnabled = filters.characterTypes.hiragana;
-  else if (item.type === "katakana") baseEnabled = filters.characterTypes.katakana;
-  else if (item.type === "romaji") baseEnabled = filters.characterTypes.romaji;
+  if (item.type === "hiragana") baseEnabled = characterTypes.hiragana;
+  else if (item.type === "katakana") baseEnabled = characterTypes.katakana;
+  else if (item.type === "romaji") baseEnabled = characterTypes.romaji;
 
   if (!baseEnabled) return false;
 
-  if (item.modifierGroup === "dakuten" && !filters.modifierGroup.dakuten) {
+  if (item.modifierGroup === "dakuten" && !modifierGroup.dakuten) {
     return false;
   }
-  if (item.modifierGroup === "handakuten" && !filters.modifierGroup.handakuten) {
+  if (item.modifierGroup === "handakuten" && !modifierGroup.handakuten) {
     return false;
   }
 
@@ -106,7 +137,7 @@ export const handleCharRenderToggles = (item, filters, options) => {
 
   if (studyMode === PROGRESSION_MODES.SHAPES) {
     if (typeof item.shapeGroup !== "number") return false;
-    return item.shapeGroup === shapeGroup;
+    return item.shapeGroup === shapeGroupIndex;
   }
 
   if (studyMode === PROGRESSION_MODES.ADAPTIVE) {
@@ -116,7 +147,7 @@ export const handleCharRenderToggles = (item, filters, options) => {
 
   if (!hasCustomRowFilters && !isWithinRowRange(item, rowRange)) return false;
 
-  return baseEnabled;
+  return true;
 };
 
 export const cloneTopCharacters = () =>
@@ -152,9 +183,8 @@ export const getInitialCharacters = (
     render: false,
   }));
   const masterTopCharacters = cloneTopCharacters();
-  const botCharacters = defaultBot.filter((item) =>
-    handleCharRenderToggles(item, filters, options)
-  );
+  const filterState = buildTileFilterState(filters, options);
+  const botCharacters = defaultBot.filter((item) => tilePassesFilter(item, filterState));
   return {
     masterTopCharacters,
     masterBotCharacters: defaultBot,

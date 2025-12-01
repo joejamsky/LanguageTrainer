@@ -1,10 +1,10 @@
 import React, { useMemo } from "react";
-import "../Styles/TopGrid.scss";
-import DropTile from "./DropTile";
-import { useGameState } from "../Contexts/GameStateContext.js";
-import { PROGRESSION_MODES } from "../Misc/levelUtils";
-import { ensureCustomSelections } from "../Misc/customGameMode";
-import { getRowNumberForTileId } from "../Data/kanaGroups";
+import "../../../styles/TopGrid.scss";
+import DropTile from "./dropTile";
+import { useGameState } from "../../../contexts/gameStateContext.js";
+import { PROGRESSION_MODES } from "../../../misc/levelUtils";
+import { ensureCustomSelections } from "../../../misc/customSelections";
+import { getRowNumberForTileId } from "../../../data/kanaGroups";
 
 const BASE_ROW_LABELS = {
   1: "V",

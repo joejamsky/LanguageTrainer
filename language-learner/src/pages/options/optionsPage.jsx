@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import "../Styles/Pages/Options.scss";
-import AppHeader from "../Components/AppHeader";
-import { useGameState } from "../Contexts/GameStateContext";
-import { DEFAULT_LEVEL, clearStoredData, normalizeLevel } from "../Misc/levelUtils";
+import "../../styles/Pages/Options.scss";
+import AppHeader from "../../components/appHeader";
+import { useGameState } from "../../contexts/gameStateContext";
+import { DEFAULT_LEVEL, clearStoredData, normalizeLevel } from "../../misc/levelUtils";
 
 const Options = () => {
   const { applyLevelConfiguration, options, setOptions } = useGameState();

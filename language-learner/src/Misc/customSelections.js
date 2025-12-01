@@ -3,7 +3,7 @@ import {
   STROKE_SECTION_KEYS,
   getRowsForKana,
   getStrokeGroupsForKana,
-} from "../Data/kanaGroups";
+} from "../data/kanaGroups";
 import { DEFAULT_LEVEL } from "./levelUtils";
 
 export const PATH_MODIFIER_OPTIONS = [
@@ -142,61 +142,3 @@ export const areAllShapesEnabled = (shapeState, scriptKey) =>
   getStrokeGroupsForKana(scriptKey).every(
     (group) => shapeState[scriptKey]?.[group]
   );
-
-export const CUSTOM_SHUFFLE_OPTIONS = [
-  {
-    key: "none",
-    title: "Unshuffled",
-    caption: "Ordered practice",
-    rowShuffle: false,
-    columnShuffle: false,
-    icon: "—",
-    value: 0,
-  },
-  {
-    key: "horizontal",
-    title: "Shuffle Rows",
-    caption: "Randomize row order",
-    rowShuffle: true,
-    columnShuffle: false,
-    icon: "↔",
-    value: 1,
-  },
-  {
-    key: "vertical",
-    title: "Shuffle Columns",
-    caption: "Randomize column order",
-    rowShuffle: false,
-    columnShuffle: true,
-    icon: "↕",
-    value: 2,
-  },
-  {
-    key: "both",
-    title: "Shuffle Both",
-    caption: "Full randomization",
-    rowShuffle: true,
-    columnShuffle: true,
-    icon: "↔ ↕",
-    value: 3,
-  },
-];
-
-export const getShuffleKeyFromSorting = (sorting = {}) => {
-  if (sorting.rowShuffle && sorting.columnShuffle) return "both";
-  if (sorting.rowShuffle) return "horizontal";
-  if (sorting.columnShuffle) return "vertical";
-  return "none";
-};
-
-export const getSortingForShuffleKey = (key, currentSorting = {}) => {
-  const option =
-    CUSTOM_SHUFFLE_OPTIONS.find((node) => node.key === key) ||
-    CUSTOM_SHUFFLE_OPTIONS[0];
-  return {
-    ...currentSorting,
-    rowShuffle: option.rowShuffle,
-    columnShuffle: option.columnShuffle,
-    shuffleLevel: option.value,
-  };
-};

@@ -1,10 +1,5 @@
-import {
-  ROW_TIERS,
-  SHUFFLE_NODES,
-  LEVEL_TO_SCRIPT,
-  SCRIPT_TO_LEVEL,
-} from "../Data/skillTreeConfig";
-import BOT_CHARACTERS from "../Data/japanese_characters_standard_bot.json";
+import { ROW_TIERS, LEVEL_TO_SCRIPT, SCRIPT_TO_LEVEL } from "../data/rowConfig";
+import BOT_CHARACTERS from "../data/japanese_characters_standard_bot.json";
 
 export const PROGRESSION_MODES = {
   LINEAR: "linear",
@@ -55,10 +50,8 @@ const MODE_SEQUENCE = [
 ];
 
 const LAST_LEVEL_STORAGE_KEY = "languageTrainerLastLevel";
-const LAST_GUIDED_SCRIPT_STORAGE_KEY = "languageTrainerLastGuidedScript";
 const STORAGE_KEYS_TO_CLEAR = [
   LAST_LEVEL_STORAGE_KEY,
-  LAST_GUIDED_SCRIPT_STORAGE_KEY,
   "languageTrainerStats",
   "tileStats",
   "languageTrainerSettings",
@@ -78,7 +71,6 @@ export const DEFAULT_LEVEL = {
   rowStart: 1,
   rowEnd: 1,
   scriptLevel: 1,
-  shuffleLevel: 0,
   shapeGroup: 1,
   accuracyThreshold: ACCURACY_THRESHOLDS[0],
 };
@@ -87,7 +79,6 @@ const LEVEL_STATS_STORAGE_KEY = "languageTrainerStats";
 
 const isBrowser = typeof window !== "undefined";
 
-const defaultMaxShuffleLevel = SHUFFLE_NODES.length - 1;
 
 const clampRowIndex = (value = 1) => {
   const numeric = Number.isFinite(value) ? value : 1;
@@ -128,12 +119,6 @@ const clampAccuracyThreshold = (value = ACCURACY_THRESHOLDS[0]) => {
   return Math.min(Math.max(numeric, min), max);
 };
 
-const SHUFFLE_SEQUENCE = SHUFFLE_NODES.map((node) => node.value).sort(
-  (a, b) => a - b
-);
-
-const getShuffleSequenceForRowRange = () => [...SHUFFLE_SEQUENCE];
-
 const normalizeModeValue = (mode) => {
   if (!mode) return PROGRESSION_MODES.LINEAR;
   const normalized = mode.toLowerCase();
@@ -147,16 +132,11 @@ const normalizeLevelShape = (level = DEFAULT_LEVEL) => {
     ? level.scriptLevel
     : SCRIPT_SEQUENCE[0];
   const scriptKey = LEVEL_TO_SCRIPT[scriptLevel] || "hiragana";
-  const shuffleSeq = getShuffleSequenceForRowRange(start, end);
-  const safeShuffle = shuffleSeq.includes(level.shuffleLevel)
-    ? level.shuffleLevel
-    : shuffleSeq[0];
   return {
     mode: normalizedMode,
     rowStart: start,
     rowEnd: end,
     scriptLevel,
-    shuffleLevel: safeShuffle,
     shapeGroup: clampShapeGroup(level.shapeGroup, scriptKey),
     accuracyThreshold: clampAccuracyThreshold(level.accuracyThreshold),
   };
@@ -181,14 +161,6 @@ const DEFAULT_LEVELS_BY_SCRIPT = SCRIPT_STORAGE_KEYS.reduce((acc, scriptKey) => 
   acc[scriptKey] = buildDefaultLevelForScript(scriptKey);
   return acc;
 }, {});
-
-export const getMaxShuffleLevelForRow = () => defaultMaxShuffleLevel;
-
-export const clampShuffleLevelForRow = (rowCount, shuffleLevel = DEFAULT_LEVEL.shuffleLevel) => {
-  const maxLevel = getMaxShuffleLevelForRow(rowCount);
-  const normalizedValue = typeof shuffleLevel === "number" ? shuffleLevel : DEFAULT_LEVEL.shuffleLevel;
-  return Math.max(0, Math.min(normalizedValue, maxLevel));
-};
 
 const normalizeStoredLevels = (rawValue) => {
   const base = { ...DEFAULT_LEVELS_BY_SCRIPT };
@@ -230,14 +202,6 @@ export const readStoredLevel = (scriptKey = "hiragana") => {
   return levels[scriptKey] || levels.hiragana || DEFAULT_LEVEL;
 };
 
-export const readLastGuidedScriptKey = () => {
-  if (!isBrowser) return "hiragana";
-  const stored = localStorage.getItem(LAST_GUIDED_SCRIPT_STORAGE_KEY);
-  if (SCRIPT_STORAGE_KEYS.includes(stored)) {
-    return stored;
-  }
-  return "hiragana";
-};
 
 export const persistStoredLevel = (level = DEFAULT_LEVEL) => {
   if (!isBrowser) return;
@@ -250,7 +214,6 @@ export const persistStoredLevel = (level = DEFAULT_LEVEL) => {
   };
   try {
     localStorage.setItem(LAST_LEVEL_STORAGE_KEY, JSON.stringify(next));
-    localStorage.setItem(LAST_GUIDED_SCRIPT_STORAGE_KEY, scriptKey);
   } catch (error) {
     console.warn("Failed to persist level selection:", error);
   }
@@ -287,17 +250,6 @@ export const getScriptLevelFromFilters = (characterTypes = {}) => {
   return SCRIPT_TO_LEVEL.hiragana;
 };
 
-export const getShuffleLevelFromSorting = (sorting = {}) => {
-  if (typeof sorting.shuffleLevel === "number") return sorting.shuffleLevel;
-  if (sorting.rowShuffle && sorting.columnShuffle) return 3;
-  if (sorting.rowShuffle) return 1;
-  if (sorting.columnShuffle) return 2;
-  return 0;
-};
-
-export const getShuffleNodeByValue = (value) =>
-  SHUFFLE_NODES.find((option) => option.value === value) || SHUFFLE_NODES[0];
-
 export const levelToScriptKey = (scriptLevel) => LEVEL_TO_SCRIPT[scriptLevel] || "hiragana";
 
 export const scriptKeyToLevel = (key) => SCRIPT_TO_LEVEL[key] || SCRIPT_TO_LEVEL.hiragana;
@@ -309,7 +261,6 @@ export const buildLevelKey = (level = DEFAULT_LEVEL) => {
     normalized.rowStart,
     normalized.rowEnd,
     normalized.scriptLevel,
-    normalized.shuffleLevel,
     normalized.shapeGroup,
     normalized.accuracyThreshold,
   ].join("-");
@@ -324,7 +275,6 @@ const getInitialLevelForMode = (mode, scriptLevelOverride = SCRIPT_SEQUENCE[0]) 
         rowStart: 1,
         rowEnd: Math.min(WINDOW_SIZES[0] || 2, TOTAL_ROWS),
         scriptLevel: scriptLevelOverride,
-        shuffleLevel: 0,
       };
     case PROGRESSION_MODES.SHAPES:
       return {
@@ -333,7 +283,6 @@ const getInitialLevelForMode = (mode, scriptLevelOverride = SCRIPT_SEQUENCE[0]) 
         rowStart: 1,
         rowEnd: TOTAL_ROWS,
         scriptLevel: scriptLevelOverride,
-        shuffleLevel: 0,
         shapeGroup: getDefaultShapeGroup(LEVEL_TO_SCRIPT[scriptLevelOverride] || "hiragana"),
       };
     case PROGRESSION_MODES.ADAPTIVE:
@@ -343,7 +292,6 @@ const getInitialLevelForMode = (mode, scriptLevelOverride = SCRIPT_SEQUENCE[0]) 
         rowStart: 1,
         rowEnd: TOTAL_ROWS,
         scriptLevel: scriptLevelOverride,
-        shuffleLevel: 0,
         accuracyThreshold: ACCURACY_THRESHOLDS[0],
       };
     case PROGRESSION_MODES.LINEAR:
@@ -354,7 +302,6 @@ const getInitialLevelForMode = (mode, scriptLevelOverride = SCRIPT_SEQUENCE[0]) 
         rowStart: 1,
         rowEnd: 1,
         scriptLevel: scriptLevelOverride,
-        shuffleLevel: 0,
       };
   }
 };
@@ -365,39 +312,13 @@ const getInitialLevelForMode = (mode, scriptLevelOverride = SCRIPT_SEQUENCE[0]) 
 //   return MODE_SEQUENCE[(idx + 1) % MODE_SEQUENCE.length];
 // };
 
-const advanceScriptShuffle = (level, { rowStart, rowEnd }) => {
-  const shuffleSequence = getShuffleSequenceForRowRange(rowStart, rowEnd);
-  const shuffleIndex = Math.max(0, shuffleSequence.indexOf(level.shuffleLevel));
-
-  if (shuffleIndex < shuffleSequence.length - 1) {
-    return {
-      ...level,
-      shuffleLevel: shuffleSequence[shuffleIndex + 1],
-    };
-  }
-
-  return null;
-};
-
 const advanceLinear = (level) => {
-  const shuffleSequence = getShuffleSequenceForRowRange(level.rowStart, level.rowEnd);
-  const shuffleIndex = Math.max(0, shuffleSequence.indexOf(level.shuffleLevel));
-
-  if (shuffleIndex < shuffleSequence.length - 1) {
-    return {
-      ...level,
-      shuffleLevel: shuffleSequence[shuffleIndex + 1],
-    };
-  }
-
   if (level.rowEnd < TOTAL_ROWS) {
     const nextRow = clampRowRange(level.rowStart + 1, level.rowEnd + 1);
-    const nextShuffleSequence = getShuffleSequenceForRowRange(nextRow.start, nextRow.end);
     return {
       ...level,
       rowStart: nextRow.start,
       rowEnd: nextRow.end,
-      shuffleLevel: nextShuffleSequence[0],
     };
   }
 
@@ -407,21 +328,15 @@ const advanceLinear = (level) => {
 const advanceRange = (level) => {
   const rowCount = Math.max(1, level.rowEnd - level.rowStart + 1);
   const windowSize = WINDOW_SIZES.find((size) => size === rowCount) || WINDOW_SIZES[0] || 2;
-  const advanced = advanceScriptShuffle(level, { rowStart: level.rowStart, rowEnd: level.rowEnd });
-  if (advanced) {
-    return advanced;
-  }
 
   const maxStart = TOTAL_ROWS - rowCount + 1;
   if (level.rowStart < maxStart) {
     const nextStart = level.rowStart + 1;
     const nextEnd = nextStart + rowCount - 1;
-    const shuffleSequence = getShuffleSequenceForRowRange(nextStart, nextEnd);
     return {
       ...level,
       rowStart: nextStart,
       rowEnd: nextEnd,
-      shuffleLevel: shuffleSequence[0],
     };
   }
 
@@ -429,12 +344,10 @@ const advanceRange = (level) => {
   if (currentWindowIndex < WINDOW_SIZES.length - 1) {
     const nextSize = WINDOW_SIZES[currentWindowIndex + 1];
     const nextEnd = Math.min(TOTAL_ROWS, nextSize);
-    const shuffleSequence = getShuffleSequenceForRowRange(1, nextEnd);
     return {
       ...level,
       rowStart: 1,
       rowEnd: nextEnd,
-      shuffleLevel: shuffleSequence[0],
     };
   }
 
@@ -445,10 +358,6 @@ const advanceShapes = (level) => {
   const scriptKey = LEVEL_TO_SCRIPT[level.scriptLevel] || "hiragana";
   const availableGroups = getShapeGroupListForScriptKey(scriptKey);
   const safeGroup = clampShapeGroup(level.shapeGroup, scriptKey);
-  const advanced = advanceScriptShuffle(level, { rowStart: level.rowStart, rowEnd: level.rowEnd });
-  if (advanced) {
-    return advanced;
-  }
 
   const currentIndex = Math.max(0, availableGroups.indexOf(safeGroup));
   if (currentIndex < availableGroups.length - 1) {
@@ -456,7 +365,6 @@ const advanceShapes = (level) => {
     return {
       ...level,
       shapeGroup: nextGroup,
-      shuffleLevel: getShuffleSequenceForRowRange(level.rowStart, level.rowEnd)[0],
     };
   }
 
@@ -471,7 +379,6 @@ const advanceAdaptive = (level) => {
     return {
       ...level,
       accuracyThreshold: ACCURACY_THRESHOLDS[thresholdIndex + 1],
-      shuffleLevel: 0,
     };
   }
 
@@ -539,30 +446,13 @@ const formatGroupingLabel = (normalized) => {
   return `${normalized.rowStart}-${normalized.rowEnd}`;
 };
 
-const getShuffleGlyph = (normalized) => {
-  if (normalized.mode === PROGRESSION_MODES.ADAPTIVE) {
-    return "—";
-  }
-  const node = SHUFFLE_NODES.find((option) => option.value === normalized.shuffleLevel);
-  if (!node) {
-    return "—";
-  }
-  const glyphs = [];
-  if (node.rowShuffle) glyphs.push("↔");
-  if (node.columnShuffle) glyphs.push("↕");
-  if (!glyphs.length) {
-    return "—";
-  }
-  return glyphs.join(" ");
-};
-
 export const describeLevel = (level = DEFAULT_LEVEL) => {
   const normalized = normalizeLevelShape(level);
   const modeLabel = normalized.mode.charAt(0).toUpperCase();
   const scriptKey = LEVEL_TO_SCRIPT[normalized.scriptLevel] || "hiragana";
   const kanaLabel = SCRIPT_LABELS[scriptKey] || scriptKey.charAt(0).toUpperCase();
   const groupingLabel = formatGroupingLabel(normalized);
-  const shuffleLabel = getShuffleGlyph(normalized);
+  const shuffleLabel = "No Shuffle";
 
   return {
     mode: modeLabel,

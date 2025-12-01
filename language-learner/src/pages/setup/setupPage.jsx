@@ -1,21 +1,19 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import "../Styles/Pages/Setup.scss";
-import { useGameState } from "../Contexts/GameStateContext";
+import "../../styles/Pages/Setup.scss";
+import { useGameState } from "../../contexts/gameStateContext";
 import {
   DEFAULT_LEVEL,
   getScriptLevelFromFilters,
-  getShuffleLevelFromSorting,
-  clampShuffleLevelForRow,
   PROGRESSION_MODES,
   getShapeGroupOptionsForFilters,
   describeLevel,
   normalizeLevel,
-} from "../Misc/levelUtils";
-import AppHeader from "../Components/AppHeader";
-import SelectByRow from "../Components/SelectByRow";
-import SelectByStroke from "../Components/SelectByStroke";
-import SelectByAccuracy from "../Components/SelectByAccuracy";
+} from "../../misc/levelUtils";
+import AppHeader from "../../components/appHeader";
+import SelectByRow from "./components/selectByRow";
+import SelectByStroke from "./components/selectByStroke";
+import SelectByAccuracy from "./components/selectByAccuracy";
 import {
   PATH_MODIFIER_OPTIONS,
   ensureCustomSelections,
@@ -26,17 +24,14 @@ import {
   toggleAllShapesSelection,
   areAllShapesEnabled,
   clampAccuracyTarget,
-  CUSTOM_SHUFFLE_OPTIONS,
-  getShuffleKeyFromSorting,
-  getSortingForShuffleKey,
   getDefaultCustomSelections,
-} from "../Misc/customGameMode";
+} from "../../misc/customSelections";
 import {
   getRowsForKana,
   getStrokeGroupsForKana,
   STROKE_SECTION_KEYS,
-} from "../Data/kanaGroups";
-import { defaultState } from "../Misc/Utils";
+} from "../../data/kanaGroups";
+import { defaultState } from "../../misc/utils";
 
 const Setup = () => {
   const {
@@ -58,10 +53,6 @@ const Setup = () => {
     : DEFAULT_LEVEL.accuracyThreshold;
 
   const scriptLevel = getScriptLevelFromFilters(filters.characterTypes);
-  const shuffleLevelRaw = getShuffleLevelFromSorting(options.sorting);
-  const shuffleLevel = studyMode === PROGRESSION_MODES.ADAPTIVE
-    ? 0
-    : clampShuffleLevelForRow(rowCount, shuffleLevelRaw);
 
   const availableShapeGroups = useMemo(
     () => getShapeGroupOptionsForFilters(filters.characterTypes),
@@ -75,11 +66,10 @@ const Setup = () => {
         rowStart: rowRange.start,
         rowEnd: rowRange.end,
         scriptLevel,
-        shuffleLevel,
         shapeGroup,
         accuracyThreshold,
       }),
-    [studyMode, rowRange, scriptLevel, shuffleLevel, shapeGroup, accuracyThreshold]
+    [studyMode, rowRange, scriptLevel, shapeGroup, accuracyThreshold]
   );
   const customDescriptor = useMemo(() => describeLevel(customLevel), [customLevel]);
 
@@ -278,15 +268,7 @@ const Setup = () => {
     });
   };
 
-  const shuffleKey = getShuffleKeyFromSorting(options.sorting);
   const [selectionTab, setSelectionTab] = useState("rows");
-
-  const handleShuffleModeChange = (key) => {
-    setOptions((prev) => ({
-      ...prev,
-      sorting: getSortingForShuffleKey(key, prev.sorting),
-    }));
-  };
 
   const handleResetForm = () => {
     setFilters(defaultState.filters);
@@ -322,7 +304,7 @@ const Setup = () => {
       <section className="setup-summary">
         <span className="setup-badge">Current Plan</span>
         <p className="setup-summary-main">{customDescriptor.summary}</p>
-        <p className="setup-summary-note">Mode · Grouping · Kana · Shuffle</p>
+        <p className="setup-summary-note">Mode · Grouping · Kana</p>
       </section>
 
       <div className="setup-grid">
@@ -416,28 +398,6 @@ const Setup = () => {
           </div>
         </section>
 
-        <section className="control-card shuffle-card full-width-card">
-          <div className="control-card-header">
-            <h2>Shuffle</h2>
-            <p>Control ordering and randomization.</p>
-          </div>
-          <div className="shuffle-options">
-            {CUSTOM_SHUFFLE_OPTIONS.map((option) => (
-              <button
-                key={option.key}
-                type="button"
-                className={`shuffle-chip ${shuffleKey === option.key ? "active" : ""}`}
-                onClick={() => handleShuffleModeChange(option.key)}
-              >
-                <span className="shuffle-icon">{option.icon}</span>
-                <span className="shuffle-text">
-                  <span className="shuffle-title">{option.title}</span>
-                  <span className="shuffle-caption">{option.caption}</span>
-                </span>
-              </button>
-            ))}
-          </div>
-        </section>
       </div>
 
       <div className="setup-actions">

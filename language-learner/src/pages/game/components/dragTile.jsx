@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
-import "../Styles/DragTile.scss";
-import { useGameState } from "../Contexts/GameStateContext";
-import { dictionaryKanaToRomaji } from "../Misc/Utils";
+import "../../../styles/DragTile.scss";
+import { useGameState } from "../../../contexts/gameStateContext";
+import { dictionaryKanaToRomaji } from "../../../misc/utils";
 
 const DragTile = ({
   characterObj,

@@ -1,13 +1,13 @@
 import React from "react";
-import "../Styles/Main.scss";
-import "../Styles/Pages/Game.scss";
+import "../../styles/Main.scss";
+import "../../styles/Pages/Game.scss";
 import "@fortawesome/fontawesome-free/css/all.css";
-import TopGrid from "../Components/TopGrid.jsx";
-import BotGrid from "../Components/BotGrid.jsx";
-import LevelCompleteModal from "../Components/LevelCompleteModal.jsx";
-import GameHeader from "../Components/GameHeader.jsx";
-import PronunciationSpeaker from "../Components/PronunciationSpeaker.jsx";
-import { useGameState } from "../Contexts/GameStateContext.js";
+import TopGrid from "./components/topGrid";
+import BotGrid from "./components/botGrid";
+import LevelCompleteModal from "../../components/levelCompleteModal";
+import GameHeader from "./components/gameHeader";
+import PronunciationSpeaker from "../../components/pronunciationSpeaker";
+import { useGameState } from "../../contexts/gameStateContext.js";
 
 const Game = () => {
   useGameState();

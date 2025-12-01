@@ -1,6 +1,6 @@
 import React, {useState} from "react";
-import { useGameState } from "../Contexts/GameStateContext.js";
-import "../Styles/MobileHint.scss";
+import { useGameState } from "../../../contexts/gameStateContext.js";
+import "../../../styles/MobileHint.scss";
 
 
 const MobileHint = () => {

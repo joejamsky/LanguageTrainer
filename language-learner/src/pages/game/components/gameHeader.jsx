@@ -1,7 +1,7 @@
 import React from "react";
-import AppHeader from "./AppHeader";
-import Timer from "./Timer.jsx";
-import MobileHint from "./MobileHint.jsx";
+import AppHeader from "../../../components/appHeader";
+import Timer from "./gameTimer";
+import MobileHint from "./mobileHint";
 
 const GameHeader = () => {
   return (

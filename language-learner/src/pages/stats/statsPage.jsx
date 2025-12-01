@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
-import "../Styles/Pages/Stats.scss";
-import { useGameState } from "../Contexts/GameStateContext";
-import AppHeader from "../Components/AppHeader";
+import "../../styles/Pages/Stats.scss";
+import { useGameState } from "../../contexts/gameStateContext";
+import AppHeader from "../../components/appHeader";
 
 const Stats = () => {
   const { characters, stats, tileStats } = useGameState();

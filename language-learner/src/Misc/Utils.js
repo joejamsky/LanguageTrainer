@@ -1,7 +1,7 @@
 // Utils.js
 
 import { PROGRESSION_MODES, DEFAULT_LEVEL } from "./levelUtils";
-import { getDefaultCustomSelections } from "./customGameMode";
+import { getDefaultCustomSelections } from "./customSelections";
 
 export const defaultState = {
   characters: {
@@ -30,18 +30,9 @@ export const defaultState = {
     studyMode: PROGRESSION_MODES.LINEAR,
     shapeGroup: 1,
     accuracyThreshold: DEFAULT_LEVEL.accuracyThreshold,
-    gameMode: {
-      current: 0,
-      methods: ['sound', 'h-shape', 'k-shape', 'missed']
-    },
     hints: false,
     pronunciation: true,
     sound: false,
-    sorting: {
-      shuffleLevel: 0,
-      rowShuffle: false,
-      columnShuffle: false
-    },
     customSelections: getDefaultCustomSelections(),
   },
   game: {

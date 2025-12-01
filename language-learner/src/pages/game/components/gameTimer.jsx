@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import "../Styles/Timer.scss";
-import { useGameState } from "../Contexts/GameStateContext.js";
-import { describeLevel } from "../Misc/levelUtils";
+import "../../../styles/Timer.scss";
+import { useGameState } from "../../../contexts/gameStateContext.js";
+import { describeLevel } from "../../../misc/levelUtils";
 
 function Timer() {
   const { game, setStats, currentLevel } = useGameState();
@@ -13,7 +13,7 @@ function Timer() {
     currentLevelDescriptor?.mode || "--",
     currentLevelDescriptor?.grouping || "--",
     currentLevelDescriptor?.kana || "--",
-    currentLevelDescriptor?.shuffle || "--",
+    currentLevelDescriptor?.shuffle || "No Shuffle",
   ];
 
   useEffect(() => {

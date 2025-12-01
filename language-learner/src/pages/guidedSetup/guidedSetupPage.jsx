@@ -1,17 +1,34 @@
 import React, { useMemo, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import "../Styles/Pages/GuidedSetup.scss";
-import AppHeader from "../Components/AppHeader";
-import { useGameState } from "../Contexts/GameStateContext";
-import { GUIDED_SCRIPT_OPTIONS } from "../Constants/guidedPaths";
-import { buildGuidedLevelMap, getInitialGuidedSelection } from "../Misc/guidedGameMode";
+import "../../styles/Pages/GuidedSetup.scss";
+import AppHeader from "../../components/appHeader";
+import { useGameState } from "../../contexts/gameStateContext";
+import { GUIDED_SCRIPT_OPTIONS } from "../../constants/guidedPaths";
+import {
+  describeLevel,
+  readStoredLevel,
+  readStoredLevels,
+} from "../../misc/levelUtils";
 
 const GuidedSetup = () => {
   const navigate = useNavigate();
   const { applyLevelConfiguration, setSessionType } = useGameState();
 
-  const { descriptors } = useMemo(() => buildGuidedLevelMap(), []);
-  const [scriptSelection, setScriptSelection] = useState(() => getInitialGuidedSelection());
+  const descriptors = useMemo(() => {
+    const storedLevels = readStoredLevels();
+    const map = {};
+    GUIDED_SCRIPT_OPTIONS.forEach((option) => {
+      const level = storedLevels[option.key] || readStoredLevel(option.key);
+      map[option.key] = {
+        level,
+        descriptor: describeLevel(level),
+      };
+    });
+    return map;
+  }, []);
+  const [scriptSelection, setScriptSelection] = useState(
+    () => GUIDED_SCRIPT_OPTIONS[0]?.key || "hiragana"
+  );
 
   const handleStartGuided = () => {
     const levelToApply = descriptors[scriptSelection]?.level;
@@ -43,7 +60,7 @@ const GuidedSetup = () => {
             <span className="guided-choice-caption">{choice.caption}</span>
             <div className="guided-choice-summary">
               <span>Checkpoint</span>
-              <strong>{descriptors[choice.key]?.descriptor.summary || "Row 1 | Ordered"}</strong>
+              <strong>{descriptors[choice.key]?.descriptor.summary || "Row 1 | No Shuffle"}</strong>
             </div>
           </button>
         ))}

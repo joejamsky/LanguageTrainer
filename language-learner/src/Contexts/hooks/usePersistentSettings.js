@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { defaultState } from "../../Misc/Utils";
+import { defaultState } from "../../misc/utils";
 import { normalizeOptionsState } from "../utils/optionsUtils";
 import {
   loadSettingsFromStorage,

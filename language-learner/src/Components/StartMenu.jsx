@@ -1,6 +1,6 @@
 import React from "react";
-import "../Styles/StartMenu.scss";
-import { useGameState } from "../Contexts/GameStateContext.js";
+import "../styles/StartMenu.scss";
+import { useGameState } from "../contexts/gameStateContext.js";
 
 function StartMenu() {
     const {setFilters, startMenuOpen, setStartMenuOpen, handleCharacterSelect } = useGameState();

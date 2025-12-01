@@ -1,6 +1,6 @@
 import TOP_CHARACTERS from "./japanese_characters_standard_top.json";
 import BOT_CHARACTERS from "./japanese_characters_standard_bot.json";
-import { ROW_TIERS } from "./skillTreeConfig";
+import { ROW_TIERS } from "./rowConfig";
 
 const ROW_LOOKUP = ROW_TIERS.reduce((acc, row) => {
   acc[row.value] = row;

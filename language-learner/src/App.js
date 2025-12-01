@@ -1,14 +1,14 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import "./Styles/App.scss";
-import Game from "./Pages/Game";
-import { GameStateProvider } from "./Contexts/GameStateContext";
-import Home from "./Pages/Home";
-import ModeSelect from "./Pages/ModeSelect";
-import GuidedSetup from "./Pages/GuidedSetup";
-import Setup from "./Pages/Setup";
-import Stats from "./Pages/Stats";
-import Options from "./Pages/Options";
+import "./styles/App.scss";
+import Game from "./pages/game/gamePage";
+import { GameStateProvider } from "./contexts/gameStateContext";
+import Home from "./pages/home/homePage";
+import ModeSelect from "./pages/modeSelect/modeSelectPage";
+import GuidedSetup from "./pages/guidedSetup/guidedSetupPage";
+import Setup from "./pages/setup/setupPage";
+import Stats from "./pages/stats/statsPage";
+import Options from "./pages/options/optionsPage";
 
 function App() {
   return (

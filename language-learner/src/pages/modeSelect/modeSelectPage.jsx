@@ -1,9 +1,9 @@
 import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import "../Styles/Pages/ModeSelect.scss";
-import AppHeader from "../Components/AppHeader";
-import { GUIDED_SCRIPT_OPTIONS } from "../Constants/guidedPaths";
-import { describeLevel, readStoredLevels } from "../Misc/levelUtils";
+import "../../styles/Pages/ModeSelect.scss";
+import AppHeader from "../../components/appHeader";
+import { GUIDED_SCRIPT_OPTIONS } from "../../constants/guidedPaths";
+import { describeLevel, readStoredLevels } from "../../misc/levelUtils";
 
 const ModeSelect = () => {
   const navigate = useNavigate();
