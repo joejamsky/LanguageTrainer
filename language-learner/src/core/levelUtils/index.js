@@ -12,6 +12,7 @@ export {
   getModeSequence,
   normalizeLevel,
   clampRowRange,
+  SCRIPT_LABELS,
 } from "./core";
 export { loadLevelStats, persistLevelStats, clearStoredData } from "./storage";
 export { getNextLevel, getInitialLevelByMode } from "./progression";

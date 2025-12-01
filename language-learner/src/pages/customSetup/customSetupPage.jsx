@@ -9,6 +9,7 @@ import {
   getShapeGroupOptionsForFilters,
   describeLevel,
   normalizeLevel,
+  SCRIPT_LABELS,
 } from "../../core/levelUtils";
 import AppHeader from "../../components/appHeader";
 import SelectByRow from "./components/selectByRow";
@@ -339,21 +340,40 @@ const CustomSetup = () => {
         };
       });
     } else if (selectionTab === "accuracy") {
-      // Accuracy tab: "Toggle All" sets all targets to 0% (show all)
+      // Accuracy tab: Toggle all row groups on/off, keep accuracy values
+      const allRowsOn = Object.values(customSelections.rows).every((panel) =>
+        Object.values(panel || {}).every(Boolean)
+      );
+      const shouldEnable = !allRowsOn;
+
+      setFilters((prev) => ({
+        ...prev,
+        characterTypes: {
+          ...prev.characterTypes,
+          hiragana: shouldEnable,
+          katakana: shouldEnable,
+        },
+        modifierGroup: {
+          ...prev.modifierGroup,
+          dakuten: shouldEnable,
+          handakuten: shouldEnable,
+        },
+      }));
+
       updateCustomSelections((prevSelections) => {
-        const nextTargets = {};
-        Object.keys(prevSelections.accuracyTargets || {}).forEach((key) => {
-          nextTargets[key] = 0;
+        const nextRows = {};
+        Object.keys(prevSelections.rows).forEach((key) => {
+          const rows = getRowsForKana(key);
+          nextRows[key] = rows.reduce((acc, row) => {
+            acc[row.value] = shouldEnable;
+            return acc;
+          }, {});
         });
         return {
           ...prevSelections,
-          accuracyTargets: nextTargets,
+          rows: nextRows,
         };
       });
-      setOptions((prev) => ({
-        ...prev,
-        accuracyThreshold: 0,
-      }));
     }
   };
 
@@ -366,6 +386,71 @@ const CustomSetup = () => {
       ),
     [customSelections.rows]
   );
+
+  const summaryScriptLabel = useMemo(() => {
+    const panelKeysForScript = (scriptKey) => {
+      if (selectionTab === "rows" || selectionTab === "accuracy") {
+        const baseKeys = [scriptKey];
+        const modifierKeys = ["dakuten", "handakuten"].map((modifier) =>
+          getScriptModifierKey(scriptKey, modifier)
+        );
+        return [...baseKeys, ...modifierKeys];
+      }
+      if (selectionTab === "shapes") {
+        const baseKeys = [scriptKey];
+        const modifierKeys = ["dakuten", "handakuten"].map(
+          (modifier) => `${scriptKey}-${modifier}`
+        );
+        return [...baseKeys, ...modifierKeys];
+      }
+      return [scriptKey];
+    };
+
+    const scriptHasSelection = (scriptKey) => {
+      if (selectionTab === "shapes") {
+        return panelKeysForScript(scriptKey).some((key) =>
+          Object.values(customSelections.shapes[key] || {}).some(Boolean)
+        );
+      }
+      // rows + accuracy share the same row state
+      return panelKeysForScript(scriptKey).some((key) =>
+        Object.values(customSelections.rows[key] || {}).some(Boolean)
+      );
+    };
+
+    const hasHiragana = scriptHasSelection("hiragana");
+    const hasKatakana = scriptHasSelection("katakana");
+
+    if (hasHiragana && hasKatakana) return SCRIPT_LABELS.both;
+    if (hasHiragana) return SCRIPT_LABELS.hiragana;
+    if (hasKatakana) return SCRIPT_LABELS.katakana;
+    return "—";
+  }, [selectionTab, customSelections.rows, customSelections.shapes]);
+
+  const summaryGroupingLabel = useMemo(() => {
+    const countTruthyValues = (record) =>
+      Object.values(record || {}).reduce(
+        (sum, value) => sum + (value ? 1 : 0),
+        0
+      );
+
+    if (selectionTab === "shapes") {
+      const totalGroups = Object.values(customSelections.shapes).reduce(
+        (sum, panel) => sum + countTruthyValues(panel),
+        0
+      );
+      return `${totalGroups} stroke groups`;
+    }
+
+    // rows + accuracy: count selected rows
+    const totalRows = Object.values(customSelections.rows).reduce(
+      (sum, panel) => sum + countTruthyValues(panel),
+      0
+    );
+    return `${totalRows} rows`;
+  }, [selectionTab, customSelections.rows, customSelections.shapes]);
+
+  const summaryShuffleLabel = "No Shuffle";
 
   const handleResetForm = () => {
     if (selectionTab === "rows") {
@@ -427,14 +512,36 @@ const CustomSetup = () => {
         };
       });
     } else if (selectionTab === "accuracy") {
-      // Accuracy tab: reset to "just Hiragana at 80% and below"
+      // Accuracy tab: only Hiragana base group active, all targets 80%
+      setFilters((prev) => ({
+        ...prev,
+        characterTypes: {
+          ...prev.characterTypes,
+          hiragana: true,
+          katakana: false,
+        },
+        modifierGroup: {
+          ...prev.modifierGroup,
+          dakuten: false,
+          handakuten: false,
+        },
+      }));
       updateCustomSelections((prevSelections) => {
+        const nextRows = {};
+        Object.keys(prevSelections.rows).forEach((key) => {
+          const rows = getRowsForKana(key);
+          nextRows[key] = rows.reduce((acc, row) => {
+            acc[row.value] = key === "hiragana";
+            return acc;
+          }, {});
+        });
         const nextTargets = {};
         Object.keys(prevSelections.accuracyTargets || {}).forEach((key) => {
-          nextTargets[key] = key === "hiragana" ? 80 : 100;
+          nextTargets[key] = 80;
         });
         return {
           ...prevSelections,
+          rows: nextRows,
           accuracyTargets: nextTargets,
         };
       });
@@ -464,7 +571,9 @@ const CustomSetup = () => {
 
       <section className="setup-summary">
         <span className="setup-badge">Current Plan</span>
-        <p className="setup-summary-main">{customDescriptor.summary}</p>
+        <p className="setup-summary-main">
+          {summaryGroupingLabel} | {summaryScriptLabel} | {summaryShuffleLabel}
+        </p>
         <p className="setup-summary-note">Mode · Grouping · Kana · Shuffle</p>
       </section>
 
