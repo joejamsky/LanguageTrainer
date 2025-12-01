@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "../../styles/pages/setup.scss";
 import { useSettings } from "../../contexts/gameStateContext";
 import {
@@ -14,6 +14,7 @@ import AppHeader from "../../components/appHeader";
 import SelectByRow from "./components/selectByRow";
 import SelectByStroke from "./components/selectByStroke";
 import SelectByAccuracy from "./components/selectByAccuracy";
+import Button from "../../components/button";
 import {
   PATH_MODIFIER_OPTIONS,
   ensureCustomSelections,
@@ -35,6 +36,7 @@ import { defaultState } from "../../core/state";
 
 const Setup = () => {
   const { filters, setFilters, options, setOptions } = useSettings();
+  const navigate = useNavigate();
   const studyMode = options.studyMode || PROGRESSION_MODES.LINEAR;
   const rowRange = useMemo(
     () => options.rowRange || { start: options.rowLevel || 1, end: options.rowLevel || 1 },
@@ -390,12 +392,9 @@ const Setup = () => {
       </div>
 
       <div className="setup-actions">
-        <Link
-          to="/game"
-          className="setup-start"
-        >
+        <Button className="setup-start" onClick={() => navigate("/game")}>
           Start Round
-        </Link>
+        </Button>
       </div>
     </main>
   );

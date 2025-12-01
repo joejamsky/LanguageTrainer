@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "../../styles/pages/guidedsetup.scss";
 import AppHeader from "../../components/appHeader";
+import Button from "../../components/button";
 
 const GUIDED_SCRIPT_OPTIONS = [
   {
@@ -60,9 +61,9 @@ const GuidedSetup = () => {
       </div>
 
       <div className="guided-actions">
-        <button type="button" className="guided-start" onClick={handleStartGuided}>
+        <Button className="guided-start" onClick={handleStartGuided}>
           Start Guided
-        </button>
+        </Button>
         <Link to="/options" className="guided-link">
           Reset checkpoints or clear data
         </Link>

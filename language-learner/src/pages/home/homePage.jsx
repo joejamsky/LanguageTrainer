@@ -1,22 +1,25 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import Button from "../../components/button";
 import "../../styles/pages/home.scss";
 
 const Home = () => {
+  const navigate = useNavigate();
+
   return (
     <main className="gutter-container home">
       <div className="home-content">
         <h1 className="home-title">Welcome to Language Learner</h1>
         <div className="home-actions">
-          <Link to="/mode" className="home-cta">
+          <Button className="home-start" onClick={() => navigate("/mode")}>
             Start Learning
-          </Link>
-          <Link to="/options" className="home-cta secondary">
+          </Button>
+          <Button variant="secondary" onClick={() => navigate("/options")}>
             Options
-          </Link>
-          <Link to="/stats" className="home-cta secondary">
+          </Button>
+          <Button variant="secondary" onClick={() => navigate("/stats")}>
             Stats
-          </Link>
+          </Button>
         </div>
       </div>
     </main>

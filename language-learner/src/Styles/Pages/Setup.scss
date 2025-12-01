@@ -792,33 +792,12 @@
 }
 
 .setup-start {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
     padding: 14px 36px;
     border-radius: 999px;
-    border: none;
-    background: linear-gradient(135deg, vars.$color-accent-primary 0%, vars.$color-accent-primary-bright 100%);
-    color: vars.$color-text-primary;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
     font-size: 16px;
     font-weight: 600;
-    text-transform: uppercase;
-    text-decoration: none;
-    letter-spacing: 1.2px;
-    box-shadow: 0 10px 24px vars.$color-accent-primary, inset 0 1px 0 vars.$color-text-primary;
-    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
-}
-
-.setup-start:hover,
-.setup-start:focus-visible {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 16px 28px vars.$color-accent-primary, inset 0 1px 0 vars.$color-text-primary;
-    background: linear-gradient(135deg, vars.$color-accent-primary-bold 0%, vars.$color-accent-primary-light 100%);
-}
-
-.setup-start:active {
-    transform: translateY(-1px) scale(0.99);
-    box-shadow: 0 8px 16px vars.$color-accent-primary;
 }
 
 .setup-secondary {
