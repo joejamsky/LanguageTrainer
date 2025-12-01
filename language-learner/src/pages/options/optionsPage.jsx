@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import "../../styles/Pages/Options.scss";
 import AppHeader from "../../components/appHeader";
-import { useGameState } from "../../contexts/gameStateContext";
-import { DEFAULT_LEVEL, clearStoredData, normalizeLevel } from "../../misc/levelUtils";
+import { useSettings } from "../../contexts/gameStateContext";
+import { clearStoredData } from "../../core/levelUtils";
 
 const Options = () => {
-  const { applyLevelConfiguration, options, setOptions } = useGameState();
+  const { options, setOptions } = useSettings();
   const [statusMessage, setStatusMessage] = useState("");
 
   const handlePronunciationToggle = () => {
@@ -16,16 +16,12 @@ const Options = () => {
   };
 
   const handleResetCourse = () => {
-    const normalized = normalizeLevel(DEFAULT_LEVEL);
-    applyLevelConfiguration(normalized);
-    setStatusMessage("Guided course reset to Row 1 Hiragana.");
+    setStatusMessage("Guided course resets are coming soon.");
   };
 
   const handleClearStorage = () => {
     clearStoredData();
-    const normalized = normalizeLevel(DEFAULT_LEVEL);
-    applyLevelConfiguration(normalized);
-    setStatusMessage("All saved data cleared and levels reset.");
+    setStatusMessage("Saved data cleared.");
   };
 
   return (

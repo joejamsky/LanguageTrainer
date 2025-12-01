@@ -1,9 +1,11 @@
 import React from "react";
 import "../styles/StartMenu.scss";
-import { useGameState } from "../contexts/gameStateContext.js";
+import { useSettings, useGame, useCharacters } from "../contexts/gameStateContext.js";
 
 function StartMenu() {
-    const {setFilters, startMenuOpen, setStartMenuOpen, handleCharacterSelect } = useGameState();
+    const { setFilters } = useSettings();
+    const { startMenuOpen, setStartMenuOpen } = useGame();
+    const { handleCharacterSelect } = useCharacters();
 
     const handleSelection = (type) => {
         setFilters((prevFilters) => {

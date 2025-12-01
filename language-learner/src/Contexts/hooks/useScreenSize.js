@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { breakpoints } from "../../misc/utils";
+import { breakpoints } from "../../core/utils";
 
 const getScreenSizeFromWidth = (width) => {
   if (width <= breakpoints.mobile) return "mobile";

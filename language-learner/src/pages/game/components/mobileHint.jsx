@@ -1,11 +1,11 @@
 import React, {useState} from "react";
-import { useGameState } from "../../../contexts/gameStateContext.js";
+import { useSettings } from "../../../contexts/gameStateContext.js";
 import "../../../styles/MobileHint.scss";
 
 
 const MobileHint = () => {
     const [touched, setTouched] = useState(false);
-    const {setOptions} = useGameState();
+    const { setOptions } = useSettings();
 
     const handleTouchStart = () => {
       setTouched(true)

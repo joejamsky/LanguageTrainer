@@ -1,24 +1,22 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/Pages/ModeSelect.scss";
 import AppHeader from "../../components/appHeader";
 import { GUIDED_SCRIPT_OPTIONS } from "../../constants/guidedPaths";
-import { describeLevel, readStoredLevels } from "../../misc/levelUtils";
 
 const ModeSelect = () => {
   const navigate = useNavigate();
+  const [guidedStatus, setGuidedStatus] = useState("");
 
-  const guidedLevels = useMemo(() => readStoredLevels(), []);
   const guidedCheckpoints = useMemo(() => {
     return GUIDED_SCRIPT_OPTIONS.reduce((acc, option) => {
-      const level = guidedLevels[option.key];
-      acc[option.key] = describeLevel(level).summary;
+      acc[option.key] = "Coming soon";
       return acc;
     }, {});
-  }, [guidedLevels]);
+  }, []);
 
   const handleGuidedSelect = () => {
-    navigate("/guided");
+    setGuidedStatus("Guided gameplay is coming soon.");
   };
 
   const handleCustomSelect = () => {
@@ -54,6 +52,7 @@ const ModeSelect = () => {
           <button type="button" onClick={handleGuidedSelect}>
             Start Guided
           </button>
+          {guidedStatus && <p className="mode-status">{guidedStatus}</p>}
         </section>
 
         <section className="mode-card custom-card">

@@ -1,10 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import "../../../styles/TextInput.scss";
-import { useGameState } from "../../../contexts/gameStateContext.js";
-import { dictionaryKanaToRomaji } from "../../../misc/utils";
+import { useCharacters, useSettings } from "../../../contexts/gameStateContext.js";
+import { dictionaryKanaToRomaji } from "../../../core/utils";
 
 const TextInput = ({ targetTileId = null, completionDelayMs = 0 }) => {
-    const {handleTextSubmit, setOptions, currentLevel, inputFocusKey, characters} = useGameState();
+    const { handleTextSubmit, inputFocusKey, characters } = useCharacters();
+    const { setOptions, currentLevel } = useSettings();
     const [textInput, setTextInput] = useState('');
     const [shakeTimer, setShakeTimer] = useState(false);
     const [placeholderVisible, setPlaceholderVisible] = useState(true);

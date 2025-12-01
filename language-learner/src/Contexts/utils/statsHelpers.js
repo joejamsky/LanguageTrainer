@@ -1,5 +1,5 @@
-import { defaultState } from "../../misc/utils";
-import { loadLevelStats } from "../../misc/levelUtils";
+import { defaultState } from "../../core/utils";
+import { loadLevelStats } from "../../core/levelUtils";
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 

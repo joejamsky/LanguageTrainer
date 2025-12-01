@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import "../../../styles/Timer.scss";
-import { useGameState } from "../../../contexts/gameStateContext.js";
-import { describeLevel } from "../../../misc/levelUtils";
+import { useGame, useStatsContext, useSettings } from "../../../contexts/gameStateContext.js";
+import { describeLevel } from "../../../core/levelUtils";
 
 function Timer() {
-  const { game, setStats, currentLevel } = useGameState();
+  const { game } = useGame();
+  const { setStats } = useStatsContext();
+  const { currentLevel } = useSettings();
   const [timeElapsed, setTimeElapsed] = useState(0);
   const levelKey = currentLevel?.key;
   const currentLevelDescriptor = currentLevel ? describeLevel(currentLevel) : null;

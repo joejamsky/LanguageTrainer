@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import {
   loadTilePerformance,
   persistTilePerformance,
-} from "../../misc/statUtils";
+} from "../../core/statUtils";
 
 export const useTilePerformance = () => {
   const initialTileStats = useMemo(() => loadTilePerformance(), []);

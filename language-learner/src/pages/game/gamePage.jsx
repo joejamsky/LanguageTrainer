@@ -4,14 +4,11 @@ import "../../styles/Pages/Game.scss";
 import "@fortawesome/fontawesome-free/css/all.css";
 import TopGrid from "./components/topGrid";
 import BotGrid from "./components/botGrid";
-import LevelCompleteModal from "../../components/levelCompleteModal";
+import LevelCompleteModal from "./components/levelCompleteModal";
 import GameHeader from "./components/gameHeader";
 import PronunciationSpeaker from "../../components/pronunciationSpeaker";
-import { useGameState } from "../../contexts/gameStateContext.js";
 
 const Game = () => {
-  useGameState();
-
   return (
     <main className="gutter-container game">
       <div className="game-layout">

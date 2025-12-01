@@ -1,30 +1,17 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import "../../../styles/DropTile.scss";
-import { useGameState } from "../../../contexts/gameStateContext";
+import { useCharacters, useSettings } from "../../../contexts/gameStateContext";
 import { getGridCoordinatesForTile } from "../../../contexts/utils/characterUtils";
-import { ensureCustomSelections } from "../../../misc/customSelections";
-import {
-    getRowNumberForTileId,
-} from "../../../data/kanaGroups";
-
 
 const DropTile = ({ characterObj, index }) => {
-
     const [dragHover, setDragHover] = useState(false);
-    const {handleDrop, filters, options, screenSize} = useGameState(); 
+    const { handleDrop } = useCharacters();
+    const { filters, options, screenSize } = useSettings(); 
 
     const active = !characterObj.completed;
     const isDesktop = screenSize === "laptop" || screenSize === "desktop";
     const isMobileLayout = screenSize === 'mobile' || screenSize === 'tablet';
     const gridPosition = getGridCoordinatesForTile(characterObj);
-    const customSelections = useMemo(
-        () => ensureCustomSelections(options.customSelections),
-        [options.customSelections]
-    );
-    const rowNumber = useMemo(
-        () => getRowNumberForTileId(characterObj?.id),
-        [characterObj?.id]
-    );
     const tileStyle = gridPosition
         ? { gridColumn: gridPosition.column }
         : undefined;
@@ -35,24 +22,7 @@ const DropTile = ({ characterObj, index }) => {
             : "";
     const hintClass = options?.hints ? "column-hint-active" : "";
 
-    const getRowSelectionKey = (scriptKey) => {
-        if (characterObj?.modifierGroup === "dakuten") return "dakuten";
-        if (characterObj?.modifierGroup === "handakuten") return "handakuten";
-        return scriptKey;
-    };
-
-    const isRowEnabledForScript = (scriptKey) => {
-        if (typeof rowNumber !== "number" || rowNumber <= 0) {
-            return true;
-        }
-        const selectionKey = getRowSelectionKey(scriptKey);
-        const rowsForKey = customSelections.rows?.[selectionKey];
-        if (!rowsForKey) {
-            return true;
-        }
-        const value = rowsForKey[rowNumber];
-        return typeof value === "boolean" ? value : true;
-    };
+    const isRowEnabledForScript = () => true;
     
     const onDragOver = (e) => {
         e.preventDefault();

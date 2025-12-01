@@ -1,5 +1,5 @@
 import { useCallback, useState, useEffect } from "react";
-import { persistLevelStats } from "../../misc/levelUtils";
+import { persistLevelStats } from "../../core/levelUtils";
 import {
   getDateKey,
   getInitialStats,

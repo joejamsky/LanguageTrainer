@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import "../../../styles/BotGrid.scss";
 import DragTile from './dragTile';
 import TextInput from './textInput';
-import { useGameState } from "../../../contexts/gameStateContext.js";
+import { useCharacters, useSettings } from "../../../contexts/gameStateContext.js";
 import { getGridCoordinatesForTile } from "../../../contexts/utils/characterUtils";
 import { TILE_COMPLETION_ANIMATION_MS } from "../../../constants/animation";
 
@@ -12,7 +12,8 @@ const TRAY_SLOT_COUNT = 5;
 const buildEmptySlots = () => Array(TRAY_SLOT_COUNT).fill(null);
 
 const BotGrid = () => {
-  const { characters, screenSize, registerTileCompletionListener } = useGameState();
+  const { characters, registerTileCompletionListener } = useCharacters();
+  const { screenSize } = useSettings();
 
   const rawTiles = useMemo(() => characters.botCharacters || [], [characters.botCharacters]);
   const isDesktopView = screenSize === 'laptop' || screenSize === 'desktop';

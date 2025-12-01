@@ -1,10 +1,11 @@
 import React, { useMemo } from "react";
 import "../../styles/Pages/Stats.scss";
-import { useGameState } from "../../contexts/gameStateContext";
+import { useCharacters, useStatsContext } from "../../contexts/gameStateContext";
 import AppHeader from "../../components/appHeader";
 
 const Stats = () => {
-  const { characters, stats, tileStats } = useGameState();
+  const { characters } = useCharacters();
+  const { stats, tileStats } = useStatsContext();
 
   const computeAccuracy = (attempts, misses) => {
     const totalInteractions = attempts + misses;

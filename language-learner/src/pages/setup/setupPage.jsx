@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import "../../styles/Pages/Setup.scss";
-import { useGameState } from "../../contexts/gameStateContext";
+import { useSettings } from "../../contexts/gameStateContext";
 import {
   DEFAULT_LEVEL,
   getScriptLevelFromFilters,
@@ -9,7 +9,7 @@ import {
   getShapeGroupOptionsForFilters,
   describeLevel,
   normalizeLevel,
-} from "../../misc/levelUtils";
+} from "../../core/levelUtils";
 import AppHeader from "../../components/appHeader";
 import SelectByRow from "./components/selectByRow";
 import SelectByStroke from "./components/selectByStroke";
@@ -25,28 +25,21 @@ import {
   areAllShapesEnabled,
   clampAccuracyTarget,
   getDefaultCustomSelections,
-} from "../../misc/customSelections";
+} from "../../core/customSelections";
 import {
   getRowsForKana,
   getStrokeGroupsForKana,
   STROKE_SECTION_KEYS,
 } from "../../data/kanaGroups";
-import { defaultState } from "../../misc/utils";
+import { defaultState } from "../../core/utils";
 
 const Setup = () => {
-  const {
-    filters,
-    setFilters,
-    options,
-    setOptions,
-    setSessionType,
-  } = useGameState();
+  const { filters, setFilters, options, setOptions } = useSettings();
   const studyMode = options.studyMode || PROGRESSION_MODES.LINEAR;
   const rowRange = useMemo(
     () => options.rowRange || { start: options.rowLevel || 1, end: options.rowLevel || 1 },
     [options.rowRange, options.rowLevel]
   );
-  const rowCount = Math.max(1, rowRange.end - rowRange.start + 1);
   const shapeGroup = options.shapeGroup || 1;
   const accuracyThreshold = Number.isFinite(options.accuracyThreshold)
     ? options.accuracyThreshold
@@ -290,10 +283,6 @@ const Setup = () => {
     }
   }, [availableShapeGroups, options.shapeGroup, setOptions]);
 
-  const handleFreePlayStart = () => {
-    setSessionType("freePlay");
-  };
-
   return (
     <main className="gutter-container setup">
       <AppHeader />
@@ -404,7 +393,6 @@ const Setup = () => {
         <Link
           to="/game"
           className="setup-start"
-          onClick={handleFreePlayStart}
         >
           Start Round
         </Link>

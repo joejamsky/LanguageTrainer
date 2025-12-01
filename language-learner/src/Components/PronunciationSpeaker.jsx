@@ -1,12 +1,13 @@
 import { useEffect, useRef } from "react";
-import { useGameState } from "../contexts/gameStateContext.js";
-import { dictionaryKanaToRomaji } from "../misc/utils";
+import { useCharacters, useSettings } from "../contexts/gameStateContext.js";
+import { dictionaryKanaToRomaji } from "../core/utils";
 
 const hasSpeechSupport = () =>
   typeof window !== "undefined" && typeof window.speechSynthesis !== "undefined";
 
 const PronunciationSpeaker = () => {
-  const { registerTileCompletionListener, options, characters } = useGameState();
+  const { registerTileCompletionListener, characters } = useCharacters();
+  const { options } = useSettings();
   const optionsRef = useRef(options);
   const charactersRef = useRef(characters);
 

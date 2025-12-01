@@ -3,15 +3,8 @@ import {
   STROKE_SECTION_KEYS,
   getRowsForKana,
   getStrokeGroupsForKana,
-} from "../data/kanaGroups";
-import { DEFAULT_LEVEL } from "./levelUtils";
-
-export const PATH_MODIFIER_OPTIONS = [
-  { key: "hiragana", label: "Hiragana", type: "character" },
-  { key: "katakana", label: "Katakana", type: "character" },
-  { key: "dakuten", label: "Dakuten", type: "modifier" },
-  { key: "handakuten", label: "Handakuten", type: "modifier" },
-];
+} from "../../data/kanaGroups";
+import { DEFAULT_LEVEL } from "../levelUtils";
 
 const buildRowsForKey = (key) => {
   const rows = getRowsForKana(key);
@@ -28,9 +21,7 @@ const buildRowState = () =>
     return acc;
   }, {});
 
-const DEFAULT_ACCURACY_PERCENT = Math.round(
-  DEFAULT_LEVEL.accuracyThreshold * 100
-);
+const DEFAULT_ACCURACY_PERCENT = Math.round(DEFAULT_LEVEL.accuracyThreshold * 100);
 
 const buildShapeState = () =>
   STROKE_SECTION_KEYS.reduce((acc, key) => {
@@ -95,50 +86,4 @@ export const ensureCustomSelections = (selections = {}) => {
   };
 };
 
-export const toggleRowSelection = (rowsState, scriptKey, rowValue) => ({
-  ...rowsState,
-  [scriptKey]: {
-    ...(rowsState[scriptKey] || {}),
-    [rowValue]: !rowsState[scriptKey]?.[rowValue],
-  },
-});
-
-export const toggleAllRowsSelection = (rowsState, scriptKey, enabled) => {
-  const nextState = {};
-  getRowsForKana(scriptKey).forEach((row) => {
-    nextState[row.value] = enabled;
-  });
-  return {
-    ...rowsState,
-    [scriptKey]: nextState,
-  };
-};
-
-export const areAllRowsEnabled = (rowsState, scriptKey) =>
-  getRowsForKana(scriptKey).every(
-    (row) => rowsState[scriptKey]?.[row.value]
-  );
-
-export const toggleShapeSelection = (shapeState, scriptKey, groupValue) => ({
-  ...shapeState,
-  [scriptKey]: {
-    ...(shapeState[scriptKey] || {}),
-    [groupValue]: !shapeState[scriptKey]?.[groupValue],
-  },
-});
-
-export const toggleAllShapesSelection = (shapeState, scriptKey, enabled) => {
-  const nextState = {};
-  getStrokeGroupsForKana(scriptKey).forEach((group) => {
-    nextState[group] = enabled;
-  });
-  return {
-    ...shapeState,
-    [scriptKey]: nextState,
-  };
-};
-
-export const areAllShapesEnabled = (shapeState, scriptKey) =>
-  getStrokeGroupsForKana(scriptKey).every(
-    (group) => shapeState[scriptKey]?.[group]
-  );
+export { DEFAULT_ACCURACY_PERCENT };

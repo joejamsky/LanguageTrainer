@@ -1,7 +1,6 @@
 import React, { useRef } from "react";
 import "../../../styles/DragTile.scss";
-import { useGameState } from "../../../contexts/gameStateContext";
-import { dictionaryKanaToRomaji } from "../../../misc/utils";
+import { useGame, useCharacters, useSettings } from "../../../contexts/gameStateContext";
 
 const DragTile = ({
   characterObj,
@@ -12,7 +11,9 @@ const DragTile = ({
   isActive = false,
 }) => {
   const dragRef = useRef(null);
-  const { game, setGame, selectedTile, setSelectedTile, screenSize, options } = useGameState();
+  const { game, setGame } = useGame();
+  const { selectedTile, setSelectedTile } = useCharacters();
+  const { screenSize, options } = useSettings();
   const isDesktop = screenSize === "laptop" || screenSize === "desktop";
   const displayCharacter = characterObj.character;
   const baseStyle = columnPosition ? { gridColumn: columnPosition } : undefined;

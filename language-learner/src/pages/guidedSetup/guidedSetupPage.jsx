@@ -1,41 +1,17 @@
-import React, { useMemo, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import "../../styles/Pages/GuidedSetup.scss";
 import AppHeader from "../../components/appHeader";
-import { useGameState } from "../../contexts/gameStateContext";
 import { GUIDED_SCRIPT_OPTIONS } from "../../constants/guidedPaths";
-import {
-  describeLevel,
-  readStoredLevel,
-  readStoredLevels,
-} from "../../misc/levelUtils";
 
 const GuidedSetup = () => {
-  const navigate = useNavigate();
-  const { applyLevelConfiguration, setSessionType } = useGameState();
-
-  const descriptors = useMemo(() => {
-    const storedLevels = readStoredLevels();
-    const map = {};
-    GUIDED_SCRIPT_OPTIONS.forEach((option) => {
-      const level = storedLevels[option.key] || readStoredLevel(option.key);
-      map[option.key] = {
-        level,
-        descriptor: describeLevel(level),
-      };
-    });
-    return map;
-  }, []);
   const [scriptSelection, setScriptSelection] = useState(
     () => GUIDED_SCRIPT_OPTIONS[0]?.key || "hiragana"
   );
+  const [statusMessage, setStatusMessage] = useState("");
 
   const handleStartGuided = () => {
-    const levelToApply = descriptors[scriptSelection]?.level;
-    if (!levelToApply) return;
-    applyLevelConfiguration(levelToApply);
-    setSessionType("guided");
-    navigate("/game");
+    setStatusMessage("Guided gameplay is coming soon.");
   };
 
   return (
@@ -60,7 +36,7 @@ const GuidedSetup = () => {
             <span className="guided-choice-caption">{choice.caption}</span>
             <div className="guided-choice-summary">
               <span>Checkpoint</span>
-              <strong>{descriptors[choice.key]?.descriptor.summary || "Row 1 | No Shuffle"}</strong>
+              <strong>Coming soon</strong>
             </div>
           </button>
         ))}
@@ -73,6 +49,7 @@ const GuidedSetup = () => {
         <Link to="/options" className="guided-link">
           Reset checkpoints or clear data
         </Link>
+        {statusMessage && <p className="guided-status">{statusMessage}</p>}
       </div>
     </main>
   );
