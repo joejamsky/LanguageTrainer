@@ -1,4 +1,4 @@
-import { PROGRESSION_MODES, DEFAULT_LEVEL } from "../levelUtils";
+import { PROGRESSION_MODES, DEFAULT_LEVEL, SHUFFLE_MODES } from "../levelUtils";
 import { getDefaultCustomSelections } from "../customSelections";
 
 export const defaultState = {
@@ -28,6 +28,7 @@ export const defaultState = {
     studyMode: PROGRESSION_MODES.LINEAR,
     shapeGroup: 1,
     accuracyThreshold: DEFAULT_LEVEL.accuracyThreshold,
+     shuffleMode: SHUFFLE_MODES.NONE,
     hints: false,
     pronunciation: false,
     sound: false,

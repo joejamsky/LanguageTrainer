@@ -1,6 +1,7 @@
 export {
   PROGRESSION_MODES,
   DEFAULT_LEVEL,
+  SHUFFLE_MODES,
   getScriptLevelFromFilters,
   levelToScriptKey,
   scriptKeyToLevel,

@@ -1,6 +1,6 @@
 import { defaultState } from "../../core/state";
 import { TOTAL_ROWS } from "./constants";
-import { getShapeGroupOptionsForFilters } from "../../core/levelUtils";
+import { getShapeGroupOptionsForFilters, SHUFFLE_MODES } from "../../core/levelUtils";
 import { ensureCustomSelections } from "../../core/customSelections";
 
 export const clampRowRange = (range = defaultState.options.rowRange) => {
@@ -37,6 +37,13 @@ export const resolveAccuracyThreshold = (options) => {
   return Math.min(Math.max(threshold, 0), 1);
 };
 
+export const resolveShuffleMode = (options) => {
+  const candidate = options?.shuffleMode;
+  const allowed = Object.values(SHUFFLE_MODES);
+  if (allowed.includes(candidate)) return candidate;
+  return defaultState.options.shuffleMode || SHUFFLE_MODES.NONE;
+};
+
 export const normalizeOptionsState = (options = defaultState.options) => {
   const normalizedRange =
     options.rowRange &&
@@ -54,6 +61,7 @@ export const normalizeOptionsState = (options = defaultState.options) => {
     shapeGroup: resolveShapeGroup(options),
     accuracyThreshold: resolveAccuracyThreshold(options),
     studyMode: resolveStudyMode(options),
+    shuffleMode: resolveShuffleMode(options),
     customSelections: ensureCustomSelections(options.customSelections),
   };
 };

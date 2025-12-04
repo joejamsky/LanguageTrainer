@@ -10,6 +10,7 @@ import {
   describeLevel,
   normalizeLevel,
   SCRIPT_LABELS,
+  SHUFFLE_MODES,
 } from "../../core/levelUtils";
 import AppHeader from "../../components/appHeader";
 import SelectByRow from "./components/selectByRow";
@@ -379,12 +380,64 @@ const CustomSetup = () => {
 
   const [selectionTab, setSelectionTab] = useState("rows");
 
-  const hasAnyRowSelected = useMemo(
+  const totalSelectedRows = useMemo(
     () =>
-      Object.values(customSelections.rows).some((panel) =>
-        Object.values(panel || {}).some(Boolean)
-      ),
+      Object.values(customSelections.rows).reduce((sum, panel) => {
+        const values = Object.values(panel || {});
+        const activeCount = values.reduce(
+          (count, value) => count + (value ? 1 : 0),
+          0
+        );
+        return sum + activeCount;
+      }, 0),
     [customSelections.rows]
+  );
+
+  const getAllowedShuffleModes = (tab, rowCount) => {
+    if (tab === "shapes" || tab === "accuracy") {
+      return [SHUFFLE_MODES.NONE, SHUFFLE_MODES.BOTH];
+    }
+    if (rowCount <= 1) {
+      return [SHUFFLE_MODES.NONE, SHUFFLE_MODES.HORIZONTAL];
+    }
+    return [
+      SHUFFLE_MODES.NONE,
+      SHUFFLE_MODES.HORIZONTAL,
+      SHUFFLE_MODES.VERTICAL,
+      SHUFFLE_MODES.BOTH,
+    ];
+  };
+
+  const allowedShuffleModes = useMemo(
+    () => getAllowedShuffleModes(selectionTab, totalSelectedRows),
+    [selectionTab, totalSelectedRows]
+  );
+
+  const rawShuffleMode = options.shuffleMode || SHUFFLE_MODES.NONE;
+  const effectiveShuffleMode = allowedShuffleModes.includes(rawShuffleMode)
+    ? rawShuffleMode
+    : allowedShuffleModes[0];
+
+  useEffect(() => {
+    if (rawShuffleMode !== effectiveShuffleMode) {
+      setOptions((prev) => ({
+        ...prev,
+        shuffleMode: effectiveShuffleMode,
+      }));
+    }
+  }, [rawShuffleMode, effectiveShuffleMode, setOptions]);
+
+  const handleShuffleChange = (mode) => {
+    if (!allowedShuffleModes.includes(mode)) return;
+    setOptions((prev) => ({
+      ...prev,
+      shuffleMode: mode,
+    }));
+  };
+
+  const hasAnyRowSelected = useMemo(
+    () => totalSelectedRows > 0,
+    [totalSelectedRows]
   );
 
   const summaryScriptLabel = useMemo(() => {
@@ -450,7 +503,19 @@ const CustomSetup = () => {
     return `${totalRows} rows`;
   }, [selectionTab, customSelections.rows, customSelections.shapes]);
 
-  const summaryShuffleLabel = "No Shuffle";
+  const summaryShuffleLabel = useMemo(() => {
+    switch (effectiveShuffleMode) {
+      case SHUFFLE_MODES.HORIZONTAL:
+        return "Row Shuffle";
+      case SHUFFLE_MODES.VERTICAL:
+        return "Column Shuffle";
+      case SHUFFLE_MODES.BOTH:
+        return "Row + Column";
+      case SHUFFLE_MODES.NONE:
+      default:
+        return "No Shuffle";
+    }
+  }, [effectiveShuffleMode]);
 
   const handleResetForm = () => {
     if (selectionTab === "rows") {
@@ -663,6 +728,79 @@ const CustomSetup = () => {
                 handleToggleAllRows={handleToggleAllRows}
               />
             )}
+          </div>
+        </section>
+
+        <section className="control-card full-width-card">
+          <div className="control-card-header">
+            <h2>Shuffle</h2>
+            <p>
+              Choose how kana are shuffled in the grid.
+            </p>
+          </div>
+          <div className="shuffle-row">
+            <div className="shuffle-glyphs">
+              <button
+                type="button"
+                aria-label="No shuffle"
+                className={`shuffle-glyph ${
+                  effectiveShuffleMode === SHUFFLE_MODES.NONE ? "active" : ""
+                } ${
+                  allowedShuffleModes.includes(SHUFFLE_MODES.NONE)
+                    ? ""
+                    : "disabled"
+                }`}
+                onClick={() => handleShuffleChange(SHUFFLE_MODES.NONE)}
+              >
+                —
+              </button>
+              <button
+                type="button"
+                aria-label="Horizontal shuffle"
+                className={`shuffle-glyph ${
+                  effectiveShuffleMode === SHUFFLE_MODES.HORIZONTAL
+                    ? "active"
+                    : ""
+                } ${
+                  allowedShuffleModes.includes(SHUFFLE_MODES.HORIZONTAL)
+                    ? ""
+                    : "disabled"
+                }`}
+                onClick={() => handleShuffleChange(SHUFFLE_MODES.HORIZONTAL)}
+              >
+                ↔
+              </button>
+              <button
+                type="button"
+                aria-label="Vertical shuffle"
+                className={`shuffle-glyph ${
+                  effectiveShuffleMode === SHUFFLE_MODES.VERTICAL
+                    ? "active"
+                    : ""
+                } ${
+                  allowedShuffleModes.includes(SHUFFLE_MODES.VERTICAL)
+                    ? ""
+                    : "disabled"
+                }`}
+                onClick={() => handleShuffleChange(SHUFFLE_MODES.VERTICAL)}
+              >
+                ↕
+              </button>
+              <button
+                type="button"
+                aria-label="Horizontal and vertical shuffle"
+                className={`shuffle-glyph ${
+                  effectiveShuffleMode === SHUFFLE_MODES.BOTH ? "active" : ""
+                } ${
+                  allowedShuffleModes.includes(SHUFFLE_MODES.BOTH)
+                    ? ""
+                    : "disabled"
+                }`}
+                onClick={() => handleShuffleChange(SHUFFLE_MODES.BOTH)}
+              >
+                ↕↔
+              </button>
+            </div>
           </div>
         </section>
 

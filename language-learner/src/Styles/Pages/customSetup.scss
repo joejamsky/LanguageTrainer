@@ -230,7 +230,7 @@
 }
 
 .row-panel {
-    flex: 1 1 220px;
+    flex: 1 1 auto;
     min-width: 220px;
     border-radius: 18px;
     border: 1px solid vars.$color-border-strong;
@@ -343,7 +343,7 @@
 
 .row-toggle-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
     gap: 10px;
 }
 
@@ -698,12 +698,6 @@
     color: vars.$color-text-primary;
 }
 
-.shuffle-hint {
-    margin: 0;
-    font-size: 13px;
-    color: vars.$color-text-primary;
-}
-
 .modifier-switches {
     display: flex;
     flex-direction: column;
@@ -793,29 +787,36 @@
 }
 
 .shuffle-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    align-items: stretch;
+    width: 100%;
 }
 
 .shuffle-glyphs {
-    display: inline-flex;
-    gap: 12px;
-    font-size: 18px;
-    color: vars.$color-text-primary;
+    display: contents;
 }
 
 .shuffle-glyph {
+    font-size: 18px;
+    color: vars.$color-text-primary;
+    background: vars.$color-bg-panel;
     padding: 6px 12px;
     border-radius: 12px;
-    border: 1px solid transparent;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
 }
 
 .shuffle-glyph.active {
-    color: vars.$color-text-primary;
-    border-color: vars.$color-accent-primary;
-    background: vars.$color-bg-panel;
+    background: vars.$color-accent-primary;
+}
+
+.shuffle-glyph.disabled {
+    opacity: 0.4;
+    pointer-events: none;
+    cursor: default;
 }
 
 .setup-actions {

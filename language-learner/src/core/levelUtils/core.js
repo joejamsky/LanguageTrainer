@@ -8,6 +8,13 @@ export const PROGRESSION_MODES = {
   ADAPTIVE: "adaptive",
 };
 
+export const SHUFFLE_MODES = {
+  NONE: "none",
+  HORIZONTAL: "horizontal",
+  VERTICAL: "vertical",
+  BOTH: "both",
+};
+
 export const TOTAL_ROWS = ROW_TIERS.length;
 export const WINDOW_SIZES = [2, 4, 6, 8, 10].filter((size) => size <= TOTAL_ROWS);
 
@@ -58,6 +65,7 @@ export const DEFAULT_LEVEL = {
   scriptLevel: 1,
   shapeGroup: 1,
   accuracyThreshold: ACCURACY_THRESHOLDS[0],
+  shuffleMode: SHUFFLE_MODES.NONE,
 };
 
 export const LEVEL_STATS_STORAGE_KEY = "languageTrainerStats";
@@ -122,6 +130,15 @@ export const normalizeModeValue = (mode) => {
   return MODE_SEQUENCE.includes(normalized) ? normalized : PROGRESSION_MODES.LINEAR;
 };
 
+const normalizeShuffleMode = (shuffleMode) => {
+  const values = Object.values(SHUFFLE_MODES);
+  if (!shuffleMode) return SHUFFLE_MODES.NONE;
+  if (values.includes(shuffleMode)) return shuffleMode;
+  const normalized = String(shuffleMode).toLowerCase();
+  const match = values.find((value) => value === normalized);
+  return match || SHUFFLE_MODES.NONE;
+};
+
 export const normalizeLevelShape = (level = DEFAULT_LEVEL) => {
   const normalizedMode = normalizeModeValue(level.mode);
   const { start, end } = clampRowRange(level.rowStart, level.rowEnd);
@@ -136,6 +153,7 @@ export const normalizeLevelShape = (level = DEFAULT_LEVEL) => {
     scriptLevel,
     shapeGroup: clampShapeGroup(level.shapeGroup, scriptKey),
     accuracyThreshold: clampAccuracyThreshold(level.accuracyThreshold),
+    shuffleMode: normalizeShuffleMode(level.shuffleMode),
   };
 };
 

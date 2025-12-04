@@ -28,6 +28,7 @@ export const SettingsProvider = ({ children }) => {
   const shapeGroup = resolveShapeGroup(options, filters);
   const adaptiveThreshold = resolveAccuracyThreshold(options);
   const derivedScriptLevel = getScriptLevelFromFilters(filters.characterTypes);
+  const shuffleMode = options.shuffleMode;
   const currentLevel = useMemo(() => {
     const baseLevel = {
       mode: studyMode,
@@ -36,6 +37,7 @@ export const SettingsProvider = ({ children }) => {
       scriptLevel: derivedScriptLevel,
       shapeGroup,
       accuracyThreshold: adaptiveThreshold,
+      shuffleMode,
     };
     return {
       ...baseLevel,
@@ -48,6 +50,7 @@ export const SettingsProvider = ({ children }) => {
     rowRange.start,
     shapeGroup,
     studyMode,
+    shuffleMode,
   ]);
 
   const value = useMemo(
