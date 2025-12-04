@@ -1,11 +1,12 @@
 // BotGrid.jsx
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import "../../../styles/BotGrid.scss";
 import DragTile from './dragTile';
 import TextInput from './textInput';
 import { useCharacters, useSettings } from "../../../contexts/gameStateContext.js";
 import { getGridCoordinatesForTile } from "../../../contexts/utils/characterUtils";
 import { TILE_COMPLETION_ANIMATION_MS } from "../../../core/constants/animation";
+import { useTileCompletionAnimation } from "../hooks/useTileCompletionAnimation";
 
 const TRAY_SLOT_COUNT = 5;
 
@@ -64,9 +65,6 @@ const BotGrid = () => {
 
   const [chunkSlots, setChunkSlots] = useState(() => buildEmptySlots());
   const [currentTrayKey, setCurrentTrayKey] = useState(null);
-  const [activeAnimation, setActiveAnimation] = useState(null);
-  const [pendingClears, setPendingClears] = useState(() => new Set());
-  const animationTimeoutRef = useRef(null);
 
   useEffect(() => {
     setChunkSlots((prev) => {
@@ -114,99 +112,13 @@ const BotGrid = () => {
     }
   }, [chunkSlots, currentTrayKey, trayQueue]);
 
-  useEffect(() => {
-    setPendingClears((prev) => {
-      if (!prev.size) {
-        return prev;
-      }
-      let changed = false;
-      const next = new Set();
-      prev.forEach((id) => {
-        if (tileLookupById.has(id)) {
-          next.add(id);
-        } else {
-          changed = true;
-        }
-      });
-      return changed ? next : prev;
-    });
-  }, [tileLookupById]);
-
-  useEffect(() => {
-    return () => {
-      if (animationTimeoutRef.current) {
-        clearTimeout(animationTimeoutRef.current);
-        animationTimeoutRef.current = null;
-      }
-    };
-  }, []);
-
-  const activeTileId = useMemo(() => {
-    for (const tileId of chunkSlots) {
-      if (!tileId) continue;
-      if (pendingClears.has(tileId)) continue;
-      if (tileLookupById.has(tileId)) {
-        return tileId;
-      }
-    }
-    return null;
-  }, [chunkSlots, pendingClears, tileLookupById]);
+  const { activeTileId, getTileAnimationProps } = useTileCompletionAnimation({
+    chunkSlots,
+    tileLookupById,
+    registerTileCompletionListener,
+  });
 
   const targetTileId = activeTileId;
-
-  const triggerCompletionAnimation = useCallback(
-    (completedTileId) => {
-      if (!completedTileId) return;
-      const tileEntry = tileLookupById.get(completedTileId);
-      if (!tileEntry) {
-        return;
-      }
-      const botTileElement = document.getElementById(`draggable-${completedTileId}`);
-      const targetTileElement = document.getElementById(`drop-tile-${tileEntry.tile.parentId}`);
-      if (!botTileElement || !targetTileElement) {
-        return;
-      }
-
-      const botRect = botTileElement.getBoundingClientRect();
-      const targetRect = targetTileElement.getBoundingClientRect();
-      const translateX =
-        targetRect.left + targetRect.width / 2 - (botRect.left + botRect.width / 2);
-      const translateY =
-        targetRect.top + targetRect.height / 2 - (botRect.top + botRect.height / 2);
-
-      setPendingClears((prev) => {
-        if (prev.has(completedTileId)) {
-          return prev;
-        }
-        const next = new Set(prev);
-        next.add(completedTileId);
-        return next;
-      });
-
-      setActiveAnimation({
-        tileId: completedTileId,
-        tile: tileEntry.tile,
-        translateX,
-        translateY,
-        key: `${completedTileId}-${Date.now()}`,
-      });
-
-      if (animationTimeoutRef.current) {
-        clearTimeout(animationTimeoutRef.current);
-      }
-      animationTimeoutRef.current = setTimeout(() => {
-        setActiveAnimation(null);
-        animationTimeoutRef.current = null;
-      }, TILE_COMPLETION_ANIMATION_MS);
-    },
-    [tileLookupById]
-  );
-
-  useEffect(() => {
-    if (!registerTileCompletionListener) return undefined;
-    const unsubscribe = registerTileCompletionListener(triggerCompletionAnimation);
-    return unsubscribe;
-  }, [registerTileCompletionListener, triggerCompletionAnimation]);
 
   const slotEntries = chunkSlots.map((tileId, slotIndex) => {
     if (!tileId) {
@@ -238,14 +150,7 @@ const BotGrid = () => {
               />
             );
           }
-          const isCompleting = activeAnimation?.tileId === tile.id;
-          const animationStyle = isCompleting
-            ? {
-                transform: `translate(${activeAnimation.translateX}px, ${activeAnimation.translateY}px)`,
-                transition: `transform ${TILE_COMPLETION_ANIMATION_MS}ms ease-in-out`,
-              }
-            : undefined;
-          const extraClassName = isCompleting ? 'completing' : '';
+          const { styleOverrides, extraClassName } = getTileAnimationProps(tile.id);
           const isActive = isDesktopView && tile.id === activeTileId;
           return (
             <DragTile
@@ -254,7 +159,7 @@ const BotGrid = () => {
               columnPosition={slotIndex + 1}
               characterObj={tile}
               extraClassName={extraClassName}
-              styleOverrides={animationStyle}
+              styleOverrides={styleOverrides}
               isActive={isActive}
             />
           );
