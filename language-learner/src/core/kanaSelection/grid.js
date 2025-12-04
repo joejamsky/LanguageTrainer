@@ -30,3 +30,4 @@ export const getRowNumberFromItem = (item) => {
   const rowIndex = getRowIndexFromId(sourceId);
   return rowIndex === null ? null : rowIndex + 1;
 };
+

@@ -1,15 +1,35 @@
-import { defaultState } from "../../../core/state";
-import { PROGRESSION_MODES } from "../../../core/levelUtils";
-import { ensureCustomSelections } from "../../../core/customSelections";
-import {
-  clampRowRange,
-  resolveAccuracyThreshold,
-  resolveShapeGroup,
-  resolveStudyMode,
-} from "../optionsUtils";
-import { getRowNumberFromItem, isWithinRowRange } from "./characterGrid";
+import { defaultState } from "../state";
+import { PROGRESSION_MODES, clampRowRange, getShapeGroupOptionsForFilters } from "../levelUtils";
+import { ensureCustomSelections } from "../customSelections";
+import { getRowNumberFromItem, isWithinRowRange } from "./grid";
 
 const BASE_SCRIPT_ROW_KEYS = ["hiragana", "katakana"];
+
+const clampRowRangeFromOptions = (range = defaultState.options.rowRange) => {
+  const start = Number.isFinite(range?.start) ? range.start : 1;
+  const end = Number.isFinite(range?.end) ? range.end : start;
+  return clampRowRange(start, end);
+};
+
+const resolveStudyMode = (options) =>
+  options?.studyMode || defaultState.options.studyMode;
+
+const resolveShapeGroup = (options, filters = defaultState.filters) => {
+  const characterTypes = filters?.characterTypes || defaultState.filters.characterTypes;
+  const availableGroups = getShapeGroupOptionsForFilters(characterTypes);
+  const fallback = availableGroups[0] || 1;
+  const numeric = Number.isFinite(options?.shapeGroup)
+    ? Math.max(1, Math.floor(options.shapeGroup))
+    : fallback;
+  return availableGroups.includes(numeric) ? numeric : fallback;
+};
+
+const resolveAccuracyThreshold = (options) => {
+  const threshold = Number.isFinite(options?.accuracyThreshold)
+    ? options.accuracyThreshold
+    : defaultState.options.accuracyThreshold;
+  return Math.min(Math.max(threshold, 0), 1);
+};
 
 const getSelectionKeyForItem = (item) => {
   if (item.modifierGroup === "dakuten") {
@@ -31,7 +51,9 @@ export const buildTileFilterState = (
   filters = defaultState.filters,
   options = defaultState.options
 ) => {
-  const rowRange = clampRowRange(options?.rowRange || defaultState.options.rowRange);
+  const rowRange = clampRowRangeFromOptions(
+    options?.rowRange || defaultState.options.rowRange
+  );
   const studyMode = resolveStudyMode(options);
   const shapeGroupIndex = resolveShapeGroup(options, filters) - 1;
   const accuracyThreshold = resolveAccuracyThreshold(options);
@@ -100,7 +122,6 @@ export const tilePassesFilter = (item, filterState) => {
 
   if (studyMode === PROGRESSION_MODES.ADAPTIVE) {
     if (accuracyThreshold === 0) {
-      // 0% accuracy target means "show all"
       return true;
     }
     const effectiveAccuracy = Number.isFinite(item.accuracy) ? item.accuracy : 1;
@@ -111,3 +132,4 @@ export const tilePassesFilter = (item, filterState) => {
 
   return true;
 };
+

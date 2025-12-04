@@ -1,7 +1,7 @@
 import { defaultState } from "../../../core/state";
 import japaneseCharactersBot from "../../../data/japanese_characters_standard_bot.json";
 import japaneseCharactersTop from "../../../data/japanese_characters_standard_top.json";
-import { buildTileFilterState, tilePassesFilter } from "./characterFilters";
+import { buildTileFilterState, tilePassesFilter } from "../../../core/kanaSelection";
 
 export const cloneTopCharacters = () =>
   japaneseCharactersTop.map((tile) => ({

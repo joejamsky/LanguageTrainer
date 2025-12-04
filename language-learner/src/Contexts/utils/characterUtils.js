@@ -1,6 +1,11 @@
 export { matchInput } from "./characters/characterMatching";
-export { getGridCoordinatesForTile, isWithinRowRange } from "./characters/characterGrid";
-export { buildTileFilterState, tilePassesFilter } from "./characters/characterFilters";
+export {
+  getGridCoordinatesForTile,
+  getRowNumberFromItem,
+  isWithinRowRange,
+  buildTileFilterState,
+  tilePassesFilter,
+} from "../../core/kanaSelection";
 export {
   cloneTopCharacters,
   getInitialCharacters,
