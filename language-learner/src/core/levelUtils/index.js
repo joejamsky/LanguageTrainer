@@ -9,6 +9,7 @@ export {
   getAccuracyThresholds,
   getWindowSizes,
   getShapeGroupCount,
+  getShapeGroupListForScriptKey,
   getShapeGroupOptionsForFilters,
   getModeSequence,
   normalizeLevel,

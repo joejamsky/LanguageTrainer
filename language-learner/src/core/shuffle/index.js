@@ -68,3 +68,29 @@ export const applyShuffleToTiles = (tiles = [], shuffleMode = SHUFFLE_MODES.NONE
   }
 };
 
+export const getShuffleDisplay = (shuffleMode = SHUFFLE_MODES.NONE) => {
+  switch (shuffleMode) {
+    case SHUFFLE_MODES.HORIZONTAL:
+      return {
+        label: "Row Shuffle",
+        icon: "↔",
+      };
+    case SHUFFLE_MODES.VERTICAL:
+      return {
+        label: "Column Shuffle",
+        icon: "↕",
+      };
+    case SHUFFLE_MODES.BOTH:
+      return {
+        label: "Row + Column",
+        icon: "↕↔",
+      };
+    case SHUFFLE_MODES.NONE:
+    default:
+      return {
+        label: "No Shuffle",
+        icon: "—",
+      };
+  }
+};
+

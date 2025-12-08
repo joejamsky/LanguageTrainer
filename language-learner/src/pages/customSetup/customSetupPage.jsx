@@ -12,6 +12,7 @@ import {
   SCRIPT_LABELS,
   SHUFFLE_MODES,
 } from "../../core/levelUtils";
+import { getShuffleDisplay } from "../../core/shuffle";
 import AppHeader from "../../components/appHeader";
 import SelectByRow from "./components/selectByRow";
 import SelectByStroke from "./components/selectByStroke";
@@ -495,27 +496,29 @@ const CustomSetup = () => {
       return `${totalGroups} stroke groups`;
     }
 
-    // rows + accuracy: count selected rows
+    if (selectionTab === "accuracy") {
+      return `${fallbackAccuracyPercent}%`;
+    }
+
+    // rows: count selected rows
     const totalRows = Object.values(customSelections.rows).reduce(
       (sum, panel) => sum + countTruthyValues(panel),
       0
     );
     return `${totalRows} rows`;
-  }, [selectionTab, customSelections.rows, customSelections.shapes]);
+  }, [selectionTab, customSelections.rows, customSelections.shapes, fallbackAccuracyPercent]);
 
-  const summaryShuffleLabel = useMemo(() => {
-    switch (effectiveShuffleMode) {
-      case SHUFFLE_MODES.HORIZONTAL:
-        return "Row Shuffle";
-      case SHUFFLE_MODES.VERTICAL:
-        return "Column Shuffle";
-      case SHUFFLE_MODES.BOTH:
-        return "Row + Column";
-      case SHUFFLE_MODES.NONE:
-      default:
-        return "No Shuffle";
-    }
-  }, [effectiveShuffleMode]);
+  const summaryModeLabel = useMemo(() => {
+    if (selectionTab === "rows") return "Row";
+    if (selectionTab === "shapes") return "Stroke";
+    if (selectionTab === "accuracy") return "Accuracy";
+    return "Row";
+  }, [selectionTab]);
+
+  const summaryShuffleDisplay = useMemo(
+    () => getShuffleDisplay(effectiveShuffleMode),
+    [effectiveShuffleMode]
+  );
 
   const handleResetForm = () => {
     if (selectionTab === "rows") {
@@ -636,10 +639,22 @@ const CustomSetup = () => {
 
       <section className="setup-summary">
         <span className="setup-badge">Current Plan</span>
-        <p className="setup-summary-main">
-          {summaryGroupingLabel} | {summaryScriptLabel} | {summaryShuffleLabel}
-        </p>
-        <p className="setup-summary-note">Mode · Grouping · Kana · Shuffle</p>
+        <div className="setup-summary-grid">
+          <div className="setup-summary-row setup-summary-row--values">
+            <span className="setup-summary-item">{summaryModeLabel}</span>
+            <span className="setup-summary-item">{summaryScriptLabel}</span>
+            <span className="setup-summary-item">{summaryGroupingLabel}</span>
+            <span className="setup-summary-item">
+              {summaryShuffleDisplay?.icon || summaryShuffleDisplay?.label}
+            </span>
+          </div>
+          <div className="setup-summary-row setup-summary-row--labels">
+            <span className="setup-summary-item">Mode</span>
+            <span className="setup-summary-item">Kana</span>
+            <span className="setup-summary-item">Grouping</span>
+            <span className="setup-summary-item">Shuffle</span>
+          </div>
+        </div>
       </section>
 
       <div className="setup-grid">
@@ -680,9 +695,6 @@ const CustomSetup = () => {
               Reset All
             </button>
           </div>
-          <p className="control-caption">
-            Toggle kana groups, then fine-tune what should be available in the round.
-          </p>
           <div className="grouping-content">
             {selectionTab === "rows" && (
               <SelectByRow

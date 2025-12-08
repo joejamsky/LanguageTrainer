@@ -28,70 +28,356 @@
     }
 }
 
-.guided-options {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 16px;
-    width: 100%;
-    max-width: 720px;
+.guided-tree-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
 }
 
-.guided-choice {
-    border-radius: 20px;
-    border: 1px solid vars.$color-text-primary;
-    padding: 28px;
+.guided-tree-toggle {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    width: 100%;
+}
+
+.guided-tree-column {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.guided-tree-button {
+    width: 100%;
+    border-radius: 999px;
+    border: 1px solid vars.$color-border-default;
     background: vars.$color-bg-panel;
     color: vars.$color-text-primary;
-    text-align: left;
+    padding: 10px 16px;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
     cursor: pointer;
-    transition: border 0.2s ease, background 0.2s ease, transform 0.2s ease;
+    transition: border 0.2s ease, background 0.2s ease, color 0.2s ease;
 }
 
-.guided-choice.active {
+.guided-tree-button.active {
     border-color: vars.$color-accent-primary;
     background: vars.$color-accent-primary;
-    transform: translateY(-2px);
 }
 
-.guided-choice-title {
-    font-size: 20px;
+.guided-tree-label {
+    font-size: 18px;
+}
+
+.guided-tree-title {
     font-weight: 600;
 }
 
-.guided-choice-caption {
+.guided-tree-main {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+}
+
+.guided-tree-caption {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.guided-tree-actions {
+    display: none;
+}
+
+.guided-checkpoints {
+    width: 100%;
+    max-width: 960px;
+}
+
+.guided-checkpoints-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+
+    h2 {
+        margin: 0;
+        font-size: 18px;
+    }
+}
+
+.guided-checkpoints-script {
+    font-size: 13px;
+    color: vars.$color-text-primary;
+}
+
+.guided-checkpoint-list {
+    margin-top: 4px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.guided-checkpoint-pill {
+    width: 100%;
+    border-radius: 999px;
+    border: 1px solid vars.$color-border-default;
+    padding: 6px 12px;
+    font-size: 12px;
+    color: vars.$color-text-primary;
+    background: vars.$color-bg-panel;
+    text-align: center;
+}
+
+.guided-checkpoint-main {
+    white-space: nowrap;
+}
+
+@media (max-width: vars.$breakpoint-tablet) {
+    .guided-tree-toggle {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.guided-layout {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 12px;
+    position: relative;
+}
+
+.guided-jump-column {
+    position: absolute;
+    left: 0; 
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+    z-index: 2;
+}
+
+.guided-jump-button {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid vars.$color-border-default;
+    background: vars.$color-bg-panel;
+    color: vars.$color-text-primary;
+    cursor: pointer;
+    font-size: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.guided-jump-button:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.guided-node-column {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.guided-node-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.guided-node-section-title {
+    margin: 0;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: vars.$color-text-primary;
+    text-align: center;
+}
+
+.guided-mode-tile {
+    border-radius: 16px;
+    border: 1px solid vars.$color-border-default;
+    padding: 10px 12px;
+    background: vars.$color-bg-panel;
+    color: vars.$color-text-primary;
+    text-align: left;
+}
+
+.guided-mode-tile--active {
+    border-color: vars.$color-accent-primary;
+}
+
+.guided-mode-title {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.guided-mode-caption {
     display: block;
-    margin-top: 6px;
+    margin-top: 4px;
+    font-size: 12px;
+    color: vars.$color-text-primary;
+}
+
+.guided-node-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: stretch;
+}
+
+.guided-node-list--secondary {
+    gap: 10px;
+}
+
+.guided-node {
+    position: relative;
+    width: 200px;
+    min-height: 40px;
+    border-radius: 999px;
+    border: 1px solid vars.$color-border-default;
+    background: vars.$color-bg-panel;
+    color: vars.$color-text-primary;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 8px 14px 8px 40px;
+    cursor: pointer;
+    transition: border 0.2s ease, background 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
+}
+
+.guided-node--completed {
+    opacity: 0.9;
+}
+
+.guided-node--current {
+    border-color: vars.$color-accent-primary;
+    background: vars.$color-accent-primary;
+}
+
+.guided-node--future {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.guided-node--selected {
+    transform: translateY(-1px);
+}
+
+.guided-node:disabled {
+    cursor: default;
+}
+
+.guided-node-ring {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid vars.$color-border-default;
+}
+
+.guided-node--current .guided-node-ring {
+    border-color: vars.$color-black;
+    background: vars.$color-bg-panel;
+}
+
+.guided-node-index {
+    position: relative;
+    z-index: 1;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.guided-details-panel {
+    display: none;
+}
+
+.guided-details-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.guided-details-header h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.guided-details-summary {
+    margin: 0;
     font-size: 14px;
     color: vars.$color-text-primary;
 }
 
-.guided-choice-summary {
-    margin-top: 18px;
-    padding-top: 12px;
-    border-top: 1px solid vars.$color-text-primary;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-
-    span {
-        font-size: 12px;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        color: vars.$color-text-primary;
-    }
-
-    strong {
-        font-size: 16px;
-    }
+.guided-details-section {
+    border-radius: 14px;
+    border: 1px solid vars.$color-border-strong;
+    padding: 12px 14px;
+    background: vars.$color-bg-panel;
 }
 
-.guided-actions {
+.guided-details-section h3 {
+    margin: 0 0 8px;
+    font-size: 14px;
+}
+
+.guided-details-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    width: 100%;
-    max-width: 420px;
+    gap: 6px;
+}
+
+.guided-details-item-title {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.guided-details-item-caption {
+    font-size: 12px;
+    color: vars.$color-text-primary;
+}
+
+.guided-details-note {
+    margin: 0;
+    font-size: 13px;
+    color: vars.$color-text-primary;
+}
+
+.guided-row-characters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.guided-row-character {
+    display: inline-flex;
     align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 2px 6px;
+    border-radius: 999px;
+    border: 1px solid vars.$color-border-default;
+    font-size: 16px;
+}
+
+.guided-details-actions {
+    display: none;
 }
 
 .guided-start {
@@ -115,12 +401,46 @@
     color: vars.$color-text-primary;
 }
 
+.guided-details-empty {
+    margin: 0;
+    font-size: 14px;
+    color: vars.$color-text-primary;
+}
+
+.guided-actions {
+    position: sticky;
+    bottom: 0;
+    padding-bottom: 12px;
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.guided-actions .guided-start {
+    max-width: 180px;
+}
+
 @media (max-width: vars.$breakpoint-mobile) {
     .guided-setup {
         padding: 40px 16px;
     }
 
-    .guided-choice {
-        padding: 20px;
+
+    .guided-jump-column {
+        position: absolute;
+        margin-bottom: 12px;
+    }
+
+    .guided-node-column {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .guided-details-panel {
+        display: none;
+    }
+
+    .guided-tree-toggle {
+        grid-template-columns: minmax(0, 1fr);
     }
 }

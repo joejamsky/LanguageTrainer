@@ -1,26 +1,9 @@
-import React, { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
 import "../../styles/pages/modeSelect.scss";
 import AppHeader from "../../components/appHeader";
+import LinkButton from "../../components/linkButton";
 
 const ModeSelect = () => {
-  const navigate = useNavigate();
-  const [guidedStatus] = useState("");
-
-  const guidedCheckpointSummaries = [
-    { key: "hiragana", title: "Hiragana", summary: "Kana | Mode | Group | Shuffle" },
-    { key: "katakana", title: "Katakana", summary: "Kana | Mode | Group | Shuffle" },
-    { key: "both", title: "Both", summary: "Kana | Mode | Group | Shuffle" },
-  ];
-
-  const handleGuidedSelect = () => {
-    navigate("/guided/setup");
-  };
-
-  const handleCustomSelect = () => {
-    navigate("/custom/setup");
-  };
-
   return (
     <main className="gutter-container mode-select">
       <AppHeader />
@@ -33,35 +16,24 @@ const ModeSelect = () => {
           <div>
             <h2>Guided Journey</h2>
             <p>
-              Resume from saved checkpoints and progress through Kana using spaced repetition.
+              Progress through kana paths using spaced repetition and resume from saved checkpoints from previous sessions.
             </p>
-            <div className="mode-summary">
-              <span>Checkpoints</span>
-              <div className="mode-summary-grid">
-                {guidedCheckpointSummaries.map((item) => (
-                  <div key={item.key} className="mode-summary-item">
-                    <span className="mode-summary-title">{item.title}</span>
-                    <span>{item.summary}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
-          <button type="button" onClick={handleGuidedSelect}>
+          <LinkButton to="/guided/setup">
             Enter Guided Setup
-          </button>
+          </LinkButton>
         </section>
 
         <section className="mode-card">
           <div>
             <h2>Custom Session</h2>
             <p>
-              Choose rows, modes, modifiers, and shuffle yourself. Perfect when you want to focus on a specific skill.
+              Choose rows, modes, modifiers, and shuffle yourself. Perfect when you want to focus on a specific group of kana.
             </p>
           </div>
-          <button type="button" onClick={handleCustomSelect}>
+          <LinkButton to="/custom/setup">
             Enter Custom Setup
-          </button>
+          </LinkButton>
         </section>
       </div>
     </main>

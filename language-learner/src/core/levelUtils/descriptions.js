@@ -2,9 +2,9 @@ import {
   PROGRESSION_MODES,
   SCRIPT_LABELS,
   LEVEL_TO_SCRIPT,
-  SHUFFLE_MODES,
   normalizeLevelShape,
 } from "./core";
+import { getShuffleDisplay } from "../shuffle";
 
 const formatGroupingLabel = (normalized) => {
   if (normalized.mode === PROGRESSION_MODES.LINEAR) {
@@ -24,27 +24,13 @@ const formatGroupingLabel = (normalized) => {
   return `${normalized.rowStart}-${normalized.rowEnd}`;
 };
 
-const formatShuffleLabel = (normalized) => {
-  switch (normalized.shuffleMode) {
-    case SHUFFLE_MODES.HORIZONTAL:
-      return "Row Shuffle";
-    case SHUFFLE_MODES.VERTICAL:
-      return "Column Shuffle";
-    case SHUFFLE_MODES.BOTH:
-      return "Row + Column";
-    case SHUFFLE_MODES.NONE:
-    default:
-      return "No Shuffle";
-  }
-};
-
 export const describeLevel = (level) => {
   const normalized = normalizeLevelShape(level);
   const modeLabel = normalized.mode.charAt(0).toUpperCase();
   const scriptKey = LEVEL_TO_SCRIPT[normalized.scriptLevel] || "hiragana";
   const kanaLabel = SCRIPT_LABELS[scriptKey] || scriptKey.charAt(0).toUpperCase();
   const groupingLabel = formatGroupingLabel(normalized);
-  const shuffleLabel = formatShuffleLabel(normalized);
+  const { label: shuffleLabel } = getShuffleDisplay(normalized.shuffleMode);
 
   return {
     mode: modeLabel,
