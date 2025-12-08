@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import "../../styles/pages/guidedSetup.scss";
 import AppHeader from "../../components/appHeader";
 import Button from "../../components/button";
+import GuidedPathNode from "./components/guidedPathNode";
 import {
   PROGRESSION_MODES,
   SHUFFLE_MODES,
@@ -72,22 +73,6 @@ const buildRangeWindows = () => {
 
 const RANGE_WINDOWS = buildRangeWindows();
 const ACCURACY_LEVELS = getAccuracyThresholds();
-
-const GuidedPathNode = ({
-  as = "div",
-  className = "",
-  label,
-  innerRef,
-  ...rest
-}) => {
-  const Element = as;
-  return (
-    <Element ref={innerRef} className={className} {...rest}>
-      <span className="guided-node-ring" />
-      <span className="guided-node-index">{label}</span>
-    </Element>
-  );
-};
 
 const GuidedSetup = () => {
   const [scriptSelection, setScriptSelection] = useState(
